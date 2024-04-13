@@ -5,7 +5,15 @@
     android:id="@+id/lDrawLayoutMain"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/image_back_main"
     tools:context=".MainActivity">
+
+    <ImageView
+        android:id="@+id/ivBackgrounPic"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:alpha="0.47"
+        android:background="@drawable/rectangle_main" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -16,18 +24,18 @@
             android:id="@+id/tb_main"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="?attr/colorPrimary"
+            android:background="@android:color/transparent"
             android:minHeight="?attr/actionBarSize"
             android:theme="?attr/actionBarTheme"
-            app:menu="@menu/toolbar_menu_general"/>
+            app:menu="@menu/toolbar_menu_general" />
 
         <androidx.fragment.app.FragmentContainerView
             android:id="@+id/fcv_main"
             android:name="androidx.navigation.fragment.NavHostFragment"
-            app:defaultNavHost="true"
-            app:navGraph="@navigation/nav_graph_general"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            app:defaultNavHost="true"
+            app:navGraph="@navigation/nav_graph_general" />
     </LinearLayout>
 
     <com.google.android.material.navigation.NavigationView
@@ -35,5 +43,5 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="start"
-        app:menu="@menu/drawer_side_menu"/>
+        app:menu="@menu/drawer_side_menu" />
 </androidx.drawerlayout.widget.DrawerLayout>
