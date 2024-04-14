@@ -3,11 +3,21 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph_general"
-    app:startDestination="@id/homeFragment">
+    app:startDestination="@id/homeFragment"
+    android:label="label1">
 
     <fragment
         android:id="@+id/homeFragment"
         android:name="com.example.kindcafe.fragments.HomeFragment"
         android:label="HomeFragment"
-        tools:layout="@layout/frag_home"/>
+        tools:layout="@layout/frag_home">
+        <action
+            android:id="@+id/action_homeFragment_to_registrationFragment"
+            app:destination="@id/registrationFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/registrationFragment"
+        android:name="com.example.kindcafe.fragments.RegistrationFragment"
+        android:label="RegistrationFragment"
+        tools:layout="@layout/frag_registration"/>
 </navigation>
