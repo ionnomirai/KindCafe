@@ -62,7 +62,7 @@ class MainActivity : AppCompatActivity() {
         /* Full Screen */
         setFullScreen()
 
-
+        binding.tbMain.title = "Kind Cafe"
     }
 
     /* Connecting NavigationView (sliding panel) to navController so that you can navigate. */

@@ -5,15 +5,328 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/textView"
+    <ImageView
+        android:id="@+id/ivBackCardFirst"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="332dp"
-        android:text="HomeFragment"
-        android:textSize="25sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
+        android:layout_marginStart="41dp"
+        android:layout_marginTop="4dp"
+        android:visibility="visible"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="@id/cvFirst"
+        app:srcCompat="@drawable/home_pics_back_shadow" />
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cvFirst"
+        android:layout_width="146dp"
+        android:layout_height="218dp"
+        android:layout_marginStart="45dp"
+        app:cardCornerRadius="20dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.37">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:id="@+id/ivPicFirst"
+                android:layout_width="match_parent"
+                android:layout_height="110dp"
+                android:scaleType="centerCrop"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/home_first_pic" />
+
+            <ImageView
+                android:id="@+id/ivGradientFirst"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:scaleType="fitXY"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="@id/ivPicFirst"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="@id/ivPicFirst"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.129"
+                app:srcCompat="@drawable/home_gradient" />
+
+            <ImageView
+                android:id="@+id/ivSeparatorFirst"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/home_pic_separator"
+                android:scaleType="fitXY"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="@id/ivPicFirst"
+                app:layout_constraintStart_toStartOf="@id/ivPicFirst"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.55" />
+
+            <TextView
+                android:id="@+id/tvDishNameFirst"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:fontFamily="@font/island_moments_regular"
+                android:gravity="center"
+                android:paddingHorizontal="15dp"
+                android:shadowColor="@color/red"
+                android:shadowDx="2"
+                android:shadowRadius="1"
+                android:text="@string/home_first_category"
+                android:textColor="@color/red"
+                android:textSize="33sp"
+                android:textStyle="normal"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="@id/ivPicFirst"
+                app:layout_constraintStart_toStartOf="@id/ivPicFirst"
+                app:layout_constraintTop_toBottomOf="@id/ivSeparatorFirst" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.cardview.widget.CardView>
+
+
+    <ImageView
+        android:id="@+id/ivBackCardSecond"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:layout_marginEnd="41dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/cvSecond"
+        app:srcCompat="@drawable/home_pics_back_shadow" />
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cvSecond"
+        android:layout_width="146dp"
+        android:layout_height="218dp"
+        android:layout_marginEnd="45dp"
+        app:cardCornerRadius="20dp"
+        app:layout_constraintBottom_toBottomOf="@+id/cvFirst"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/cvFirst"
+        app:layout_constraintVertical_bias="0.0">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:id="@+id/ivPicSecond"
+                android:layout_width="match_parent"
+                android:layout_height="110dp"
+                android:scaleType="centerCrop"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/home_second_pic" />
+
+            <ImageView
+                android:id="@+id/ivGradientSecond"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:scaleType="fitXY"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="@id/ivPicSecond"
+                app:layout_constraintStart_toStartOf="@id/ivPicSecond"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.13"
+
+                app:srcCompat="@drawable/home_gradient" />
+
+            <ImageView
+                android:id="@+id/ivSeparatorSecond"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/home_pic_separator"
+                android:scaleType="fitXY"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="@id/ivPicSecond"
+                app:layout_constraintStart_toStartOf="@id/ivPicSecond"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.55" />
+
+            <TextView
+                android:id="@+id/tvDishNameSecond"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:fontFamily="@font/island_moments_regular"
+                android:gravity="center"
+                android:shadowColor="@color/red"
+                android:shadowDx="2"
+                android:shadowRadius="1"
+                android:text="@string/home_second_category"
+                android:textColor="@color/red"
+                android:textSize="33sp"
+                android:textStyle="normal"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="@id/ivPicSecond"
+                app:layout_constraintStart_toStartOf="@id/ivPicSecond"
+                app:layout_constraintTop_toBottomOf="@id/ivSeparatorSecond" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.cardview.widget.CardView>
+
+    <ImageView
+        android:id="@+id/ivBackCardThird"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="visible"
+        android:layout_marginTop="50dp"
+        app:layout_constraintStart_toStartOf="@id/ivBackCardFirst"
+        app:layout_constraintTop_toBottomOf="@id/ivBackCardFirst"
+        app:srcCompat="@drawable/home_pics_back_shadow" />
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cvThird"
+        android:layout_width="146dp"
+        android:layout_height="218dp"
+        app:cardCornerRadius="20dp"
+        android:layout_marginTop="50dp"
+        app:layout_constraintStart_toStartOf="@id/cvFirst"
+        app:layout_constraintTop_toBottomOf="@id/cvFirst"
+        app:layout_constraintVertical_bias="0.37">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:id="@+id/ivPicThird"
+                android:layout_width="match_parent"
+                android:layout_height="110dp"
+                android:scaleType="centerCrop"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/home_third_pic" />
+
+            <ImageView
+                android:id="@+id/ivGradientThird"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:scaleType="fitXY"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="@id/ivPicThird"
+                app:layout_constraintStart_toStartOf="@id/ivPicThird"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.13"
+                app:srcCompat="@drawable/home_gradient" />
+
+            <ImageView
+                android:id="@+id/ivSeparatorThird"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/home_pic_separator"
+                android:scaleType="fitXY"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="@id/ivPicThird"
+                app:layout_constraintStart_toStartOf="@id/ivPicThird"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.55" />
+
+            <TextView
+                android:id="@+id/tvDishNameThird"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:fontFamily="@font/island_moments_regular"
+                android:gravity="center"
+                android:paddingHorizontal="15dp"
+                android:shadowColor="@color/red"
+                android:shadowDx="2"
+                android:shadowRadius="1"
+                android:text="@string/home_third_category"
+                android:textColor="@color/red"
+                android:textSize="33sp"
+                android:textStyle="normal"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="@id/ivPicThird"
+                app:layout_constraintStart_toStartOf="@id/ivPicThird"
+                app:layout_constraintTop_toBottomOf="@id/ivSeparatorThird" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.cardview.widget.CardView>
+
+    <ImageView
+        android:id="@+id/ivBackCardFourth"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
+        android:layout_marginEnd="41dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/ivBackCardSecond"
+        app:srcCompat="@drawable/home_pics_back_shadow" />
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cvFourth"
+        android:layout_width="146dp"
+        android:layout_height="218dp"
+        android:layout_marginEnd="45dp"
+        app:cardCornerRadius="20dp"
+        android:layout_marginTop="50dp"
+        app:layout_constraintStart_toStartOf="@id/cvSecond"
+        app:layout_constraintTop_toBottomOf="@id/cvSecond">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:id="@+id/ivPicFourth"
+                android:layout_width="match_parent"
+                android:layout_height="110dp"
+                android:scaleType="centerCrop"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/home_fourth_pic" />
+
+            <ImageView
+                android:id="@+id/ivGradientFourth"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:scaleType="fitXY"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="@id/ivPicFourth"
+                app:layout_constraintStart_toStartOf="@id/ivPicFourth"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.13"
+
+                app:srcCompat="@drawable/home_gradient" />
+
+            <ImageView
+                android:id="@+id/ivSeparatorFourth"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/home_pic_separator"
+                android:scaleType="fitXY"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="@id/ivPicFourth"
+                app:layout_constraintStart_toStartOf="@id/ivPicFourth"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.55" />
+
+            <TextView
+                android:id="@+id/tvDishNameFourth"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:fontFamily="@font/island_moments_regular"
+                android:gravity="center"
+                android:shadowColor="@color/red"
+                android:shadowDx="2"
+                android:shadowRadius="1"
+                android:text="@string/home_fourth_category"
+                android:textColor="@color/red"
+                android:textSize="33sp"
+                android:textStyle="normal"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="@id/ivPicFourth"
+                app:layout_constraintStart_toStartOf="@id/ivPicFourth"
+                app:layout_constraintTop_toBottomOf="@id/ivSeparatorFourth" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.cardview.widget.CardView>
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>

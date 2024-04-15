@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="black">#FF000000</color>
+    <color name="black_25_transparent">#25000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="red">#FFFF0000</color>
+    <color name="transparent_my">#00000000</color>
 
     <color name="yellow_main_back">#EFD288</color>
 </resources>

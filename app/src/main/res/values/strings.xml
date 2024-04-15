@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">Kind Cafe</string>
+
+    <!-- FragHome-->
+    <string name="home_first_category">Sparkling\ndrinks</string>
+    <string name="home_second_category">Non-sparkling\ndrinks</string>
+    <string name="home_third_category">Sweets</string>
+    <string name="home_fourth_category">Cakes</string>
 </resources>
