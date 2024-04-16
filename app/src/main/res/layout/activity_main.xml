@@ -5,15 +5,8 @@
     android:id="@+id/lDrawLayoutMain"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/image_back_main"
+    android:background="@drawable/home_background2x"
     tools:context=".MainActivity">
-
-    <ImageView
-        android:id="@+id/ivBackgrounPic"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:alpha="0.47"
-        android:background="@drawable/rectangle_main" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -60,8 +53,8 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="start"
-        app:menu="@menu/drawer_side_menu" />
-
-
+        android:background="@color/menu_side_yellow"
+        app:menu="@menu/drawer_side_menu"
+        app:headerLayout="@layout/side_menu_header"/>
 
 </androidx.drawerlayout.widget.DrawerLayout>

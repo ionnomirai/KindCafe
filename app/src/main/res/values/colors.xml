@@ -6,5 +6,11 @@
     <color name="red">#FFFF0000</color>
     <color name="transparent_my">#00000000</color>
 
-    <color name="yellow_main_back">#EFD288</color>
+    <color name="menu_side_yellow">#FFEDBE</color>
+
+    <!-- header_side_menu_gradient -->
+    <color name="header_gradient_start">#562B1A</color>
+    <color name="header_gradient_end">#CB8A58</color>
+
+    <color name="hamburger_color">#D1512D</color>
 </resources>

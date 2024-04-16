@@ -6,4 +6,17 @@
     <string name="home_second_category">Non-sparkling\ndrinks</string>
     <string name="home_third_category">Sweets</string>
     <string name="home_fourth_category">Cakes</string>
+
+    <!-- Navigation View menu (dsm = drawer_side_menu.xml) -->
+    <string name="dsm_login">Login</string>
+    <string name="dsm_register">Register</string>
+    <string name="dsm_favorites">Favorites</string>
+    <string name="dsm_basket">Basket</string>
+    <string name="dsm_settings">Settings</string>
+    <string name="dsm_log_out">Log out</string>
+    <string name="dsm_exit">Exit</string>
+
+    <!-- Header side menu -->
+    <string name="user_name_default">Guest</string>
+
 </resources>

@@ -1,22 +1,23 @@
 package com.example.kindcafe
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
-import android.view.MotionEvent
-import android.view.WindowManager
 import android.widget.Toast
+import androidx.appcompat.app.ActionBarDrawerToggle
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
+import androidx.navigation.ui.NavigationUI
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.example.kindcafe.databinding.ActivityMainBinding
+
 
 class MainActivity : AppCompatActivity() {
 
@@ -55,6 +56,7 @@ class MainActivity : AppCompatActivity() {
             drawerLayout = binding.lDrawLayoutMain
         )
 
+
         setupNavigationMenu(navController)
         setupActionBar(navController, appBarConfiguration)
         setupBottomNavMenu(navController)
@@ -62,6 +64,12 @@ class MainActivity : AppCompatActivity() {
         /* Full Screen */
         setFullScreen()
 
+        everyOpenHomeSettings()
+
+    }
+
+    /* Perform these settings every time the screen starts up */
+    fun everyOpenHomeSettings(){
         binding.tbMain.title = "Kind Cafe"
     }
 
