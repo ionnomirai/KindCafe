@@ -46,6 +46,9 @@ class MainActivity : AppCompatActivity() {
         /* Connecting my custom Action Bar */
         setSupportActionBar(binding.tbMain)
 
+        /* set default active item bottom navigation on empty button */
+        binding.bnvMain.selectedItemId = R.id.bnvItemEmpty
+
         val navHostFragment =
             supportFragmentManager.findFragmentById(R.id.fcv_main) as NavHostFragment
 
@@ -56,25 +59,30 @@ class MainActivity : AppCompatActivity() {
             drawerLayout = binding.lDrawLayoutMain
         )
 
+        binding.ibHome.setOnClickListener {
+            Toast.makeText(this, "IB", Toast.LENGTH_SHORT).show()
+        }
+
 
         setupNavigationMenu(navController)
         setupActionBar(navController, appBarConfiguration)
         setupBottomNavMenu(navController)
 
         /* Full Screen */
-        setFullScreen()
+        //setFullScreen()
 
         everyOpenHomeSettings()
-
     }
 
     /* Perform these settings every time the screen starts up */
-    fun everyOpenHomeSettings(){
-        binding.tbMain.title = "Kind Cafe"
+    fun everyOpenHomeSettings() {
+        //binding.tbMain.title = "Kind Cafe"
+        binding.tbMain.title = ""
+        binding.tvToolbarTitle.text = resources.getString(R.string.home_name)
     }
 
     /* Connecting NavigationView (sliding panel) to navController so that you can navigate. */
-    private fun setupNavigationMenu(navController: NavController){
+    private fun setupNavigationMenu(navController: NavController) {
         binding.nvLeft.setupWithNavController(navController)
     }
 
@@ -82,7 +90,10 @@ class MainActivity : AppCompatActivity() {
     *  - shows the current location in place title (toolbar);
     *  - shows the back button when we are not in the top destination;
     *  - shows the "burger" button when we are in the top destination. */
-    private fun setupActionBar(navController: NavController, appBarConfiguration: AppBarConfiguration){
+    private fun setupActionBar(
+        navController: NavController,
+        appBarConfiguration: AppBarConfiguration
+    ) {
         setupActionBarWithNavController(navController, appBarConfiguration)
     }
 
@@ -95,13 +106,13 @@ class MainActivity : AppCompatActivity() {
         binding.bnvMain.setupWithNavController(navController)
     }
 
-    private fun setFullScreen(){
-        WindowCompat.setDecorFitsSystemWindows(window, false)
-        WindowInsetsControllerCompat(window, binding.root).let { controller ->
-            controller.hide(WindowInsetsCompat.Type.systemBars())
-            controller.systemBarsBehavior = WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
-        }
-    }
+    /*    private fun setFullScreen(){
+            WindowCompat.setDecorFitsSystemWindows(window, false)
+            WindowInsetsControllerCompat(window, binding.root).let { controller ->
+                controller.hide(WindowInsetsCompat.Type.systemBars())
+                controller.systemBarsBehavior = WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+            }
+        }*/
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.toolbar_menu_general, menu)
@@ -109,7 +120,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if(item.itemId == R.id.itbSearch){
+        if (item.itemId == R.id.itbSearch) {
             Toast.makeText(this, "Search", Toast.LENGTH_SHORT).show()
         }
         return super.onOptionsItemSelected(item)

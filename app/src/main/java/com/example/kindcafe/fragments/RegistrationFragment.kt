@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import com.example.kindcafe.MainActivity
 import com.example.kindcafe.databinding.FragHomeBinding
 import com.example.kindcafe.databinding.FragRegistrationBinding
 
@@ -31,6 +32,8 @@ class RegistrationFragment: Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        // test -- done!
+        (activity as MainActivity).supportActionBar?.title = ""
     }
 
     override fun onDestroyView() {

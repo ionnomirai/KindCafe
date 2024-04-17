@@ -3,11 +3,33 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/registrationFragment"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:title="Home"
-        android:icon="@drawable/baseline_home_24"
-        app:showAsAction="ifRoom"
+        android:id="@+id/bmFirstItem"
+        android:title="User"
+        android:icon="@drawable/ic_user"
+
         />
+
+    <item
+        android:id="@+id/registrationFragment"
+        android:title="Setting"
+        android:icon="@drawable/ic_settings"
+        />
+
+    <item
+        android:id="@+id/bnvItemEmpty"
+        android:title="empty"
+        />
+
+    <item
+        android:id="@+id/bmThirdItem"
+        android:title="Heart"
+        android:icon="@drawable/ic_heart"
+        />
+
+    <item
+        android:id="@+id/bmFourthItem"
+        android:title="Bag"
+        android:icon="@drawable/ic_shopping_bag"
+        />
+
 </menu>

@@ -25,27 +25,66 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:menu="@menu/toolbar_menu_general" />
+            app:menu="@menu/toolbar_menu_general">
+
+            <TextView
+                android:id="@+id/tvToolbarTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:text = "Kind cafe"
+                android:textColor="@color/toolbar_title"
+                android:textStyle="bold"
+                android:textSize="24sp"
+                android:layout_gravity="center_horizontal"
+                 />
+        </androidx.appcompat.widget.Toolbar>
+
 
         <androidx.fragment.app.FragmentContainerView
             android:id="@+id/fcv_main"
             android:name="androidx.navigation.fragment.NavHostFragment"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            app:layout_constraintBottom_toTopOf="@id/bnvMain"
-            app:layout_constraintTop_toBottomOf="@id/tb_main"
             app:defaultNavHost="true"
-            app:navGraph="@navigation/nav_graph_general"/>
+            app:layout_constraintBottom_toTopOf="@id/bnvMain"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.0"
+            app:navGraph="@navigation/nav_graph_general"
+            tools:layout_editor_absoluteX="0dp" />
+
+        <ImageButton
+            android:id="@+id/ibHome"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:background="@drawable/home_button_back"
+
+            android:elevation="9dp"
+
+            android:layout_marginBottom="15dp"
+            android:src="@drawable/ic_home"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
 
         <com.google.android.material.bottomnavigation.BottomNavigationView
             android:id="@+id/bnvMain"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="80dp"
+
+            style="@style/Widget.MaterialComponents.BottomNavigationView.Colored"
             android:background="@drawable/ellipse_of_lower_menu"
-            app:menu="@menu/bottom_menu"
+
+            app:itemBackground="@color/transparent_my"
+            app:itemIconTint="@color/bottom_nav_color"
+            app:itemRippleColor="@color/transparent_my"
+            app:itemTextColor="@color/bottom_nav_color"
+            app:labelVisibilityMode="unlabeled"
             app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"/>
+            app:menu="@menu/bottom_menu" />
+
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <com.google.android.material.navigation.NavigationView

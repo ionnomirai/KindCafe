@@ -5,6 +5,40 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <TextView
+        android:id="@+id/tvGreetingHome"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="105dp"
+        android:shadowColor="@color/shadow_greeting_color"
+        android:shadowDx="11"
+        android:shadowDy="3"
+        android:shadowRadius="1"
+        android:text="@string/default_welcome"
+        android:textColor="@color/hamburger_color"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tvUserNameHome"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:shadowColor="@color/shadow_greeting_color"
+        android:shadowDx="11"
+        android:shadowDy="3"
+        android:shadowRadius="1"
+        android:text="@string/default_test_username"
+        android:textColor="@color/user_name_home_screen"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="@+id/tvGreetingHome"
+        app:layout_constraintTop_toBottomOf="@+id/tvGreetingHome" />
+
     <ImageView
         android:id="@+id/ivBackCardFirst"
         android:layout_width="wrap_content"
@@ -21,11 +55,12 @@
         android:layout_width="146dp"
         android:layout_height="218dp"
         android:layout_marginStart="45dp"
+        android:layout_marginTop="55dp"
         app:cardCornerRadius="20dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.37">
+        app:layout_constraintTop_toBottomOf="@id/tvUserNameHome"
+        app:layout_constraintVertical_bias="0.0">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"

@@ -13,4 +13,11 @@
     <color name="header_gradient_end">#CB8A58</color>
 
     <color name="hamburger_color">#D1512D</color>
+    <color name="bottom_icon_color">#C58B9A</color>
+    <color name="home_button_color">#D1512D</color>
+
+    <color name="greeting_phrase_color">#D1512D</color>
+    <color name="user_name_home_screen">#411530</color>
+    <color name="shadow_greeting_color">#25B8A331</color>
+    <color name="toolbar_title">#411530</color>
 </resources>

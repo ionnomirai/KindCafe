@@ -2,6 +2,10 @@
     <string name="app_name">Kind Cafe</string>
 
     <!-- FragHome-->
+    <string name="home_name">Kind Cafe</string>
+    <string name="default_welcome">Welcome,</string>
+    <string name="default_username">Guest</string>
+    <string name="default_test_username">Abigayle Smith</string>
     <string name="home_first_category">Sparkling\ndrinks</string>
     <string name="home_second_category">Non-sparkling\ndrinks</string>
     <string name="home_third_category">Sweets</string>
