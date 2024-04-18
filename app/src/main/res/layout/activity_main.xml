@@ -16,6 +16,7 @@
             android:id="@+id/tb_main"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:elevation="9dp"
             android:background="@android:color/transparent"
             android:minHeight="?attr/actionBarSize"
             android:paddingStart="20dp"
@@ -46,44 +47,80 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             app:defaultNavHost="true"
-            app:layout_constraintBottom_toTopOf="@id/bnvMain"
+            app:layout_constraintBottom_toTopOf="@id/clMainBottomMenu"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.0"
             app:navGraph="@navigation/nav_graph_general"
             tools:layout_editor_absoluteX="0dp" />
+
+
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/clMainBottomMenu"
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:background="@drawable/ellipse_of_lower_menu"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
+
+            <ImageButton
+                android:id="@+id/ibProfile"
+                android:background="@drawable/ripple_test"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginTop="15dp"
+                android:layout_marginStart="25dp"
+                app:srcCompat="@drawable/ic_user"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <ImageButton
+                android:id="@+id/ibSettings"
+                android:background="@drawable/ripple_test"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginStart="55dp"
+                app:srcCompat="@drawable/ic_settings"
+                app:layout_constraintTop_toTopOf="@id/ibProfile"
+                app:layout_constraintBottom_toBottomOf="@id/ibProfile"
+                app:layout_constraintStart_toEndOf="@id/ibProfile"/>
+
+            <ImageButton
+                android:id="@+id/ibHeart"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginEnd="55dp"
+                android:background="@drawable/ripple_test"
+                app:srcCompat="@drawable/ic_heart"
+                app:layout_constraintTop_toTopOf="@+id/ibBag"
+                app:layout_constraintBottom_toBottomOf="@id/ibBag"
+                app:layout_constraintEnd_toStartOf="@id/ibBag"
+                 />
+
+            <ImageButton
+                android:id="@+id/ibBag"
+                android:background="@drawable/ripple_test"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginEnd="25dp"
+                app:srcCompat="@drawable/ic_shopping_bag"
+                app:layout_constraintTop_toTopOf="@id/ibProfile"
+                app:layout_constraintBottom_toBottomOf="@id/ibProfile"
+                app:layout_constraintEnd_toEndOf="parent"/>
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <ImageButton
             android:id="@+id/ibHome"
             android:layout_width="80dp"
             android:layout_height="80dp"
             android:background="@drawable/home_button_back"
-
-            android:elevation="9dp"
-
             android:layout_marginBottom="15dp"
             android:src="@drawable/ic_home"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
-
-        <com.google.android.material.bottomnavigation.BottomNavigationView
-            android:id="@+id/bnvMain"
-            android:layout_width="match_parent"
-            android:layout_height="80dp"
-
-            style="@style/Widget.MaterialComponents.BottomNavigationView.Colored"
-            android:background="@drawable/ellipse_of_lower_menu"
-
-            app:itemBackground="@color/transparent_my"
-            app:itemIconTint="@color/bottom_nav_color"
-            app:itemRippleColor="@color/transparent_my"
-            app:itemTextColor="@color/bottom_nav_color"
-            app:labelVisibilityMode="unlabeled"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:menu="@menu/bottom_menu" />
-
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

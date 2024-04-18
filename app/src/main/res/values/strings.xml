@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Kind Cafe</string>
 
-    <!-- FragHome-->
+    <!-- frag_Home-->
     <string name="home_name">Kind Cafe</string>
     <string name="default_welcome">Welcome,</string>
     <string name="default_username">Guest</string>
@@ -10,6 +10,12 @@
     <string name="home_second_category">Non-sparkling\ndrinks</string>
     <string name="home_third_category">Sweets</string>
     <string name="home_fourth_category">Cakes</string>
+
+    <!-- frag_registration -->
+    <string name="register_title">Please register</string>
+    <string name="register_enter_user_name">Please enter your name</string>
+    <string name="register_enter_user_email">Please enter your e-mail</string>
+    <string name="register_enter_user_password">Please enter your password</string>
 
     <!-- Navigation View menu (dsm = drawer_side_menu.xml) -->
     <string name="dsm_login">Login</string>
@@ -22,5 +28,6 @@
 
     <!-- Header side menu -->
     <string name="user_name_default">Guest</string>
+
 
 </resources>

@@ -3,27 +3,26 @@ package com.example.kindcafe
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import android.widget.Toast
-import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.WindowCompat
-import androidx.core.view.WindowInsetsCompat
-import androidx.core.view.WindowInsetsControllerCompat
+import androidx.core.view.isVisible
+import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.NavigationUI
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.example.kindcafe.databinding.ActivityMainBinding
+import com.example.kindcafe.utils.GeneralAccessTypes
 
 
 class MainActivity : AppCompatActivity() {
 
     /*---------------------------------------- Properties ----------------------------------------*/
 
-    private lateinit var binding: ActivityMainBinding
+    lateinit var binding: ActivityMainBinding
 
     /*  AppBarConfiguration:
     * - determining which drawerLayout to work with;
@@ -47,7 +46,7 @@ class MainActivity : AppCompatActivity() {
         setSupportActionBar(binding.tbMain)
 
         /* set default active item bottom navigation on empty button */
-        binding.bnvMain.selectedItemId = R.id.bnvItemEmpty
+        //binding.bnvMain.selectedItemId = R.id.bnvItemEmpty
 
         val navHostFragment =
             supportFragmentManager.findFragmentById(R.id.fcv_main) as NavHostFragment
@@ -66,10 +65,11 @@ class MainActivity : AppCompatActivity() {
 
         setupNavigationMenu(navController)
         setupActionBar(navController, appBarConfiguration)
-        setupBottomNavMenu(navController)
+        //setupBottomNavMenu(navController)
 
         /* Full Screen */
         //setFullScreen()
+
 
         everyOpenHomeSettings()
     }
@@ -79,6 +79,40 @@ class MainActivity : AppCompatActivity() {
         //binding.tbMain.title = "Kind Cafe"
         binding.tbMain.title = ""
         binding.tvToolbarTitle.text = resources.getString(R.string.home_name)
+
+        accessBottomPart(GeneralAccessTypes.OPEN)
+        accessUpperPart(GeneralAccessTypes.OPEN)
+    }
+
+    /* Hide or show bottom menu */
+    fun accessBottomPart(action: GeneralAccessTypes){
+        binding.apply {
+            when(action){
+                GeneralAccessTypes.OPEN -> {
+                    clMainBottomMenu.visibility = View.VISIBLE
+                    ibHome.visibility = View.VISIBLE
+                }
+                GeneralAccessTypes.CLOSE -> {
+                    clMainBottomMenu.visibility = View.GONE
+                    ibHome.visibility = View.GONE
+                }
+            }
+        }
+    }
+
+    fun accessUpperPart(action: GeneralAccessTypes){
+        binding.apply {
+            when(action){
+                GeneralAccessTypes.OPEN -> {
+                    tvToolbarTitle.isVisible = true
+                    tbMain.menu.findItem(R.id.itbSearch).isVisible = true
+                }
+                GeneralAccessTypes.CLOSE -> {
+                    tvToolbarTitle.isVisible = false
+                    tbMain.menu.findItem(R.id.itbSearch).isVisible = false
+                }
+            }
+        }
     }
 
     /* Connecting NavigationView (sliding panel) to navController so that you can navigate. */
@@ -102,9 +136,11 @@ class MainActivity : AppCompatActivity() {
         return navController.navigateUp(appBarConfiguration)
     }
 
+/*
     private fun setupBottomNavMenu(navController: NavController) {
         binding.bnvMain.setupWithNavController(navController)
     }
+*/
 
     /*    private fun setFullScreen(){
             WindowCompat.setDecorFitsSystemWindows(window, false)
@@ -125,4 +161,5 @@ class MainActivity : AppCompatActivity() {
         }
         return super.onOptionsItemSelected(item)
     }
+
 }
