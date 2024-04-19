@@ -47,12 +47,8 @@ class RegistrationFragment: Fragment() {
         mainActivity.accessUpperPart(GeneralAccessTypes.CLOSE)  // close upper part (tb title and icons)
         mainActivity.accessBottomPart(GeneralAccessTypes.CLOSE) // close bottom part
 
-        binding.button.setOnClickListener {
-            Log.d("RegFrag", "button")
-        }
-
-        binding.tvUnderButton.setOnClickListener {
-            Log.d("RegFrag", "textView")
+        binding.cvRegGo.setOnClickListener {
+            Log.d("RegFrag", "cv")
         }
     }
 

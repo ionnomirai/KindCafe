@@ -16,6 +16,7 @@
     <string name="register_enter_user_name">Please enter your name</string>
     <string name="register_enter_user_email">Please enter your e-mail</string>
     <string name="register_enter_user_password">Please enter your password</string>
+    <string name="register_go">GO</string>
 
     <!-- Navigation View menu (dsm = drawer_side_menu.xml) -->
     <string name="dsm_login">Login</string>
