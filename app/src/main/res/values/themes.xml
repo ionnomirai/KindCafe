@@ -13,8 +13,4 @@
         <item name="spinBars">true</item>
         <item name="color">@color/black</item>
     </style>
-
-    <style name="CustomButtonStyle" parent="Widget.AppCompat.Button">
-        <item name="android:background">@drawable/reg_ripple_button</item>
-    </style>
 </resources>

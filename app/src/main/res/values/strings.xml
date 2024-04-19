@@ -17,6 +17,8 @@
     <string name="register_enter_user_email">Please enter your e-mail</string>
     <string name="register_enter_user_password">Please enter your password</string>
     <string name="register_go">GO</string>
+    <string name="send_verification_email_done">A link to confirm your account has been sent to your email!</string>
+    <string name="send_verification_email_error">Failed to send confirmation email!</string>
 
     <!-- Navigation View menu (dsm = drawer_side_menu.xml) -->
     <string name="dsm_login">Login</string>

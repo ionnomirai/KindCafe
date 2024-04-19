@@ -1,5 +1,6 @@
 package com.example.kindcafe.fragments
 
+import android.app.Activity
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -16,13 +17,15 @@ import androidx.fragment.app.Fragment
 import com.example.kindcafe.MainActivity
 import com.example.kindcafe.R
 import com.example.kindcafe.databinding.FragRegistrationBinding
+import com.example.kindcafe.firebase.AccountHelper
 import com.example.kindcafe.utils.GeneralAccessTypes
+import com.google.android.material.snackbar.Snackbar
 
-class RegistrationFragment: Fragment() {
+class RegistrationFragment : Fragment() {
     private var _binding: FragRegistrationBinding? = null
     private val binding
         get() : FragRegistrationBinding {
-            return checkNotNull(_binding){
+            return checkNotNull(_binding) {
                 "Cannot access binding because it is null. Is the view visible"
             }
         }
