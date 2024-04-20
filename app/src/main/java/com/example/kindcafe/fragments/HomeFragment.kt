@@ -5,8 +5,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Observer
 import com.example.kindcafe.MainActivity
 import com.example.kindcafe.databinding.FragHomeBinding
+import com.example.kindcafe.viewModels.MainViewModel
 
 class HomeFragment: Fragment() {
     /*---------------------------------------- Properties ----------------------------------------*/
@@ -18,6 +21,8 @@ class HomeFragment: Fragment() {
             }
         }
 
+    /* Common viewModel between activity and this fragment */
+    private val mainVM : MainViewModel by activityViewModels()
 
     /*---------------------------------------- Functions -----------------------------------------*/
 
@@ -33,6 +38,10 @@ class HomeFragment: Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         (activity as MainActivity).everyOpenHomeSettings()
+
+        mainVM.nameData.observe(viewLifecycleOwner, Observer {name ->
+            binding.tvUserNameHome.text = name
+        })
     }
 
     override fun onDestroyView() {

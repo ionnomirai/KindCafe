@@ -1,14 +1,16 @@
 package com.example.kindcafe
 
 import android.os.Bundle
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.viewModels
+import androidx.annotation.IdRes
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.GravityCompat
 import androidx.core.view.isVisible
-import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
@@ -16,10 +18,14 @@ import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.example.kindcafe.databinding.ActivityMainBinding
+import com.example.kindcafe.firebase.AccountHelper
+import com.example.kindcafe.fragments.HomeFragment
+import com.example.kindcafe.fragments.RegistrationFragment
 import com.example.kindcafe.utils.GeneralAccessTypes
+import com.example.kindcafe.viewModels.MainViewModel
 
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity()/*, NavigationView.OnNavigationItemSelectedListener*/{
 
     /*---------------------------------------- Properties ----------------------------------------*/
 
@@ -37,6 +43,10 @@ class MainActivity : AppCompatActivity() {
     private lateinit var navController: NavController
 
     private val MY_TAG = "MainActivityTag"
+    private val accountHelper = AccountHelper(this, R.id.lDrawLayoutMain)
+
+    /* Common viewModel to get data to fragment (for example Home_fragment) */
+    private val mainViewModel : MainViewModel by viewModels()
 
     /*---------------------------------------- Functions -----------------------------------------*/
 
@@ -48,9 +58,6 @@ class MainActivity : AppCompatActivity() {
         /* Connecting my custom Action Bar */
         setSupportActionBar(binding.tbMain)
 
-        /* set default active item bottom navigation on empty button */
-        //binding.bnvMain.selectedItemId = R.id.bnvItemEmpty
-
         val navHostFragment =
             supportFragmentManager.findFragmentById(R.id.fcv_main) as NavHostFragment
 
@@ -61,19 +68,60 @@ class MainActivity : AppCompatActivity() {
             drawerLayout = binding.lDrawLayoutMain
         )
 
+        //setupNavigationMenu(navController)
+        setupActionBar(navController, appBarConfiguration)
+
         binding.ibHome.setOnClickListener {
             Toast.makeText(this, "IB", Toast.LENGTH_SHORT).show()
         }
 
-
-        setupNavigationMenu(navController)
-        setupActionBar(navController, appBarConfiguration)
-        //setupBottomNavMenu(navController)
-
-        /* Full Screen */
-        //setFullScreen()
-
         everyOpenHomeSettings()
+
+        movingLogicN2()
+
+        updateMainUI()
+    }
+
+    /* Custom logic of moving between fragments */
+    private  fun movingLogicN2(){
+
+        binding.nvLeft.setNavigationItemSelectedListener {
+            when(it.itemId){
+                R.id.itemRegistrationFragment -> moveTo(R.id.action_homeFragment_to_registrationFragment)
+                R.id.itemLogout -> {
+                    if(accountHelper.signOut()) { // if we logout successfuly
+                        binding.lDrawLayoutMain.closeDrawer(GravityCompat.START)
+                        updateMainUI()
+                    }
+                }
+                else -> Toast.makeText(this, "fraeg", Toast.LENGTH_SHORT).show()
+            }
+            true
+        }
+    }
+
+    /* Simple wrap for fragment moving. Needed to reduce code. */
+    private fun moveTo(@IdRes idDest: Int, needCloseSideMenu: Boolean = true){
+        navController.navigate(idDest)
+        if(needCloseSideMenu){
+            binding.lDrawLayoutMain.closeDrawer(GravityCompat.START)
+        }
+    }
+
+    /* Update:
+    * - toolbar header - change name;
+    * - viewmodels.name -> give this name to fragment Home*/
+    private fun updateMainUI(){
+        val currentEmail = accountHelper.getUserEmail()
+        binding.apply {
+            if(currentEmail != null){
+                nvLeft.getHeaderView(0).findViewById<TextView>(R.id.tvUserName).text = currentEmail
+                mainViewModel.setData(currentEmail)
+            } else {
+                nvLeft.getHeaderView(0).findViewById<TextView>(R.id.tvUserName).text = resources.getString(R.string.default_username)
+                mainViewModel.setData(resources.getString(R.string.default_username))
+            }
+        }
     }
 
     /* Perform these settings every time the screen starts up */
@@ -137,22 +185,6 @@ class MainActivity : AppCompatActivity() {
     override fun onSupportNavigateUp(): Boolean {
         return navController.navigateUp(appBarConfiguration)
     }
-
-
-
-/*
-    private fun setupBottomNavMenu(navController: NavController) {
-        binding.bnvMain.setupWithNavController(navController)
-    }
-*/
-
-    /*    private fun setFullScreen(){
-            WindowCompat.setDecorFitsSystemWindows(window, false)
-            WindowInsetsControllerCompat(window, binding.root).let { controller ->
-                controller.hide(WindowInsetsCompat.Type.systemBars())
-                controller.systemBarsBehavior = WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
-            }
-        }*/
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.toolbar_menu_general, menu)

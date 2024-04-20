@@ -19,5 +19,9 @@
         android:id="@+id/registrationFragment"
         android:name="com.example.kindcafe.fragments.RegistrationFragment"
         android:label="RegistrationFragment"
-        tools:layout="@layout/frag_registration"/>
+        tools:layout="@layout/frag_registration">
+        <action
+            android:id="@+id/action_registrationFragment_to_homeFragment"
+            app:destination="@id/homeFragment" />
+    </fragment>
 </navigation>

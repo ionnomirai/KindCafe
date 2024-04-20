@@ -10,6 +10,9 @@
     <string name="home_second_category">Non-sparkling\ndrinks</string>
     <string name="home_third_category">Sweets</string>
     <string name="home_fourth_category">Cakes</string>
+    <string name="home_open">Open</string>
+    <string name="home_not_logged">You are not logged in to your account.</string>
+    <string name="home_success_log_out">You are logged out of your account.</string>
 
     <!-- frag_registration -->
     <string name="register_title">Please register</string>

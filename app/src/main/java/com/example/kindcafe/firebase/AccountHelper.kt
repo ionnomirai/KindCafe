@@ -36,6 +36,23 @@ class AccountHelper(val activity: Activity, @IdRes val currentView: Int) {
         }
     }
 
+    /* Enter into account */
+    fun signInWithEmail(email: String, password: String){
+
+    }
+
+    /* Exit this account */
+    fun signOut(): Boolean{
+        if (myAuth.currentUser != null){
+            myAuth.signOut()
+            showSnackBar(R.string.home_success_log_out)
+        } else {
+            showSnackBar(R.string.home_not_logged)
+            return false
+        }
+        return true
+    }
+
     /*------------------------------------ Auxilary ------------------------------------*/
     private fun sendEmailVerification(user: FirebaseUser) {
         user
@@ -46,8 +63,11 @@ class AccountHelper(val activity: Activity, @IdRes val currentView: Int) {
             }
     }
 
-    fun showUser(){
-        Log.d(MY_TAG, "current user: ${myAuth.currentUser.toString()}")
+    fun getUserEmail(): String?{
+        myAuth.currentUser?.let {
+            return it.email.toString()
+        }
+        return null
     }
 
     /* Show message on the screen */

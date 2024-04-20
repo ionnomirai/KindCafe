@@ -11,7 +11,7 @@
             android:icon="@drawable/ic_login"/>
 
         <item
-            android:id="@+id/registrationFragment"
+            android:id="@+id/itemRegistrationFragment"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:title="@string/dsm_register"

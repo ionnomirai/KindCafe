@@ -55,10 +55,11 @@ class RegistrationFragment : Fragment() {
         accountHelper = AccountHelper(mainActivity, R.id.constrLayoutReg)
 
         binding.apply {
-            accountHelper.showUser()
+
 
             /* Action when user press button "GO" */
             cvRegGo.setOnClickListener {
+
                 accountHelper.signUpWithEmail(
                     name = etRegName.text.toString(),
                     email = etRegEmail.text.toString(),
@@ -66,7 +67,7 @@ class RegistrationFragment : Fragment() {
                 )
             }
 
-            accountHelper.showUser()
+
         }
     }
 
