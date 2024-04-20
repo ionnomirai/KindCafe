@@ -30,6 +30,7 @@ class RegistrationFragment : Fragment() {
             }
         }
 
+    private lateinit var accountHelper: AccountHelper
 
     /*---------------------------------------- Functions -----------------------------------------*/
 
@@ -50,8 +51,22 @@ class RegistrationFragment : Fragment() {
         mainActivity.accessUpperPart(GeneralAccessTypes.CLOSE)  // close upper part (tb title and icons)
         mainActivity.accessBottomPart(GeneralAccessTypes.CLOSE) // close bottom part
 
-        binding.cvRegGo.setOnClickListener {
-            Log.d("RegFrag", "cv")
+        /* initialise account helper for perform registrations */
+        accountHelper = AccountHelper(mainActivity, R.id.constrLayoutReg)
+
+        binding.apply {
+            accountHelper.showUser()
+
+            /* Action when user press button "GO" */
+            cvRegGo.setOnClickListener {
+                accountHelper.signUpWithEmail(
+                    name = etRegName.text.toString(),
+                    email = etRegEmail.text.toString(),
+                    password = etRegPassword.text.toString()
+                )
+            }
+
+            accountHelper.showUser()
         }
     }
 
@@ -59,4 +74,7 @@ class RegistrationFragment : Fragment() {
         super.onDestroyView()
         _binding = null
     }
+
+
+
 }

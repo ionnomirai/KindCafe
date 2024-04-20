@@ -19,6 +19,8 @@
     <string name="register_go">GO</string>
     <string name="send_verification_email_done">A link to confirm your account has been sent to your email!</string>
     <string name="send_verification_email_error">Failed to send confirmation email!</string>
+    <string name="can_not_contact_the_server">Registration failed. Please check your internet connection.</string>
+    <string name="incomplete_fields">You have not filled in all fields.</string>
 
     <!-- Navigation View menu (dsm = drawer_side_menu.xml) -->
     <string name="dsm_login">Login</string>
@@ -32,5 +34,7 @@
     <!-- Header side menu -->
     <string name="user_name_default">Guest</string>
 
+    <!-- SnackBar-->
+    <string name="close">Close</string>
 
 </resources>

@@ -36,6 +36,8 @@ class MainActivity : AppCompatActivity() {
     * among the navGraph. It also changes fragments in NavHostFrament*/
     private lateinit var navController: NavController
 
+    private val MY_TAG = "MainActivityTag"
+
     /*---------------------------------------- Functions -----------------------------------------*/
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -135,6 +137,8 @@ class MainActivity : AppCompatActivity() {
     override fun onSupportNavigateUp(): Boolean {
         return navController.navigateUp(appBarConfiguration)
     }
+
+
 
 /*
     private fun setupBottomNavMenu(navController: NavController) {
