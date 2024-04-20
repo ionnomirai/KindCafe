@@ -40,7 +40,7 @@ class MainActivity : AppCompatActivity()/*, NavigationView.OnNavigationItemSelec
 
     /* NavController - This will be the object that keeps track of the current navigation position
     * among the navGraph. It also changes fragments in NavHostFrament*/
-    private lateinit var navController: NavController
+    lateinit var navController: NavController
 
     private val MY_TAG = "MainActivityTag"
     private val accountHelper = AccountHelper(this, R.id.lDrawLayoutMain)
@@ -87,6 +87,7 @@ class MainActivity : AppCompatActivity()/*, NavigationView.OnNavigationItemSelec
 
         binding.nvLeft.setNavigationItemSelectedListener {
             when(it.itemId){
+                R.id.itemLogin -> moveTo(R.id.action_homeFragment_to_loginFragment)
                 R.id.itemRegistrationFragment -> moveTo(R.id.action_homeFragment_to_registrationFragment)
                 R.id.itemLogout -> {
                     if(accountHelper.signOut()) { // if we logout successfuly

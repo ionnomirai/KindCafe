@@ -65,6 +65,9 @@ class RegistrationFragment : Fragment() {
                     email = etRegEmail.text.toString(),
                     password = etRegPassword.text.toString()
                 )
+
+                /* TEST -- move to back screen and delete current screen from backstack */
+                mainActivity.navController.popBackStack()
             }
 
 
