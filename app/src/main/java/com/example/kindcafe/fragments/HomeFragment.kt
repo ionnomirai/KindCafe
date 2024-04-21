@@ -1,12 +1,14 @@
 package com.example.kindcafe.fragments
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
+import com.example.kindcafe.KindCafeApplication
 import com.example.kindcafe.MainActivity
 import com.example.kindcafe.databinding.FragHomeBinding
 import com.example.kindcafe.viewModels.MainViewModel
@@ -24,6 +26,8 @@ class HomeFragment: Fragment() {
     /* Common viewModel between activity and this fragment */
     private val mainVM : MainViewModel by activityViewModels()
 
+    private val homeFragmentTag = "HomeFragmentTag"
+
     /*---------------------------------------- Functions -----------------------------------------*/
 
     override fun onCreateView(
@@ -39,9 +43,14 @@ class HomeFragment: Fragment() {
         super.onViewCreated(view, savedInstanceState)
         (activity as MainActivity).everyOpenHomeSettings()
 
-        mainVM.nameData.observe(viewLifecycleOwner, Observer {name ->
-            binding.tvUserNameHome.text = name
+        mainVM.nameData.observe(viewLifecycleOwner, Observer {email ->
+            binding.tvUserNameHome.text = email
         })
+    }
+
+    override fun onResume() {
+        super.onResume()
+        Log.d(homeFragmentTag, "onResume")
     }
 
     override fun onDestroyView() {

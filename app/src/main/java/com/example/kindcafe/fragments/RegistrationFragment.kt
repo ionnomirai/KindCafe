@@ -10,6 +10,7 @@ import android.view.MenuItem
 import android.view.View
 import android.view.View.TEXT_ALIGNMENT_TEXT_START
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
 import androidx.core.widget.doOnTextChanged
@@ -18,6 +19,7 @@ import com.example.kindcafe.MainActivity
 import com.example.kindcafe.R
 import com.example.kindcafe.databinding.FragRegistrationBinding
 import com.example.kindcafe.firebase.AccountHelper
+import com.example.kindcafe.firebase.firebaseInterfaces.DefinitionOfStatus
 import com.example.kindcafe.utils.GeneralAccessTypes
 import com.google.android.material.snackbar.Snackbar
 
@@ -52,7 +54,22 @@ class RegistrationFragment : Fragment() {
         mainActivity.accessBottomPart(GeneralAccessTypes.CLOSE) // close bottom part
 
         /* initialise account helper for perform registrations */
-        accountHelper = AccountHelper(mainActivity, R.id.constrLayoutReg)
+        accountHelper = AccountHelper(mainActivity, R.id.lDrawLayoutMain)
+
+        val defStatus = object : DefinitionOfStatus{
+            override fun onSuccess() {
+                try {
+                    val curFrag = parentFragmentManager.findFragmentById(R.id.fcv_main) as? RegistrationFragment
+                    if(curFrag != null){
+                        Log.d("RegistrFrag", "RegistFrag: $curFrag")
+                        mainActivity.navController.popBackStack()
+                    }
+                } catch (e: Exception){
+                    /* If user close screen earlier than it would auto*/
+                    Log.d("RegistrFrag", "exception: $e")
+                }
+            }
+        }
 
         binding.apply {
 
@@ -63,11 +80,10 @@ class RegistrationFragment : Fragment() {
                 accountHelper.signUpWithEmail(
                     name = etRegName.text.toString(),
                     email = etRegEmail.text.toString(),
-                    password = etRegPassword.text.toString()
+                    password = etRegPassword.text.toString(),
+                    status = defStatus
                 )
 
-                /* TEST -- move to back screen and delete current screen from backstack */
-                mainActivity.navController.popBackStack()
             }
 
 

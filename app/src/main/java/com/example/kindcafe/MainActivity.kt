@@ -1,6 +1,7 @@
 package com.example.kindcafe
 
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -11,6 +12,7 @@ import androidx.annotation.IdRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
 import androidx.core.view.isVisible
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
@@ -25,7 +27,7 @@ import com.example.kindcafe.utils.GeneralAccessTypes
 import com.example.kindcafe.viewModels.MainViewModel
 
 
-class MainActivity : AppCompatActivity()/*, NavigationView.OnNavigationItemSelectedListener*/{
+class MainActivity : AppCompatActivity()/*, NavigationView.OnNavigationItemSelectedListener*/ {
 
     /*---------------------------------------- Properties ----------------------------------------*/
 
@@ -46,7 +48,7 @@ class MainActivity : AppCompatActivity()/*, NavigationView.OnNavigationItemSelec
     private val accountHelper = AccountHelper(this, R.id.lDrawLayoutMain)
 
     /* Common viewModel to get data to fragment (for example Home_fragment) */
-    private val mainViewModel : MainViewModel by viewModels()
+    val mainViewModel: MainViewModel by viewModels()
 
     /*---------------------------------------- Functions -----------------------------------------*/
 
@@ -71,30 +73,45 @@ class MainActivity : AppCompatActivity()/*, NavigationView.OnNavigationItemSelec
         //setupNavigationMenu(navController)
         setupActionBar(navController, appBarConfiguration)
 
+        initialUISettingMain()
+
+        /* When user name changed -- call this */
+        mainViewModel.nameData.observe(this) {
+            updateMainUI()
+        }
+
         binding.ibHome.setOnClickListener {
-            Toast.makeText(this, "IB", Toast.LENGTH_SHORT).show()
+            val verif = accountHelper.myAuth.currentUser?.isEmailVerified
+            Toast.makeText(this, "$verif", Toast.LENGTH_SHORT).show()
         }
 
         everyOpenHomeSettings()
 
         movingLogicN2()
-
-        updateMainUI()
     }
 
     /* Custom logic of moving between fragments */
-    private  fun movingLogicN2(){
+    private fun movingLogicN2() {
 
         binding.nvLeft.setNavigationItemSelectedListener {
-            when(it.itemId){
-                R.id.itemLogin -> moveTo(R.id.action_homeFragment_to_loginFragment)
-                R.id.itemRegistrationFragment -> moveTo(R.id.action_homeFragment_to_registrationFragment)
-                R.id.itemLogout -> {
-                    if(accountHelper.signOut()) { // if we logout successfuly
-                        binding.lDrawLayoutMain.closeDrawer(GravityCompat.START)
-                        updateMainUI()
+            when (it.itemId) {
+                R.id.itemLogin -> {
+                    if (!accountHelper.isUserLogin()) {
+                        moveTo(R.id.action_homeFragment_to_loginFragment)
                     }
                 }
+                R.id.itemRegistrationFragment -> {
+                    if (!accountHelper.isUserLogin()) {
+                        moveTo(R.id.action_homeFragment_to_registrationFragment)
+                    }
+                }
+                R.id.itemLogout -> {
+                    if (accountHelper.signOut()) { // if we logout successfuly
+                        binding.lDrawLayoutMain.closeDrawer(GravityCompat.START)
+                        mainViewModel.setData(resources.getString(R.string.default_username))
+                    }
+                }
+
                 else -> Toast.makeText(this, "fraeg", Toast.LENGTH_SHORT).show()
             }
             true
@@ -102,26 +119,33 @@ class MainActivity : AppCompatActivity()/*, NavigationView.OnNavigationItemSelec
     }
 
     /* Simple wrap for fragment moving. Needed to reduce code. */
-    private fun moveTo(@IdRes idDest: Int, needCloseSideMenu: Boolean = true){
+    private fun moveTo(@IdRes idDest: Int, needCloseSideMenu: Boolean = true) {
         navController.navigate(idDest)
-        if(needCloseSideMenu){
+        if (needCloseSideMenu) {
             binding.lDrawLayoutMain.closeDrawer(GravityCompat.START)
+        }
+    }
+
+    /* Initinal UI main setting */
+    private fun initialUISettingMain(){
+        val currentEmail = accountHelper.getUserEmail()
+        if (currentEmail != null) {
+            mainViewModel.setData(currentEmail)
+        } else {
+            mainViewModel.setData(resources.getString(R.string.default_username))
         }
     }
 
     /* Update:
     * - toolbar header - change name;
     * - viewmodels.name -> give this name to fragment Home*/
-    private fun updateMainUI(){
-        val currentEmail = accountHelper.getUserEmail()
+    fun updateMainUI() {
+        Log.d(MY_TAG, "updateMainUI ")
+        //val currentEmail = accountHelper.getUserEmail()
         binding.apply {
-            if(currentEmail != null){
-                nvLeft.getHeaderView(0).findViewById<TextView>(R.id.tvUserName).text = currentEmail
-                mainViewModel.setData(currentEmail)
-            } else {
-                nvLeft.getHeaderView(0).findViewById<TextView>(R.id.tvUserName).text = resources.getString(R.string.default_username)
-                mainViewModel.setData(resources.getString(R.string.default_username))
-            }
+            nvLeft
+                .getHeaderView(0)
+                .findViewById<TextView>(R.id.tvUserName).text = mainViewModel.nameData.value
         }
     }
 
@@ -136,13 +160,14 @@ class MainActivity : AppCompatActivity()/*, NavigationView.OnNavigationItemSelec
     }
 
     /* Hide or show bottom menu */
-    fun accessBottomPart(action: GeneralAccessTypes){
+    fun accessBottomPart(action: GeneralAccessTypes) {
         binding.apply {
-            when(action){
+            when (action) {
                 GeneralAccessTypes.OPEN -> {
                     clMainBottomMenu.visibility = View.VISIBLE
                     ibHome.visibility = View.VISIBLE
                 }
+
                 GeneralAccessTypes.CLOSE -> {
                     clMainBottomMenu.visibility = View.GONE
                     ibHome.visibility = View.GONE
@@ -151,13 +176,14 @@ class MainActivity : AppCompatActivity()/*, NavigationView.OnNavigationItemSelec
         }
     }
 
-    fun accessUpperPart(action: GeneralAccessTypes){
+    fun accessUpperPart(action: GeneralAccessTypes) {
         binding.apply {
-            when(action){
+            when (action) {
                 GeneralAccessTypes.OPEN -> {
                     tvToolbarTitle.isVisible = true
                     tbMain.menu.findItem(R.id.itbSearch).isVisible = true
                 }
+
                 GeneralAccessTypes.CLOSE -> {
                     tvToolbarTitle.isVisible = false
                     tbMain.menu.findItem(R.id.itbSearch).isVisible = false

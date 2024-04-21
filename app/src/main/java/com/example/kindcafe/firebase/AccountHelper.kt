@@ -7,16 +7,19 @@ import android.widget.Toast
 import androidx.annotation.IdRes
 import androidx.annotation.StringRes
 import com.example.kindcafe.KindCafeApplication
+import com.example.kindcafe.MainActivity
 import com.example.kindcafe.R
+import com.example.kindcafe.firebase.firebaseInterfaces.DefinitionOfStatus
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseUser
 
-class AccountHelper(val activity: Activity, @IdRes val currentView: Int) {
+class AccountHelper(val activity: MainActivity, @IdRes val currentView: Int) {
     val myAuth = KindCafeApplication.myAuth
     private val MY_TAG = "AccountHelperTag"
 
     /* Registration */
-    fun signUpWithEmail(name: String, email: String, password: String) {
+    fun signUpWithEmail(name: String, email: String, password: String, status: DefinitionOfStatus? = null) {
+
         if (email.isNotEmpty() && password.isNotEmpty() && name.isNotEmpty()) {
             myAuth
                 .createUserWithEmailAndPassword(email, password)
@@ -24,6 +27,8 @@ class AccountHelper(val activity: Activity, @IdRes val currentView: Int) {
                     if (task.isSuccessful) {
                         /* if it is ok, then send verification to user */
                         sendEmailVerification(task.result?.user!!)
+                        status?.onSuccess()
+                        activity.mainViewModel.setData(task.result?.user!!.email!!)
                     } else {
                         /* Get the current error */
                         Log.d(MY_TAG, "Global Exception: ${task.exception}")
@@ -37,8 +42,27 @@ class AccountHelper(val activity: Activity, @IdRes val currentView: Int) {
     }
 
     /* Enter into account */
-    fun signInWithEmail(email: String, password: String){
-
+    fun signInWithEmail(email: String, password: String): Boolean{
+        var isSuccess = false
+        /* Checking the correctness of the input  */
+        if (email.isNotEmpty() && password.isNotEmpty()){
+            myAuth
+                .signInWithEmailAndPassword(email, password)
+                .addOnCompleteListener { task ->
+                    if (task.isSuccessful){
+                        isSuccess = true
+                        showSnackBar(R.string.success_login)
+                    }
+                    else {
+                        Log.d(MY_TAG, "Enter (Login) -- Global exception -- ${task.exception}")
+                        isSuccess = false
+                        showSnackBar(R.string.failed_login)
+                    }
+                }
+        } else {
+            showSnackBar(R.string.failed_login)
+        }
+        return isSuccess
     }
 
     /* Exit this account */
@@ -69,6 +93,17 @@ class AccountHelper(val activity: Activity, @IdRes val currentView: Int) {
         }
         return null
     }
+
+    fun isUserLogin(showMessage: Boolean = true): Boolean{
+        myAuth.currentUser?.let {
+            if(showMessage){
+                showSnackBar(R.string.already_login)
+            }
+            return true
+        }
+        return false
+    }
+
 
     /* Show message on the screen */
     private fun showSnackBar(

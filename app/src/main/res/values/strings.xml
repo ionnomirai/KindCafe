@@ -28,6 +28,9 @@
     <!-- frag_login -->
     <string name="login_title">Please login</string>
     <string name="login_forget_password">forget password?</string>
+    <string name="success_login">You are logged in successfully</string>
+    <string name="failed_login">Failed to login</string>
+    <string name="already_login">You are already logged in.</string>
 
     <!-- Navigation View menu (dsm = drawer_side_menu.xml) -->
     <string name="dsm_login">Login</string>
