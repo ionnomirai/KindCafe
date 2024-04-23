@@ -1,32 +1,34 @@
 package com.example.kindcafe.fragments
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.example.kindcafe.MainActivity
 import com.example.kindcafe.R
-import com.example.kindcafe.databinding.FragHomeBinding
 import com.example.kindcafe.databinding.FragLoginBinding
+import com.example.kindcafe.databinding.FragRestoreAccountBinding
 import com.example.kindcafe.firebase.AccountHelper
+import com.example.kindcafe.firebase.firebaseInterfaces.DefinitionOfStatus
 import com.example.kindcafe.utils.GeneralAccessTypes
-import com.example.kindcafe.viewModels.MainViewModel
 
-class LoginFragment : Fragment() {
+class RestoreAccFragment : Fragment(){
     /*---------------------------------------- Properties ----------------------------------------*/
-    private var _binding: FragLoginBinding? = null
+    private var _binding: FragRestoreAccountBinding? = null
     private val binding
-        get() : FragLoginBinding {
+        get() : FragRestoreAccountBinding {
             return checkNotNull(_binding) {
                 "Cannot access binding because it is null. Is the view visible"
             }
         }
 
     private lateinit var accountHelper: AccountHelper
+
+    private val MY_TAG = "RestoreAccFragmentTag"
 
     /*---------------------------------------- Functions -----------------------------------------*/
 
@@ -35,7 +37,7 @@ class LoginFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        _binding = FragLoginBinding.inflate(layoutInflater, container, false)
+        _binding = FragRestoreAccountBinding.inflate(layoutInflater, container, false)
         return binding.root
     }
 
@@ -49,25 +51,28 @@ class LoginFragment : Fragment() {
 
         accountHelper = AccountHelper(mainActivity, R.id.lDrawLayoutMain)
 
-        binding.apply {
-
-            /* The user enters his email and password and logs in to his account */
-            cvLoginGo.setOnClickListener {
-                if (accountHelper.signInWithEmail(
-                    email = etLoginEmail.text.toString(),
-                    password = etLoginPassword.text.toString()
-                )){
-                    mainActivity.navController.popBackStack()
-                } else {
-                    Toast.makeText(this@LoginFragment.context, "else", Toast.LENGTH_SHORT).show()
+        val defStatus = object : DefinitionOfStatus {
+            override fun onSuccess() {
+                try {
+                    val curFrag = parentFragmentManager.findFragmentById(R.id.fcv_main) as? RestoreAccFragment
+                    if(curFrag != null){
+                        Log.d(MY_TAG, "RestoreActt: $curFrag")
+                       findNavController().popBackStack()
+                    }
+                } catch (e: Exception){
+                    /* If user close screen earlier than it would auto*/
+                    Log.d(MY_TAG, "RestoreActt exception: $e")
                 }
             }
+        }
 
-            /* Move to RestoreAccFragment If user forgot password */
-            tvLoginForgot.setOnClickListener {
-                findNavController().navigate(R.id.action_loginFragment_to_restoreAccFragment)
+        binding.apply {
+            cvLoginGo.setOnClickListener {
+                accountHelper.restoreAccount(
+                    email = etRestoreLoginEmail.text.toString(),
+                    status = defStatus
+                )
             }
-
         }
 
     }

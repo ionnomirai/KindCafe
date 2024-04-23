@@ -77,6 +77,24 @@ class AccountHelper(val activity: MainActivity, @IdRes val currentView: Int) {
         return true
     }
 
+    /* Restore account (reset password by email) */
+    fun restoreAccount(email: String, status: DefinitionOfStatus? = null){
+        if(email.isNotEmpty()){
+            myAuth
+                .sendPasswordResetEmail(email)
+                .addOnCompleteListener {task ->
+                    if (task.isSuccessful){
+                        showSnackBar(R.string.send_restore_message_successfully)
+                        status?.onSuccess()
+                    } else {
+                        showSnackBar(R.string.send_restore_message_failed)
+                    }
+                }
+        } else {
+            showSnackBar(R.string.email_not_entered)
+        }
+    }
+
     /*------------------------------------ Auxilary ------------------------------------*/
     private fun sendEmailVerification(user: FirebaseUser) {
         user

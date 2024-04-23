@@ -35,6 +35,9 @@
     <!-- frag_restore_account-->
     <string name="restore_title">Restore account</string>
     <string name="resend_password">a new password will send to your e-mail</string>
+    <string name="send_restore_message_successfully">An email with the option to update your password has been sent to your email.</string>
+    <string name="send_restore_message_failed">Failed to send recovery message with password.</string>
+    <string name="email_not_entered">You have not entered your account email.</string>
 
     <!-- frag_too_much_wrong_attempts-->
     <string name="sorry">Sorry</string>
