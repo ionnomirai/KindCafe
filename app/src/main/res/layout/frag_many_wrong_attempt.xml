@@ -11,12 +11,13 @@
         android:id="@+id/ivWrongBack"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:scaleType="fitXY"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:scaleType="fitXY"
+        app:layout_constraintVertical_bias="0.0"
         app:srcCompat="@drawable/reg_general_figure" />
 
     <TextView
@@ -34,9 +35,13 @@
 
     <TextView
         android:id="@+id/tvMessage"
-        android:layout_width="250dp"
-        android:layout_height="124dp"
+        android:layout_width="0dp"
+        android:layout_height="150dp"
         android:layout_marginTop="44dp"
+        android:layout_marginHorizontal="60dp"
+        android:paddingTop="5dp"
+        android:paddingHorizontal="22dp"
+        android:background="@drawable/sorry_message_back"
         android:text="@string/sorry_message_wrong_password"
         android:textColor="@color/black"
         android:textSize="28sp"
@@ -77,7 +82,7 @@
         android:id="@+id/tvRegNow"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/new_register"
+        android:text="@string/new_registration"
         android:textStyle="bold"
         android:textSize="14sp"
         android:textColor="@color/hint_color"

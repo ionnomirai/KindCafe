@@ -43,7 +43,7 @@
     <string name="sorry">Sorry</string>
     <string name="sorry_message_wrong_password">\t\tSorry, you enter\na wrong password.\nPlease try again</string>
     <string name="try_again">Try again</string>
-    <string name="new_register">register now</string>
+    <string name="new_registration">Do you want to register a new account?</string>
 
     <!-- Navigation View menu (dsm = drawer_side_menu.xml) -->
     <string name="dsm_login">Login</string>

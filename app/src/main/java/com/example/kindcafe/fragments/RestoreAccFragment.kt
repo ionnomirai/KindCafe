@@ -16,6 +16,7 @@ import com.example.kindcafe.firebase.AccountHelper
 import com.example.kindcafe.firebase.firebaseInterfaces.DefinitionOfStatus
 import com.example.kindcafe.utils.AuxillaryFunctions
 import com.example.kindcafe.utils.GeneralAccessTypes
+import com.example.kindcafe.utils.SimplePopDirections
 
 class RestoreAccFragment : Fragment(){
     /*---------------------------------------- Properties ----------------------------------------*/
@@ -53,7 +54,7 @@ class RestoreAccFragment : Fragment(){
         accountHelper = AccountHelper(mainActivity, R.id.lDrawLayoutMain)
 
         /* interface */
-        val defStatus = AuxillaryFunctions.defaultDefinitionOfStatusInterface(this)
+        val defStatus = AuxillaryFunctions.defaultDefinitionOfStatusInterface(this, SimplePopDirections.PREVIOUS_DESTINATION)
 
         binding.apply {
             cvLoginGo.setOnClickListener {
@@ -61,6 +62,12 @@ class RestoreAccFragment : Fragment(){
                     email = etRestoreLoginEmail.text.toString(),
                     status = defStatus
                 )
+            }
+
+            /* Test */
+            tvInfo.setOnClickListener {
+                findNavController().navigate(R.id.action_restoreAccFragment_to_registrationFragment)
+
             }
         }
 

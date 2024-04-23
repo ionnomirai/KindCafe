@@ -18,9 +18,10 @@ class AccountHelper(val activity: MainActivity, @IdRes val currentView: Int) {
     val myAuth = KindCafeApplication.myAuth
     private val MY_TAG = "AccountHelperTag"
 
-    /* Registration */
+    /* Registration
+    * - return 0 - if password ok or error not related to password..
+    * - return 1 - if password bad */
     fun signUpWithEmail(name: String, email: String, password: String, status: DefinitionOfStatus? = null) {
-
         if (email.isNotEmpty() && password.isNotEmpty() && name.isNotEmpty()) {
             myAuth
                 .createUserWithEmailAndPassword(email, password)
@@ -51,18 +52,20 @@ class AccountHelper(val activity: MainActivity, @IdRes val currentView: Int) {
                 .addOnCompleteListener { task ->
                     if (task.isSuccessful){
                         AuxillaryFunctions.showSnackBar(R.string.success_login, activity)
-                        //showSnackBar(R.string.success_login)
                         activity.mainViewModel.setData(task.result?.user!!.email!!)
                         status?.onSuccess()
                     }
                     else {
                         Log.d(MY_TAG, "Enter (Login) -- Global exception -- ${task.exception}")
                         AuxillaryFunctions.showSnackBar(R.string.failed_login, activity)
-                        //showSnackBar(R.string.failed_login)
+
+                        /* Do if wrong password (realise later) */
+                        activity.mainViewModel.incAttempt()
+                        activity.mainViewModel.setNumberOfAttempts()
                     }
                 }
         } else {
-            AuxillaryFunctions.showSnackBar(R.string.failed_login, activity)
+            AuxillaryFunctions.showSnackBar(R.string.incomplete_fields, activity)
         }
     }
 
@@ -124,6 +127,7 @@ class AccountHelper(val activity: MainActivity, @IdRes val currentView: Int) {
         }
         return false
     }
+
 
 
     /* Show message on the screen */

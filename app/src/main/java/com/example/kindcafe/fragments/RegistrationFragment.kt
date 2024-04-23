@@ -15,6 +15,7 @@ import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.example.kindcafe.MainActivity
 import com.example.kindcafe.R
 import com.example.kindcafe.databinding.FragRegistrationBinding
@@ -22,6 +23,7 @@ import com.example.kindcafe.firebase.AccountHelper
 import com.example.kindcafe.firebase.firebaseInterfaces.DefinitionOfStatus
 import com.example.kindcafe.utils.AuxillaryFunctions
 import com.example.kindcafe.utils.GeneralAccessTypes
+import com.example.kindcafe.utils.SimplePopDirections
 import com.google.android.material.snackbar.Snackbar
 
 class RegistrationFragment : Fragment() {
@@ -58,7 +60,7 @@ class RegistrationFragment : Fragment() {
         accountHelper = AccountHelper(mainActivity, R.id.lDrawLayoutMain)
 
         /* interface */
-        val defStatus = AuxillaryFunctions.defaultDefinitionOfStatusInterface(this)
+        val defStatus = AuxillaryFunctions.defaultDefinitionOfStatusInterface(this, SimplePopDirections.TOP_DESTINATION)
 
         binding.apply {
 

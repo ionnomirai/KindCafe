@@ -43,5 +43,11 @@
         android:id="@+id/restoreAccFragment"
         android:name="com.example.kindcafe.fragments.RestoreAccFragment"
         android:label="RestoreAccFragment"
-        tools:layout="@layout/frag_restore_account"/>
+        tools:layout="@layout/frag_restore_account">
+        <action
+            android:id="@+id/action_restoreAccFragment_to_registrationFragment"
+            app:destination="@id/registrationFragment"
+            app:popUpTo="@id/registrationFragment"
+            app:popUpToInclusive="true" />
+    </fragment>
 </navigation>

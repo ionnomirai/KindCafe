@@ -17,7 +17,12 @@ import com.example.kindcafe.firebase.AccountHelper
 import com.example.kindcafe.firebase.firebaseInterfaces.DefinitionOfStatus
 import com.example.kindcafe.utils.AuxillaryFunctions
 import com.example.kindcafe.utils.GeneralAccessTypes
+import com.example.kindcafe.utils.SimplePopDirections
 import com.example.kindcafe.viewModels.MainViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 
 class LoginFragment : Fragment() {
     /*---------------------------------------- Properties ----------------------------------------*/
@@ -30,6 +35,10 @@ class LoginFragment : Fragment() {
         }
 
     private lateinit var accountHelper: AccountHelper
+
+    private val mainVM : MainViewModel by activityViewModels()
+
+    private var job : Job? = null
 
     private val MY_TAG = "LoginFragmentTag"
 
@@ -55,30 +64,68 @@ class LoginFragment : Fragment() {
         accountHelper = AccountHelper(mainActivity, R.id.lDrawLayoutMain)
 
         /* interface */
-        val defStatus = AuxillaryFunctions.defaultDefinitionOfStatusInterface(this)
+        val defStatus = AuxillaryFunctions.defaultDefinitionOfStatusInterface(this, SimplePopDirections.PREVIOUS_DESTINATION)
 
         binding.apply {
 
             /* The user enters his email and password and logs in to his account */
             cvLoginGo.setOnClickListener {
-                accountHelper.signInWithEmail(
-                    email = etLoginEmail.text.toString(),
-                    password = etLoginPassword.text.toString(),
-                    status = defStatus
-                )
+                job = CoroutineScope(Dispatchers.Main).launch {
+                    accountHelper.signInWithEmail(
+                        email = etLoginEmail.text.toString(),
+                        password = etLoginPassword.text.toString(),
+                        status = defStatus
+                    )
+                }
+            }
+
+            cvTryAgain.setOnClickListener {
+                clLoginOk.visibility = View.VISIBLE
+                clTooManyAttempt.visibility = View.GONE
             }
 
             /* Move to RestoreAccFragment If user forgot password */
-            tvLoginForgot.setOnClickListener {
+            tvRegNow.setOnClickListener {
                 findNavController().navigate(R.id.action_loginFragment_to_restoreAccFragment)
             }
 
+            /* When user do 5 wrong attempt, we offer him to restore account*/
+            mainVM.numberOfAttemptsLive.observe(viewLifecycleOwner){
+                Log.d(MY_TAG, "Attempts: ${mainVM.numberOfAttempts}")
+                if (mainVM.numberOfAttempts == 5) {
+                    clLoginOk.visibility = View.GONE
+                    clTooManyAttempt.visibility = View.VISIBLE
+                    mainVM.resetCounterAttempts()
+                }
+            }
         }
 
+
+    }
+
+    override fun onResume() {
+        super.onResume()
+        Log.d(MY_TAG, "onResume")
+    }
+
+    override fun onPause() {
+        super.onPause()
+        Log.d(MY_TAG, "onPause")
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+        Log.d(MY_TAG, "onDestroyView")
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        Log.d(MY_TAG, "onDestroy")
+    }
+
+    override fun onDetach() {
+        super.onDetach()
+        Log.d(MY_TAG, "onDetach")
     }
 }

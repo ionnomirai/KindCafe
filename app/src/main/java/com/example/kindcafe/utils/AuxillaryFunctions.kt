@@ -6,10 +6,8 @@ import androidx.annotation.IdRes
 import androidx.annotation.StringRes
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
-import com.example.kindcafe.MainActivity
 import com.example.kindcafe.R
 import com.example.kindcafe.firebase.firebaseInterfaces.DefinitionOfStatus
-import com.example.kindcafe.fragments.LoginFragment
 import com.google.android.material.snackbar.Snackbar
 
 object AuxillaryFunctions {
@@ -33,12 +31,18 @@ private val MY_TAG = "AuxillaryFunctionsTAG"
             .show()
     }
 
-    fun defaultDefinitionOfStatusInterface(frag: Fragment, @IdRes fragContainer: Int = R.id.fcv_main): DefinitionOfStatus{
+    fun defaultDefinitionOfStatusInterface(
+        frag: Fragment,
+        direction: SimplePopDirections,
+        @IdRes fragContainer: Int = R.id.fcv_main): DefinitionOfStatus{
         return object : DefinitionOfStatus{
             override fun onSuccess() {
                 try {
                     val curFrag = frag.parentFragmentManager.findFragmentById(fragContainer)
-                    curFrag?.findNavController()?.popBackStack()
+                    when(direction){
+                        SimplePopDirections.TOP_DESTINATION -> curFrag?.findNavController()?.popBackStack(R.id.homeFragment, false)
+                        SimplePopDirections.PREVIOUS_DESTINATION -> curFrag?.findNavController()?.popBackStack()
+                    }
                 } catch (e: Exception){
                     /* If user close screen earlier than it would auto*/
                     Log.d(MY_TAG, "LoginFrag exception: $e")
