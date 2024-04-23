@@ -14,6 +14,7 @@ import com.example.kindcafe.databinding.FragLoginBinding
 import com.example.kindcafe.databinding.FragRestoreAccountBinding
 import com.example.kindcafe.firebase.AccountHelper
 import com.example.kindcafe.firebase.firebaseInterfaces.DefinitionOfStatus
+import com.example.kindcafe.utils.AuxillaryFunctions
 import com.example.kindcafe.utils.GeneralAccessTypes
 
 class RestoreAccFragment : Fragment(){
@@ -51,20 +52,8 @@ class RestoreAccFragment : Fragment(){
 
         accountHelper = AccountHelper(mainActivity, R.id.lDrawLayoutMain)
 
-        val defStatus = object : DefinitionOfStatus {
-            override fun onSuccess() {
-                try {
-                    val curFrag = parentFragmentManager.findFragmentById(R.id.fcv_main) as? RestoreAccFragment
-                    if(curFrag != null){
-                        Log.d(MY_TAG, "RestoreActt: $curFrag")
-                       findNavController().popBackStack()
-                    }
-                } catch (e: Exception){
-                    /* If user close screen earlier than it would auto*/
-                    Log.d(MY_TAG, "RestoreActt exception: $e")
-                }
-            }
-        }
+        /* interface */
+        val defStatus = AuxillaryFunctions.defaultDefinitionOfStatusInterface(this)
 
         binding.apply {
             cvLoginGo.setOnClickListener {

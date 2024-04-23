@@ -15,6 +15,7 @@ import com.example.kindcafe.databinding.FragHomeBinding
 import com.example.kindcafe.databinding.FragLoginBinding
 import com.example.kindcafe.firebase.AccountHelper
 import com.example.kindcafe.firebase.firebaseInterfaces.DefinitionOfStatus
+import com.example.kindcafe.utils.AuxillaryFunctions
 import com.example.kindcafe.utils.GeneralAccessTypes
 import com.example.kindcafe.viewModels.MainViewModel
 
@@ -53,20 +54,8 @@ class LoginFragment : Fragment() {
 
         accountHelper = AccountHelper(mainActivity, R.id.lDrawLayoutMain)
 
-        val defStatus = object : DefinitionOfStatus {
-            override fun onSuccess() {
-                try {
-                    val curFrag = parentFragmentManager.findFragmentById(R.id.fcv_main) as? LoginFragment
-                    if(curFrag != null){
-                        Log.d(MY_TAG, "LoginFrag: $curFrag")
-                        findNavController().popBackStack()
-                    }
-                } catch (e: Exception){
-                    /* If user close screen earlier than it would auto*/
-                    Log.d("MY_TAG", "LoginFrag exception: $e")
-                }
-            }
-        }
+        /* interface */
+        val defStatus = AuxillaryFunctions.defaultDefinitionOfStatusInterface(this)
 
         binding.apply {
 

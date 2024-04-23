@@ -10,6 +10,7 @@ import com.example.kindcafe.KindCafeApplication
 import com.example.kindcafe.MainActivity
 import com.example.kindcafe.R
 import com.example.kindcafe.firebase.firebaseInterfaces.DefinitionOfStatus
+import com.example.kindcafe.utils.AuxillaryFunctions
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseUser
 
@@ -32,12 +33,12 @@ class AccountHelper(val activity: MainActivity, @IdRes val currentView: Int) {
                     } else {
                         /* Get the current error */
                         Log.d(MY_TAG, "Global Exception: ${task.exception}")
-                        showSnackBar(R.string.can_not_contact_the_server)
+                        AuxillaryFunctions.showSnackBar(R.string.can_not_contact_the_server, activity)
                         /* ... */
                     }
                 }
         } else {
-            showSnackBar(R.string.incomplete_fields)
+            AuxillaryFunctions.showSnackBar(R.string.incomplete_fields, activity)
         }
     }
 
@@ -49,17 +50,19 @@ class AccountHelper(val activity: MainActivity, @IdRes val currentView: Int) {
                 .signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener { task ->
                     if (task.isSuccessful){
-                        showSnackBar(R.string.success_login)
+                        AuxillaryFunctions.showSnackBar(R.string.success_login, activity)
+                        //showSnackBar(R.string.success_login)
                         activity.mainViewModel.setData(task.result?.user!!.email!!)
                         status?.onSuccess()
                     }
                     else {
                         Log.d(MY_TAG, "Enter (Login) -- Global exception -- ${task.exception}")
-                        showSnackBar(R.string.failed_login)
+                        AuxillaryFunctions.showSnackBar(R.string.failed_login, activity)
+                        //showSnackBar(R.string.failed_login)
                     }
                 }
         } else {
-            showSnackBar(R.string.failed_login)
+            AuxillaryFunctions.showSnackBar(R.string.failed_login, activity)
         }
     }
 
@@ -67,9 +70,11 @@ class AccountHelper(val activity: MainActivity, @IdRes val currentView: Int) {
     fun signOut(): Boolean{
         if (myAuth.currentUser != null){
             myAuth.signOut()
-            showSnackBar(R.string.home_success_log_out)
+            AuxillaryFunctions.showSnackBar(R.string.home_success_log_out, activity)
+            //showSnackBar(R.string.home_success_log_out)
         } else {
-            showSnackBar(R.string.home_not_logged)
+            AuxillaryFunctions.showSnackBar(R.string.home_not_logged, activity)
+            //showSnackBar(R.string.home_not_logged)
             return false
         }
         return true
@@ -82,14 +87,14 @@ class AccountHelper(val activity: MainActivity, @IdRes val currentView: Int) {
                 .sendPasswordResetEmail(email)
                 .addOnCompleteListener {task ->
                     if (task.isSuccessful){
-                        showSnackBar(R.string.send_restore_message_successfully)
+                        AuxillaryFunctions.showSnackBar(R.string.send_restore_message_successfully, activity)
                         status?.onSuccess()
                     } else {
-                        showSnackBar(R.string.send_restore_message_failed)
+                        AuxillaryFunctions.showSnackBar(R.string.send_restore_message_failed, activity)
                     }
                 }
         } else {
-            showSnackBar(R.string.email_not_entered)
+            AuxillaryFunctions.showSnackBar(R.string.email_not_entered, activity)
         }
     }
 
@@ -98,8 +103,8 @@ class AccountHelper(val activity: MainActivity, @IdRes val currentView: Int) {
         user
             .sendEmailVerification()
             .addOnCompleteListener { task ->
-                if (task.isSuccessful) { showSnackBar(R.string.send_verification_email_done) }
-                else { showSnackBar(R.string.send_verification_email_error) }
+                if (task.isSuccessful) { AuxillaryFunctions.showSnackBar(R.string.send_verification_email_done, activity) }
+                else { AuxillaryFunctions.showSnackBar(R.string.send_verification_email_error, activity) }
             }
     }
 
@@ -113,7 +118,7 @@ class AccountHelper(val activity: MainActivity, @IdRes val currentView: Int) {
     fun isUserLogin(showMessage: Boolean = true): Boolean{
         myAuth.currentUser?.let {
             if(showMessage){
-                showSnackBar(R.string.already_login)
+                AuxillaryFunctions.showSnackBar(R.string.already_login, activity)
             }
             return true
         }
@@ -122,7 +127,7 @@ class AccountHelper(val activity: MainActivity, @IdRes val currentView: Int) {
 
 
     /* Show message on the screen */
-    private fun showSnackBar(
+/*    private fun showSnackBar(
         @StringRes messageText: Int,
         @StringRes closeButton: Int = R.string.close
     ){
@@ -136,7 +141,7 @@ class AccountHelper(val activity: MainActivity, @IdRes val currentView: Int) {
                 snackbar.dismiss()
             }
             .show()
-    }
+    }*/
 }
 
 

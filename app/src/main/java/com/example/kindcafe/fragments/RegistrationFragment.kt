@@ -20,6 +20,7 @@ import com.example.kindcafe.R
 import com.example.kindcafe.databinding.FragRegistrationBinding
 import com.example.kindcafe.firebase.AccountHelper
 import com.example.kindcafe.firebase.firebaseInterfaces.DefinitionOfStatus
+import com.example.kindcafe.utils.AuxillaryFunctions
 import com.example.kindcafe.utils.GeneralAccessTypes
 import com.google.android.material.snackbar.Snackbar
 
@@ -56,38 +57,23 @@ class RegistrationFragment : Fragment() {
         /* initialise account helper for perform registrations */
         accountHelper = AccountHelper(mainActivity, R.id.lDrawLayoutMain)
 
-        val defStatus = object : DefinitionOfStatus{
-            override fun onSuccess() {
-                try {
-                    val curFrag = parentFragmentManager.findFragmentById(R.id.fcv_main) as? RegistrationFragment
-                    if(curFrag != null){
-                        Log.d("RegistrFrag", "RegistFrag: $curFrag")
-                        mainActivity.navController.popBackStack()
-                    }
-                } catch (e: Exception){
-                    /* If user close screen earlier than it would auto*/
-                    Log.d("RegistrFrag", "exception: $e")
-                }
-            }
-        }
+        /* interface */
+        val defStatus = AuxillaryFunctions.defaultDefinitionOfStatusInterface(this)
 
         binding.apply {
 
 
             /* Action when user press button "GO" */
             cvRegGo.setOnClickListener {
-
                 accountHelper.signUpWithEmail(
                     name = etRegName.text.toString(),
                     email = etRegEmail.text.toString(),
                     password = etRegPassword.text.toString(),
                     status = defStatus
                 )
-
             }
-
-
         }
+
     }
 
     override fun onDestroyView() {
