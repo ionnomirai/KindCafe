@@ -43,9 +43,11 @@ class HomeFragment: Fragment() {
         super.onViewCreated(view, savedInstanceState)
         (activity as MainActivity).everyOpenHomeSettings()
 
-        mainVM.nameData.observe(viewLifecycleOwner, Observer {email ->
+        Log.d(homeFragmentTag, "onViewCreated")
+
+        mainVM.nameData.observe(viewLifecycleOwner) {email ->
             binding.tvUserNameHome.text = email
-        })
+        }
     }
 
     override fun onResume() {

@@ -42,27 +42,25 @@ class AccountHelper(val activity: MainActivity, @IdRes val currentView: Int) {
     }
 
     /* Enter into account */
-    fun signInWithEmail(email: String, password: String): Boolean{
-        var isSuccess = false
+    fun signInWithEmail(email: String, password: String, status: DefinitionOfStatus? = null){
         /* Checking the correctness of the input  */
         if (email.isNotEmpty() && password.isNotEmpty()){
             myAuth
                 .signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener { task ->
                     if (task.isSuccessful){
-                        isSuccess = true
                         showSnackBar(R.string.success_login)
+                        activity.mainViewModel.setData(task.result?.user!!.email!!)
+                        status?.onSuccess()
                     }
                     else {
                         Log.d(MY_TAG, "Enter (Login) -- Global exception -- ${task.exception}")
-                        isSuccess = false
                         showSnackBar(R.string.failed_login)
                     }
                 }
         } else {
             showSnackBar(R.string.failed_login)
         }
-        return isSuccess
     }
 
     /* Exit this account */

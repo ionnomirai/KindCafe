@@ -1,6 +1,7 @@
 package com.example.kindcafe.fragments
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,6 +14,7 @@ import com.example.kindcafe.R
 import com.example.kindcafe.databinding.FragHomeBinding
 import com.example.kindcafe.databinding.FragLoginBinding
 import com.example.kindcafe.firebase.AccountHelper
+import com.example.kindcafe.firebase.firebaseInterfaces.DefinitionOfStatus
 import com.example.kindcafe.utils.GeneralAccessTypes
 import com.example.kindcafe.viewModels.MainViewModel
 
@@ -27,6 +29,8 @@ class LoginFragment : Fragment() {
         }
 
     private lateinit var accountHelper: AccountHelper
+
+    private val MY_TAG = "LoginFragmentTag"
 
     /*---------------------------------------- Functions -----------------------------------------*/
 
@@ -49,18 +53,30 @@ class LoginFragment : Fragment() {
 
         accountHelper = AccountHelper(mainActivity, R.id.lDrawLayoutMain)
 
+        val defStatus = object : DefinitionOfStatus {
+            override fun onSuccess() {
+                try {
+                    val curFrag = parentFragmentManager.findFragmentById(R.id.fcv_main) as? LoginFragment
+                    if(curFrag != null){
+                        Log.d(MY_TAG, "LoginFrag: $curFrag")
+                        findNavController().popBackStack()
+                    }
+                } catch (e: Exception){
+                    /* If user close screen earlier than it would auto*/
+                    Log.d("MY_TAG", "LoginFrag exception: $e")
+                }
+            }
+        }
+
         binding.apply {
 
             /* The user enters his email and password and logs in to his account */
             cvLoginGo.setOnClickListener {
-                if (accountHelper.signInWithEmail(
+                accountHelper.signInWithEmail(
                     email = etLoginEmail.text.toString(),
-                    password = etLoginPassword.text.toString()
-                )){
-                    mainActivity.navController.popBackStack()
-                } else {
-                    Toast.makeText(this@LoginFragment.context, "else", Toast.LENGTH_SHORT).show()
-                }
+                    password = etLoginPassword.text.toString(),
+                    status = defStatus
+                )
             }
 
             /* Move to RestoreAccFragment If user forgot password */
