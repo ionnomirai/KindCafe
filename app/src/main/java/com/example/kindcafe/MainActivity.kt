@@ -19,8 +19,12 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
+import com.example.kindcafe.data.Categories
+import com.example.kindcafe.data.Dish
 import com.example.kindcafe.databinding.ActivityMainBinding
 import com.example.kindcafe.firebase.AccountHelper
+import com.example.kindcafe.firebase.DbManager
+import com.example.kindcafe.firebase.firebaseInterfaces.ReadAndSplitCategories
 import com.example.kindcafe.fragments.HomeFragment
 import com.example.kindcafe.fragments.RegistrationFragment
 import com.example.kindcafe.utils.GeneralAccessTypes
@@ -49,6 +53,8 @@ class MainActivity : AppCompatActivity()/*, NavigationView.OnNavigationItemSelec
 
     /* Common viewModel to get data to fragment (for example Home_fragment) */
     val mainViewModel: MainViewModel by viewModels()
+
+    private val dbManager = DbManager()
 
     /*---------------------------------------- Functions -----------------------------------------*/
 
@@ -88,6 +94,13 @@ class MainActivity : AppCompatActivity()/*, NavigationView.OnNavigationItemSelec
         everyOpenHomeSettings()
 
         movingLogicN2()
+
+        dbManager.readDishDataFromDb(object : ReadAndSplitCategories{
+            override fun readAndSplit(data: Map<Int, List<Dish>>) {
+                val first = data.get(Categories.SparklingDrinks.ordinal)
+                Log.d(MY_TAG, first.toString())
+            }
+        })
     }
 
     /* Custom logic of moving between fragments */
