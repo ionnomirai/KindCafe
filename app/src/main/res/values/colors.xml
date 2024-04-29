@@ -28,4 +28,6 @@
     <color name="bottom_menu_color">#713E5D</color>
     <color name="hint_color">#676767</color>
 
+    <color name="item_icon">#6D5500</color>
+
 </resources>

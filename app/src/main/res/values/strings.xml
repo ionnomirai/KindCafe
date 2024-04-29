@@ -60,4 +60,7 @@
     <!-- SnackBar-->
     <string name="close">Close</string>
 
+    <string name="choose_item">Please choose what you need</string>
+    <string name="info_title">Information</string>
+
 </resources>

@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginHorizontal="10dp"
+        android:layout_marginVertical="15dp"
+        app:cardBackgroundColor="@color/background_cream"
+        app:cardCornerRadius="20dp"
+        app:cardElevation="3dp">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:id="@+id/ivItemPhoto"
+                android:layout_width="110dp"
+                android:layout_height="110dp"
+                android:layout_marginStart="25dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:scaleType="centerCrop"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/home_first_pic" />
+
+            <ImageButton
+                android:id="@+id/ibLike"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="3dp"
+                android:background="@color/transparent_my"
+                app:layout_constraintBottom_toBottomOf="@+id/ivItemPhoto"
+                app:layout_constraintStart_toEndOf="@+id/ivItemPhoto"
+                app:layout_constraintTop_toTopOf="@+id/ivItemPhoto"
+                app:layout_constraintVertical_bias="0.0"
+                app:srcCompat="@drawable/ic_heart"
+                app:tint="@color/item_icon" />
+
+            <TextView
+                android:id="@+id/tvItemName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:textColor="@color/user_name_home_screen"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="@+id/ibLike"
+                app:layout_constraintStart_toEndOf="@+id/ibLike"
+                app:layout_constraintTop_toTopOf="@+id/ibLike"
+                tools:text="Espresso" />
+
+            <TextView
+                android:id="@+id/tvItemPrice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/home_button_color"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toTopOf="@+id/tvItemInfo"
+                app:layout_constraintStart_toStartOf="@+id/tvItemName"
+                app:layout_constraintTop_toBottomOf="@+id/tvItemName"
+                tools:text="$2.50" />
+
+            <TextView
+                android:id="@+id/tvItemInfo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/info_title"
+                android:textColor="@color/home_button_color"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="@+id/ivItemPhoto"
+                app:layout_constraintStart_toStartOf="@+id/tvItemName" />
+
+            <ImageButton
+                android:id="@+id/ibPutToOrder"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="30dp"
+                android:background="@color/transparent_my"
+                android:src="@drawable/ic_shopping_bag"
+                app:layout_constraintBottom_toBottomOf="@+id/ivItemPhoto"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/ivItemPhoto"
+                app:tint="@color/item_icon" />
+
+            <ImageView
+                android:id="@+id/imageView2"
+                android:layout_width="105dp"
+                android:layout_height="60dp"
+                android:src="@tools:sample/avatars"
+                android:layout_marginEnd="-2dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:srcCompat="@drawable/item_curl"
+                android:scaleType="fitXY"/>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.cardview.widget.CardView>
+
+</LinearLayout>

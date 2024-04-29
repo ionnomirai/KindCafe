@@ -7,19 +7,16 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.Observer
-import androidx.navigation.fragment.findNavController
-import com.example.kindcafe.KindCafeApplication
 import com.example.kindcafe.MainActivity
-import com.example.kindcafe.R
 import com.example.kindcafe.databinding.FragHomeBinding
+import com.example.kindcafe.databinding.FragItemsBinding
 import com.example.kindcafe.viewModels.MainViewModel
 
-class HomeFragment: Fragment() {
+class ShowItemsFragment: Fragment() {
     /*---------------------------------------- Properties ----------------------------------------*/
-    private var _binding: FragHomeBinding? = null
+    private var _binding: FragItemsBinding? = null
     private val binding
-        get() : FragHomeBinding{
+        get() : FragItemsBinding {
             return checkNotNull(_binding){
                 "Cannot access binding because it is null. Is the view visible"
             }
@@ -28,7 +25,7 @@ class HomeFragment: Fragment() {
     /* Common viewModel between activity and this fragment */
     private val mainVM : MainViewModel by activityViewModels()
 
-    private val homeFragmentTag = "HomeFragmentTag"
+    private val homeFragmentTag = "ShowItemsFragment"
 
     /*---------------------------------------- Functions -----------------------------------------*/
 
@@ -37,25 +34,13 @@ class HomeFragment: Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        _binding = FragHomeBinding.inflate(layoutInflater, container, false)
+        _binding = FragItemsBinding.inflate(layoutInflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        (activity as MainActivity).everyOpenHomeSettings()
 
-        Log.d(homeFragmentTag, "onViewCreated")
-
-        mainVM.nameData.observe(viewLifecycleOwner) {email ->
-            binding.tvUserNameHome.text = email
-        }
-
-        binding.apply {
-            cvFirst.setOnClickListener {
-                findNavController().navigate(R.id.action_homeFragment_to_showItemsFragment)
-            }
-        }
     }
 
     override fun onResume() {

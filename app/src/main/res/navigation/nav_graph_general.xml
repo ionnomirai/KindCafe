@@ -17,6 +17,9 @@
         <action
             android:id="@+id/action_homeFragment_to_loginFragment"
             app:destination="@id/loginFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_showItemsFragment"
+            app:destination="@id/showItemsFragment" />
     </fragment>
     <fragment
         android:id="@+id/registrationFragment"
@@ -50,4 +53,9 @@
             app:popUpTo="@id/registrationFragment"
             app:popUpToInclusive="true" />
     </fragment>
+    <fragment
+        android:id="@+id/showItemsFragment"
+        android:name="com.example.kindcafe.fragments.ShowItemsFragment"
+        android:label="ShowItemsFragment"
+        tools:layout="@layout/frag_items"/>
 </navigation>

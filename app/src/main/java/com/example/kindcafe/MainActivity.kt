@@ -97,8 +97,11 @@ class MainActivity : AppCompatActivity()/*, NavigationView.OnNavigationItemSelec
 
         dbManager.readDishDataFromDb(object : ReadAndSplitCategories{
             override fun readAndSplit(data: Map<Int, List<Dish>>) {
-                val first = data.get(Categories.SparklingDrinks.ordinal)
-                Log.d(MY_TAG, first.toString())
+                data[Categories.SparklingDrinks.ordinal]?.let {
+                    mainViewModel.sparklingDrinks = it
+                }
+                Log.d(MY_TAG, mainViewModel.sparklingDrinks.toString())
+
             }
         })
     }
