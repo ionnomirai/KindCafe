@@ -4,7 +4,7 @@
     android:id="@+id/clChoose"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white">
+    android:background="@drawable/show_items_back">
 
     <TextView
         android:id="@+id/tvChooseTitle"
@@ -23,9 +23,8 @@
         android:id="@+id/rvShowItems"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginTop="15dp"
+        android:layout_marginTop="20dp"
         android:layout_marginBottom="105dp"
-        android:background="@color/bottom_icon_color"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tvChooseTitle"

@@ -3,32 +3,38 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="150dp"
+    android:layout_marginTop="7dp">
 
-    <androidx.cardview.widget.CardView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginHorizontal="10dp"
-        android:layout_marginVertical="15dp"
-        app:cardBackgroundColor="@color/background_cream"
-        app:cardCornerRadius="20dp"
-        app:cardElevation="3dp">
+
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+>
+
+            <ImageView
+                android:id="@+id/ivBackground"
+                android:layout_width="0dp"
+                android:layout_height="180dp"
+                android:scaleType="fitXY"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/item_choose_back3" />
 
             <ImageView
                 android:id="@+id/ivItemPhoto"
                 android:layout_width="110dp"
                 android:layout_height="110dp"
-                android:layout_marginStart="25dp"
-                android:layout_marginTop="10dp"
+                android:layout_marginStart="32dp"
                 android:layout_marginBottom="10dp"
                 android:scaleType="centerCrop"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.38"
                 app:srcCompat="@drawable/home_first_pic" />
 
             <ImageButton
@@ -95,16 +101,15 @@
 
             <ImageView
                 android:id="@+id/imageView2"
-                android:layout_width="105dp"
+                android:layout_width="100dp"
                 android:layout_height="60dp"
-                android:src="@tools:sample/avatars"
-                android:layout_marginEnd="-2dp"
+                android:layout_marginEnd="17dp"
+                android:layout_marginBottom="17dp"
+                android:scaleType="fitXY"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:srcCompat="@drawable/item_curl"
-                android:scaleType="fitXY"/>
+                app:srcCompat="@drawable/item_curl" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-    </androidx.cardview.widget.CardView>
 
 </LinearLayout>
