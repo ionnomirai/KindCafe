@@ -1,7 +1,7 @@
 package com.example.kindcafe.adapters
 
 import androidx.recyclerview.widget.DiffUtil
-import com.example.kindcafe.data.Dish
+import com.example.kindcafe.database.Dish
 
 class DiffUtilDish(
     private val oldList: List<Dish>,

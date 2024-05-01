@@ -12,7 +12,6 @@ import androidx.annotation.IdRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
 import androidx.core.view.isVisible
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
@@ -20,15 +19,15 @@ import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.example.kindcafe.data.Categories
-import com.example.kindcafe.data.Dish
+import com.example.kindcafe.database.Dish
 import com.example.kindcafe.databinding.ActivityMainBinding
 import com.example.kindcafe.firebase.AccountHelper
 import com.example.kindcafe.firebase.DbManager
 import com.example.kindcafe.firebase.firebaseInterfaces.ReadAndSplitCategories
-import com.example.kindcafe.fragments.HomeFragment
-import com.example.kindcafe.fragments.RegistrationFragment
 import com.example.kindcafe.utils.GeneralAccessTypes
 import com.example.kindcafe.viewModels.MainViewModel
+import com.squareup.picasso.OkHttp3Downloader
+import com.squareup.picasso.Picasso
 
 
 class MainActivity : AppCompatActivity()/*, NavigationView.OnNavigationItemSelectedListener*/ {
@@ -49,12 +48,13 @@ class MainActivity : AppCompatActivity()/*, NavigationView.OnNavigationItemSelec
     lateinit var navController: NavController
 
     private val MY_TAG = "MainActivityTag"
+    private val cacheSize: Long = 2048 * 2048 * 50 //+-209 MB
+    private lateinit var picasso : Picasso
+
     private val accountHelper = AccountHelper(this, R.id.lDrawLayoutMain)
 
     /* Common viewModel to get data to fragment (for example Home_fragment) */
     val mainViewModel: MainViewModel by viewModels()
-
-    private val dbManager = DbManager()
 
     /*---------------------------------------- Functions -----------------------------------------*/
 
@@ -95,15 +95,13 @@ class MainActivity : AppCompatActivity()/*, NavigationView.OnNavigationItemSelec
 
         movingLogicN2()
 
-        dbManager.readDishDataFromDb(object : ReadAndSplitCategories{
-            override fun readAndSplit(data: Map<Int, List<Dish>>) {
-                data[Categories.SparklingDrinks.ordinal]?.let {
-                    mainViewModel.sparklingDrinks = it
-                }
-                Log.d(MY_TAG, mainViewModel.sparklingDrinks.toString())
 
-            }
-        })
+
+        /* Set new cache size for Picasso */
+        picasso = Picasso
+            .Builder(this)
+            .downloader(OkHttp3Downloader(this, cacheSize))
+            .build()
     }
 
     /* Custom logic of moving between fragments */
@@ -240,5 +238,4 @@ class MainActivity : AppCompatActivity()/*, NavigationView.OnNavigationItemSelec
         }
         return super.onOptionsItemSelected(item)
     }
-
 }

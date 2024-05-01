@@ -1,6 +1,7 @@
 package com.example.kindcafe
 
 import android.app.Application
+import com.example.kindcafe.database.KindCafeRepository
 import com.google.firebase.auth.FirebaseAuth
 
 class KindCafeApplication: Application() {
@@ -9,6 +10,8 @@ class KindCafeApplication: Application() {
         super.onCreate()
 
         myAuth = FirebaseAuth.getInstance()
+
+        KindCafeRepository.initialize(this)
     }
 
     companion object{

@@ -4,6 +4,9 @@ plugins {
 
     // For firebase
     id("com.google.gms.google-services")
+
+    // For KSP
+    id("com.google.devtools.ksp")
 }
 
 android {
@@ -59,7 +62,23 @@ dependencies {
     implementation(platform("com.google.firebase:firebase-bom:32.8.1"))
     implementation("com.google.firebase:firebase-auth")
     implementation("com.google.firebase:firebase-database")
+    implementation("com.google.firebase:firebase-storage")
 
     /* Fragment and ViewModel*/
     implementation("androidx.fragment:fragment-ktx:1.6.2")
+
+    /* Picasso */
+    implementation("com.squareup.picasso:picasso:2.8")
+    /* For creating custom cache to Picasso */
+    implementation("com.squareup.okhttp3:okhttp:version")
+
+    // Coroutines
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
+
+    implementation("androidx.room:room-runtime:2.6.1")
+    implementation("androidx.room:room-ktx:2.6.1")
+    annotationProcessor("androidx.room:room-compiler:2.6.1")
+    // To use Kotlin Symbol Processing (KSP)
+    ksp("androidx.room:room-compiler:2.6.1")
+
 }
