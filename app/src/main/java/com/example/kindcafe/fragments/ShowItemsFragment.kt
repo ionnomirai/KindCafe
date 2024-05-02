@@ -8,16 +8,15 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.kindcafe.MainActivity
-import com.example.kindcafe.R
 import com.example.kindcafe.adapters.AdapterShowItems
 import com.example.kindcafe.data.Categories
 import com.example.kindcafe.database.Dish
-import com.example.kindcafe.databinding.FragHomeBinding
 import com.example.kindcafe.databinding.FragItemsBinding
 import com.example.kindcafe.firebase.DbManager
+import com.example.kindcafe.firebase.StorageManager
+import com.example.kindcafe.firebase.firebaseInterfaces.GetUrisCallback
 import com.example.kindcafe.firebase.firebaseInterfaces.ReadAndSplitCategories
 import com.example.kindcafe.viewModels.MainViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -37,13 +36,16 @@ class ShowItemsFragment: Fragment() {
     private val mainVM : MainViewModel by activityViewModels()
     private val myAdapter = AdapterShowItems()
 
-    private val homeFragmentTag = "ShowItemsFragment"
+    private val my_tag = "ShowItemsFragment"
 
     private val dbManager = DbManager()
+    private val storageManager = StorageManager()
 
     val dList = mutableListOf<Dish>()
+    val uList = mutableListOf<Dish>()
 
-    val goForward = MutableStateFlow(false)
+    val goForwardMainData = MutableStateFlow(false)
+    val goForwardUriData = MutableStateFlow(false)
 
 
 
@@ -69,17 +71,29 @@ class ShowItemsFragment: Fragment() {
             layoutManager = LinearLayoutManager(requireContext())
             adapter = myAdapter
         }
-        /* Look, now it is only for sparkling - it is test */
+
 
         dbManager.readDishDataFromDb(
             Categories.SparklingDrinks,
             clarificationGetDataFirebase()
         )
         viewLifecycleOwner.lifecycleScope.launch {
-            goForward.collect{
+            goForwardMainData.collect{
                 if (it){
-                    mainVM.addDishLocal(dList)
-                    goForward.value = false
+                    //mainVM.addDishLocal(dList)
+                    Log.d(my_tag, "data added")
+                    storageManager.readUri(dList, clarificationGetUris())
+                }
+            }
+        }
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            goForwardUriData.collect{second ->
+                if (second) {
+                    mainVM.addDishLocal(uList)
+                    Log.d(my_tag, "photo added")
+                    goForwardMainData.value = false
+                    goForwardUriData.value = false
                 }
             }
         }
@@ -87,6 +101,7 @@ class ShowItemsFragment: Fragment() {
         viewLifecycleOwner.lifecycleScope.launch {
             mainVM.sparklingDrinks.collect{
                 myAdapter.setNewData(it)
+                Log.d(my_tag, "read when start")
             }
         }
 
@@ -98,14 +113,24 @@ class ShowItemsFragment: Fragment() {
             override fun readAndSplit(data: List<Dish>) {
                 dList.clear()
                 dList += data
-                goForward.value = true
+                goForwardMainData.value = true
+            }
+        }
+    }
+
+    private fun clarificationGetUris(): GetUrisCallback{
+        return object : GetUrisCallback{
+            override fun getUris(newData: List<Dish>) {
+                uList.clear()
+                uList += newData
+                goForwardUriData.value = true
             }
         }
     }
 
     override fun onResume() {
         super.onResume()
-        Log.d(homeFragmentTag, "onResume")
+        Log.d(my_tag, "onResume")
     }
 
     override fun onDestroyView() {

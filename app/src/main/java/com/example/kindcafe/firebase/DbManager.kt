@@ -15,36 +15,36 @@ class DbManager {
     private val myDatabase = Firebase.database.getReference("dishes")
 
     /* old variant*/
-/*    fun readDishDataFromDb(callbackRead: ReadAndSplitCategories) {
-        val result: MutableMap<Int, List<Dish>> = mutableMapOf()
+    /*    fun readDishDataFromDb(callbackRead: ReadAndSplitCategories) {
+            val result: MutableMap<Int, List<Dish>> = mutableMapOf()
 
-        myDatabase.addListenerForSingleValueEvent(object : ValueEventListener {
+            myDatabase.addListenerForSingleValueEvent(object : ValueEventListener {
 
-            override fun onDataChange(snapshot: DataSnapshot) {
-                // We will enter into each category
-                for (i in Categories.entries) {
-                    // list of dishes from current category (sparkling, non-sparkling etc.
-                    val dishList: MutableList<Dish> = mutableListOf()
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    // We will enter into each category
+                    for (i in Categories.entries) {
+                        // list of dishes from current category (sparkling, non-sparkling etc.
+                        val dishList: MutableList<Dish> = mutableListOf()
 
-                    // move to category. Every iteration outer cycle, will be different category
-                    val deeperSnapshot = snapshot.child(i.name).children
+                        // move to category. Every iteration outer cycle, will be different category
+                        val deeperSnapshot = snapshot.child(i.name).children
 
-                    // collect each dish
-                    for (item in deeperSnapshot) {
-                        item.getValue(Dish::class.java)?.let { dishList.add(it) }
+                        // collect each dish
+                        for (item in deeperSnapshot) {
+                            item.getValue(Dish::class.java)?.let { dishList.add(it) }
+                        }
+
+                        // put to result map: key - index of category, value - lish of dish
+                        result[i.ordinal] = dishList
                     }
 
-                    // put to result map: key - index of category, value - lish of dish
-                    result[i.ordinal] = dishList
+                    callbackRead.readAndSplit(result)
+                    Log.d(myTag, result.toString())
                 }
 
-                callbackRead.readAndSplit(result)
-                Log.d(myTag, result.toString())
-            }
-
-            override fun onCancelled(error: DatabaseError) {}
-        })
-    }*/
+                override fun onCancelled(error: DatabaseError) {}
+            })
+        }*/
 
     fun readDishDataFromDb(category: Categories, callbackRead: ReadAndSplitCategories) {
         myDatabase.addListenerForSingleValueEvent(object : ValueEventListener {

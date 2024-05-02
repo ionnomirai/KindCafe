@@ -50,7 +50,7 @@ class AdapterShowItems: RecyclerView.Adapter<AdapterShowItems.ViewHolderMy>() {
                     .downloadUrl
                 Log.d(my_tag_inner, "$uriTest")*/
 
-                fireStorage
+/*                fireStorage
                     .getReference("dish_images/${data.name}_${data.id}.png")
                     .downloadUrl
                     .addOnCompleteListener {
@@ -65,7 +65,13 @@ class AdapterShowItems: RecyclerView.Adapter<AdapterShowItems.ViewHolderMy>() {
                         Picasso.get().load(uri.toString()).into(ivItemPhoto)
                     }.addOnFailureListener {
                         Log.d(my_tag_inner, "$it")
-                    }
+                    }*/
+                try {
+                    Picasso.get().load(data.uri).into(ivItemPhoto)
+                }
+                catch (e: Exception){
+                    Log.d(my_tag_inner, e.toString())
+                }
                 //Picasso.get().load("https://firebasestorage.googleapis.com/v0/b/kindcafe-5c04a.appspot.com/o/dish_images%2FFanta_2.png?alt=media&token=030b0397-2fe3-44b0-ac28-2d1bbe6e47cc").into(ivItemPhoto)
             }
         }

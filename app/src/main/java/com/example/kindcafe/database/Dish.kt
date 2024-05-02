@@ -12,4 +12,6 @@ data class Dish(
     val description: String? = null,
     val category: String? = null,
     val characteristic: String? = null,
+    val uri: String? = null,
+    //val uriBig: String? = null
 )
