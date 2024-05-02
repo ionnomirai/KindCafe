@@ -53,7 +53,7 @@
             app:popUpTo="@id/registrationFragment"
             app:popUpToInclusive="true" />
     </fragment>
-    <fragment
+     <fragment
         android:id="@+id/showItemsFragment"
         android:name="com.example.kindcafe.fragments.ShowItemsFragment"
         android:label="ShowItemsFragment"
@@ -61,5 +61,20 @@
         <argument
             android:name="category"
             app:argType="com.example.kindcafe.data.Categories" />
+        <action
+            android:id="@+id/action_showItemsFragment_to_detailFragment"
+            app:destination="@id/detailFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/detailFragment"
+        android:name="com.example.kindcafe.fragments.DetailFragment"
+        android:label="DetailFragment"
+        tools:layout="@layout/frag_dish_detail">
+        <argument
+            android:name="id"
+            app:argType="string" />
+        <argument
+            android:name="name"
+            app:argType="string" />
     </fragment>
 </navigation>

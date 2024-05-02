@@ -63,4 +63,6 @@
     <string name="choose_item">Please choose what you need</string>
     <string name="info_title">Information</string>
 
+    <string name="price_style">$%1$s</string>
+
 </resources>

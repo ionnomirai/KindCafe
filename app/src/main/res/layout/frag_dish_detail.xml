@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/clDishDetail"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/back_detail">
+
+    <ImageView
+        android:id="@+id/ivPicBig"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="350dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tvNameDish"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/toolbar_title"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:layout_marginTop="430dp"
+        app:layout_constraintEnd_toEndOf="@+id/ivPicBig"
+        app:layout_constraintStart_toStartOf="@+id/ivPicBig"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="Balvuten" />
+
+    <TextView
+        android:id="@+id/tvPriceDish"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:text="$2.50"
+        android:textColor="@color/greeting_phrase_color"
+        android:textStyle="bold"
+        android:textSize="20sp"
+        android:layout_marginTop="7dp"
+        app:layout_constraintEnd_toEndOf="@+id/tvNameDish"
+        app:layout_constraintStart_toStartOf="@+id/tvNameDish"
+        app:layout_constraintTop_toBottomOf="@+id/tvNameDish" />
+
+    <ImageButton
+        android:id="@+id/ibFavorite"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="7dp"
+        android:background="@color/transparent_my"
+        app:layout_constraintEnd_toEndOf="@+id/ivPicBig"
+        app:layout_constraintHorizontal_bias="0.45"
+        app:layout_constraintStart_toStartOf="@+id/ivPicBig"
+        app:layout_constraintTop_toBottomOf="@+id/tvPriceDish"
+        app:srcCompat="@drawable/ic_heart"
+        app:tint="@color/black" />
+
+    <ImageButton
+        android:id="@+id/ibToBag"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:background="@color/transparent_my"
+        app:tint="@color/black"
+        app:layout_constraintBottom_toBottomOf="@+id/ibFavorite"
+        app:layout_constraintStart_toEndOf="@+id/ibFavorite"
+        app:layout_constraintTop_toTopOf="@+id/ibFavorite"
+        app:srcCompat="@drawable/ic_shopping_bag" />
+
+    <TextView
+        android:id="@+id/tvDescription"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginHorizontal="20dp"
+        android:layout_marginTop="20dp"
+        android:textColor="@color/black"
+        android:textSize="18sp"
+        android:textStyle="italic"
+        android:fontFamily="@font/architects_daughter_regular"
+        app:layout_constraintBottom_toTopOf="@+id/ivCurl"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ibFavorite"
+        tools:text="Balviten Gluten Free Lemon Cake is a safe product specially designed for people with gluten intolerance Balviten Gluten Free Lemon Cake is a safe product specially designed for people with gluten intolerance Balviten Gluten Free Lemon Cake is a safe product specially designed for people with gluten intolerance Balviten Gluten Free Lemon Cake is a safe product specially designed for people with gluten intolerance" />
+
+    <ImageView
+        android:id="@+id/ivCurl"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="70dp"
+        android:scaleType="fitXY"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:srcCompat="@drawable/curl_detail" />
+</androidx.constraintlayout.widget.ConstraintLayout>

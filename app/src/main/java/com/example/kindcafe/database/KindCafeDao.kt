@@ -12,4 +12,7 @@ interface KindCafeDao {
 
     @Query("SELECT * FROM dish WHERE category = :categoryCur")
     fun getDishesByCategory(categoryCur: String): Flow<List<Dish>>
+
+    @Query("SELECT * FROM dish WHERE id = :id AND name = :name")
+    fun getDish(id: String, name: String): Flow<Dish>
 }

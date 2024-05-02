@@ -52,6 +52,10 @@ class MainViewModel : ViewModel() {
     val cakes: StateFlow<List<Dish>>
         get() = _cakes.asStateFlow()
 
+    private var _currentDish: MutableStateFlow<Dish> = MutableStateFlow(Dish())
+    val currentDish: StateFlow<Dish>
+        get() = _currentDish
+
     suspend fun addDishLocal(dish: List<Dish>) {
         repository.insertDish(dish)
     }
@@ -67,5 +71,11 @@ class MainViewModel : ViewModel() {
             Categories.Sweets -> ""
             Categories.NonSparklingDrinks -> ""
         }
+    }
+
+    suspend fun getDish(id: String, name: String){
+         repository.getDish(id, name).collect{
+             _currentDish.value = it
+         }
     }
 }

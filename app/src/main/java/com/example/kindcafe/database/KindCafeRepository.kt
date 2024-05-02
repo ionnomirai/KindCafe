@@ -22,7 +22,8 @@ class KindCafeRepository private constructor(
     fun getDishByCategory(category: Categories): Flow<List<Dish>> =
         database.kindCafeDao().getDishesByCategory(category.categoryName)
 
-    /* ... continue funs*/
+    fun getDish(id: String, name: String): Flow<Dish> =
+        database.kindCafeDao().getDish(id, name)
 
     companion object{
         private var INSTANCE: KindCafeRepository? = null

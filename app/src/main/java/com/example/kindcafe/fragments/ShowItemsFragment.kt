@@ -8,10 +8,12 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.kindcafe.MainActivity
 import com.example.kindcafe.adapters.AdapterShowItems
+import com.example.kindcafe.adapters.callbacks.ItemMoveDirections
 import com.example.kindcafe.data.Categories
 import com.example.kindcafe.database.Dish
 import com.example.kindcafe.databinding.FragItemsBinding
@@ -21,9 +23,6 @@ import com.example.kindcafe.firebase.firebaseEnums.UriSize
 import com.example.kindcafe.firebase.firebaseInterfaces.GetUrisCallback
 import com.example.kindcafe.firebase.firebaseInterfaces.ReadAndSplitCategories
 import com.example.kindcafe.viewModels.MainViewModel
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 
@@ -39,7 +38,7 @@ class ShowItemsFragment: Fragment() {
 
     /* Common viewModel between activity and this fragment */
     private val mainVM : MainViewModel by activityViewModels()
-    private val myAdapter = AdapterShowItems()
+    private val myAdapter = AdapterShowItems(clickItemElements())
 
     private val my_tag = "ShowItemsFragment"
     private val navArgs: ShowItemsFragmentArgs by navArgs()
@@ -72,6 +71,7 @@ class ShowItemsFragment: Fragment() {
         val mainActivity = activity as MainActivity
         mainActivity.supportActionBar?.title = ""
         mainActivity.binding.tvToolbarTitle.text = navArgs.category.categoryName
+        mainActivity.everyOpenHomeSettings()
 
         binding.rvShowItems.apply {
             layoutManager = LinearLayoutManager(requireContext())
@@ -162,6 +162,21 @@ class ShowItemsFragment: Fragment() {
                     goForwardUriBigData.value = true
                 }
 
+            }
+        }
+    }
+
+    private fun clickItemElements(): ItemMoveDirections{
+        return object : ItemMoveDirections{
+            override fun detailed(dish: Dish) {
+                dish.name?.let {
+                    val action = ShowItemsFragmentDirections.actionShowItemsFragmentToDetailFragment(dish.id, dish.name)
+                    findNavController().navigate(action)
+                }
+            }
+
+            override fun putToBag(dish: Dish) {
+                TODO("Not yet implemented")
             }
         }
     }
