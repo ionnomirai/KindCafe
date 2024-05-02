@@ -27,6 +27,8 @@ class DiffUtilDish(
             oldList[oldItemPosition].description != newList[newItemPosition].description -> false
             oldList[oldItemPosition].category != newList[newItemPosition].category -> false
             oldList[oldItemPosition].characteristic != newList[newItemPosition].characteristic -> false
+            oldList[oldItemPosition].uriSmall != newList[newItemPosition].uriSmall -> false
+            oldList[oldItemPosition].uriBig != newList[newItemPosition].uriBig -> false
             else -> true
         }
     }

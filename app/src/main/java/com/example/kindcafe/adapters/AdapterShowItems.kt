@@ -44,30 +44,8 @@ class AdapterShowItems: RecyclerView.Adapter<AdapterShowItems.ViewHolderMy>() {
                 tvItemName.text = data.name
                 tvItemPrice.text = data.price
 
-
-/*                val uriTest =                 fireStorage
-                    .getReference("dish_images/${data.name}_${data.id}.png")
-                    .downloadUrl
-                Log.d(my_tag_inner, "$uriTest")*/
-
-/*                fireStorage
-                    .getReference("dish_images/${data.name}_${data.id}.png")
-                    .downloadUrl
-                    .addOnCompleteListener {
-                        if (it.isSuccessful){
-                            Log.d(my_tag_inner, "isSuccessful")
-                        } else {
-                            Log.d(my_tag_inner, "${it.exception}")
-                        }
-                    }
-                    .addOnSuccessListener {uri ->
-                        Log.d(my_tag_inner, "in onSuccess, $uri,||||| dish_images/${data.name}_${data.id}.png")
-                        Picasso.get().load(uri.toString()).into(ivItemPhoto)
-                    }.addOnFailureListener {
-                        Log.d(my_tag_inner, "$it")
-                    }*/
                 try {
-                    Picasso.get().load(data.uri).into(ivItemPhoto)
+                    Picasso.get().load(data.uriSmall).into(ivItemPhoto)
                 }
                 catch (e: Exception){
                     Log.d(my_tag_inner, e.toString())

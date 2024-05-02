@@ -67,35 +67,16 @@ class HomeFragment : Fragment() {
 
         binding.apply {
             cvFirst.setOnClickListener {
-/*                dbManager.readDishDataFromDb(
-                    Categories.SparklingDrinks,
-                    clarificationGetDataFirebase()
-                )
-                viewLifecycleOwner.lifecycleScope.launch {
-                    goForward.collect{
-                        if (it){
-                            mainVM.addDishLocal(dList)
-                            findNavController().navigate(R.id.action_homeFragment_to_showItemsFragment)
-                            goForward.value = false
-                        }
-                    }
-                }*/
-                findNavController().navigate(R.id.action_homeFragment_to_showItemsFragment)
+                val action = HomeFragmentDirections.actionHomeFragmentToShowItemsFragment(Categories.SparklingDrinks)
+                findNavController().navigate(action)
+            }
+            cvFourth.setOnClickListener {
+                val action = HomeFragmentDirections.actionHomeFragmentToShowItemsFragment(Categories.Cakes)
+                findNavController().navigate(action)
             }
         }
 
-        Log.d(myTag, "")
     }
-
-/*    private fun clarificationGetDataFirebase(): ReadAndSplitCategories {
-        return object : ReadAndSplitCategories {
-            override fun readAndSplit(data: List<Dish>) {
-                dList.clear()
-                dList += data
-                goForward.value = true
-            }
-        }
-    }*/
 
     override fun onResume() {
         super.onResume()

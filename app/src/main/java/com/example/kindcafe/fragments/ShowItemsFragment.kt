@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.kindcafe.MainActivity
 import com.example.kindcafe.adapters.AdapterShowItems
@@ -16,9 +17,13 @@ import com.example.kindcafe.database.Dish
 import com.example.kindcafe.databinding.FragItemsBinding
 import com.example.kindcafe.firebase.DbManager
 import com.example.kindcafe.firebase.StorageManager
+import com.example.kindcafe.firebase.firebaseEnums.UriSize
 import com.example.kindcafe.firebase.firebaseInterfaces.GetUrisCallback
 import com.example.kindcafe.firebase.firebaseInterfaces.ReadAndSplitCategories
 import com.example.kindcafe.viewModels.MainViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 
@@ -37,17 +42,18 @@ class ShowItemsFragment: Fragment() {
     private val myAdapter = AdapterShowItems()
 
     private val my_tag = "ShowItemsFragment"
+    private val navArgs: ShowItemsFragmentArgs by navArgs()
 
     private val dbManager = DbManager()
     private val storageManager = StorageManager()
 
     val dList = mutableListOf<Dish>()
-    val uList = mutableListOf<Dish>()
+    val uSmallList = mutableListOf<Dish>()
+    val uBigList = mutableListOf<Dish>()
 
     val goForwardMainData = MutableStateFlow(false)
-    val goForwardUriData = MutableStateFlow(false)
-
-
+    val goForwardUriSmallData = MutableStateFlow(false)
+    val goForwardUriBigData = MutableStateFlow(false)
 
     /*---------------------------------------- Functions -----------------------------------------*/
 
@@ -65,46 +71,71 @@ class ShowItemsFragment: Fragment() {
 
         val mainActivity = activity as MainActivity
         mainActivity.supportActionBar?.title = ""
-        mainActivity.binding.tvToolbarTitle.text = "Sparkling drinks"
+        mainActivity.binding.tvToolbarTitle.text = navArgs.category.categoryName
 
         binding.rvShowItems.apply {
             layoutManager = LinearLayoutManager(requireContext())
             adapter = myAdapter
         }
 
+        // retrieve data from Local DB
+        viewLifecycleOwner.lifecycleScope.launch {
+            mainVM.getDishesByCategory(navArgs.category)
+        }
 
+        // try to read data from Realtime DB
         dbManager.readDishDataFromDb(
-            Categories.SparklingDrinks,
+            navArgs.category,
             clarificationGetDataFirebase()
+            // we need put there "Wait sign"
         )
+
+        // First try if we retrieve data from RDB, then retrieve uriSmall
         viewLifecycleOwner.lifecycleScope.launch {
             goForwardMainData.collect{
                 if (it){
-                    //mainVM.addDishLocal(dList)
-                    Log.d(my_tag, "data added")
-                    storageManager.readUri(dList, clarificationGetUris())
+                    Log.d(my_tag, "data added: Uri small")
+                    storageManager.readUri(dList, clarificationGetUris(UriSize.Small), UriSize.Small)
+                }
+            }
+        }
+
+        // Next retrieve uriBig
+        viewLifecycleOwner.lifecycleScope.launch {
+            goForwardUriSmallData.collect{
+                if (it){
+                    Log.d(my_tag, "data added: : Uri big")
+                    storageManager.readUri(uSmallList, clarificationGetUris(UriSize.Big), UriSize.Big)
                 }
             }
         }
 
         viewLifecycleOwner.lifecycleScope.launch {
-            goForwardUriData.collect{second ->
-                if (second) {
-                    mainVM.addDishLocal(uList)
-                    Log.d(my_tag, "photo added")
+            goForwardUriBigData.collect{ third ->
+                if (third) {
+                    mainVM.addDishLocal(uBigList)
+                    Log.d(my_tag, "all added")
                     goForwardMainData.value = false
-                    goForwardUriData.value = false
+                    goForwardUriSmallData.value = false
+                    goForwardUriBigData.value = false
+                    // we need get out there "Wait sign"
                 }
             }
         }
 
+        // Data we pass to adapter
         viewLifecycleOwner.lifecycleScope.launch {
-            mainVM.sparklingDrinks.collect{
-                myAdapter.setNewData(it)
-                Log.d(my_tag, "read when start")
+            when(navArgs.category){
+                Categories.SparklingDrinks ->  mainVM.sparklingDrinks.collect{
+                    myAdapter.setNewData(it)
+                    Log.d(my_tag, "read when start: $it")
+                }
+                else -> mainVM.cakes.collect{
+                    myAdapter.setNewData(it)
+                    Log.d(my_tag, "read when start: $it")
+                }
             }
         }
-
 
     }
 
@@ -118,12 +149,19 @@ class ShowItemsFragment: Fragment() {
         }
     }
 
-    private fun clarificationGetUris(): GetUrisCallback{
+    private fun clarificationGetUris(uriSize: UriSize): GetUrisCallback{
         return object : GetUrisCallback{
             override fun getUris(newData: List<Dish>) {
-                uList.clear()
-                uList += newData
-                goForwardUriData.value = true
+                if(uriSize == UriSize.Small){
+                    uSmallList.clear()
+                    uSmallList += newData
+                    goForwardUriSmallData.value = true
+                } else {
+                    uBigList.clear()
+                    uBigList += newData
+                    goForwardUriBigData.value = true
+                }
+
             }
         }
     }
@@ -136,5 +174,10 @@ class ShowItemsFragment: Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        Log.d(my_tag, "onDestroy")
     }
 }

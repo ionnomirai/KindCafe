@@ -7,6 +7,9 @@ plugins {
 
     // For KSP
     id("com.google.devtools.ksp")
+
+    // For SafeArgs
+    id("androidx.navigation.safeargs.kotlin")
 }
 
 android {

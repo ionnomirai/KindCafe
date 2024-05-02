@@ -57,5 +57,9 @@
         android:id="@+id/showItemsFragment"
         android:name="com.example.kindcafe.fragments.ShowItemsFragment"
         android:label="ShowItemsFragment"
-        tools:layout="@layout/frag_items"/>
+        tools:layout="@layout/frag_items">
+        <argument
+            android:name="category"
+            app:argType="com.example.kindcafe.data.Categories" />
+    </fragment>
 </navigation>
