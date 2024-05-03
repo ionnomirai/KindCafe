@@ -20,6 +20,9 @@
         <action
             android:id="@+id/action_homeFragment_to_showItemsFragment"
             app:destination="@id/showItemsFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_basketFrag"
+            app:destination="@id/basketFrag" />
     </fragment>
     <fragment
         android:id="@+id/registrationFragment"
@@ -77,4 +80,9 @@
             android:name="name"
             app:argType="string" />
     </fragment>
+    <fragment
+        android:id="@+id/basketFrag"
+        android:name="com.example.kindcafe.fragments.BasketFrag"
+        android:label="BasketFrag"
+        tools:layout="@layout/frag_basket"/>
 </navigation>

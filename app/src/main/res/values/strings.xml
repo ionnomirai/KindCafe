@@ -61,8 +61,16 @@
     <string name="close">Close</string>
 
     <string name="choose_item">Please choose what you need</string>
+    <string name="choose_item_to_buy">Please choose what you buy</string>
     <string name="info_title">Information</string>
-
+    <string name="basket_make_order">Make order</string>
     <string name="price_style">$%1$s</string>
+    <string name="drop_it_out">DROP IT OUT</string>
+    <string name="per">per</string>
+
+    <string name="size_small">Small</string>
+    <string name="size_medium">Medium</string>
+    <string name="size_big">Big</string>
+
 
 </resources>

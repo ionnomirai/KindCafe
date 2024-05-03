@@ -14,6 +14,7 @@ import androidx.core.view.GravityCompat
 import androidx.core.view.isVisible
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
+import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
@@ -104,9 +105,15 @@ class MainActivity : AppCompatActivity()/*, NavigationView.OnNavigationItemSelec
             updateMainUI()
         }
 
-        binding.ibHome.setOnClickListener {
-            val verif = accountHelper.myAuth.currentUser?.isEmailVerified
-            Toast.makeText(this, "$verif", Toast.LENGTH_SHORT).show()
+        binding.apply {
+            ibHome.setOnClickListener {
+                val verif = accountHelper.myAuth.currentUser?.isEmailVerified
+                Toast.makeText(this@MainActivity, "$verif", Toast.LENGTH_SHORT).show()
+            }
+
+            ibBag.setOnClickListener {
+                navController.navigate(R.id.action_homeFragment_to_basketFrag)
+            }
         }
 
         everyOpenHomeSettings()
