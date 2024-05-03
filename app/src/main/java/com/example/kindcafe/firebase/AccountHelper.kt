@@ -1,17 +1,12 @@
 package com.example.kindcafe.firebase
 
-import android.app.Activity
 import android.util.Log
-import android.view.View
-import android.widget.Toast
 import androidx.annotation.IdRes
-import androidx.annotation.StringRes
 import com.example.kindcafe.KindCafeApplication
 import com.example.kindcafe.MainActivity
 import com.example.kindcafe.R
 import com.example.kindcafe.firebase.firebaseInterfaces.DefinitionOfStatus
 import com.example.kindcafe.utils.AuxillaryFunctions
-import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseUser
 
 class AccountHelper(val activity: MainActivity, @IdRes val currentView: Int) {
@@ -30,7 +25,7 @@ class AccountHelper(val activity: MainActivity, @IdRes val currentView: Int) {
                         /* if it is ok, then send verification to user */
                         sendEmailVerification(task.result?.user!!)
                         status?.onSuccess()
-                        activity.mainViewModel.setData(task.result?.user!!.email!!)
+                        activity.mainVM.setData(task.result?.user!!.email!!)
                     } else {
                         /* Get the current error */
                         Log.d(MY_TAG, "Global Exception: ${task.exception}")
@@ -52,7 +47,7 @@ class AccountHelper(val activity: MainActivity, @IdRes val currentView: Int) {
                 .addOnCompleteListener { task ->
                     if (task.isSuccessful){
                         AuxillaryFunctions.showSnackBar(R.string.success_login, activity)
-                        activity.mainViewModel.setData(task.result?.user!!.email!!)
+                        activity.mainVM.setData(task.result?.user!!.email!!)
                         status?.onSuccess()
                     }
                     else {
@@ -60,8 +55,8 @@ class AccountHelper(val activity: MainActivity, @IdRes val currentView: Int) {
                         AuxillaryFunctions.showSnackBar(R.string.failed_login, activity)
 
                         /* Do if wrong password (realise later) */
-                        activity.mainViewModel.incAttempt()
-                        activity.mainViewModel.setNumberOfAttempts()
+                        activity.mainVM.incAttempt()
+                        activity.mainVM.setNumberOfAttempts()
                     }
                 }
         } else {

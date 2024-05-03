@@ -10,6 +10,9 @@ interface KindCafeDao {
     @Upsert
     suspend fun insertDish(dish: List<Dish>)
 
+    @Query("Select * FROM dish")
+    fun getAllDishes(): Flow<List<Dish>>
+
     @Query("SELECT * FROM dish WHERE category = :categoryCur")
     fun getDishesByCategory(categoryCur: String): Flow<List<Dish>>
 

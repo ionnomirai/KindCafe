@@ -7,21 +7,12 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.example.kindcafe.MainActivity
-import com.example.kindcafe.R
 import com.example.kindcafe.data.Categories
-import com.example.kindcafe.database.Dish
 import com.example.kindcafe.databinding.FragHomeBinding
-import com.example.kindcafe.firebase.DbManager
-import com.example.kindcafe.firebase.firebaseInterfaces.ReadAndSplitCategories
 import com.example.kindcafe.viewModels.MainViewModel
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.launch
+
 
 class HomeFragment : Fragment() {
     /*---------------------------------------- Properties ----------------------------------------*/
@@ -36,7 +27,7 @@ class HomeFragment : Fragment() {
     /* Common viewModel between activity and this fragment */
     private val mainVM: MainViewModel by activityViewModels()
 
-    private val myTag = "HomeFragmentTag"
+    private val my_tag = "HomeFragmentTag"
 
     /*---------------------------------------- Functions -----------------------------------------*/
 
@@ -53,28 +44,33 @@ class HomeFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         (activity as MainActivity).everyOpenHomeSettings()
 
-        Log.d(myTag, "onViewCreated")
+        Log.d(my_tag, "onViewCreated")
 
         mainVM.nameData.observe(viewLifecycleOwner) { email ->
             binding.tvUserNameHome.text = email
         }
 
         binding.apply {
-            cvFirst.setOnClickListener {
-                val action = HomeFragmentDirections.actionHomeFragmentToShowItemsFragment(Categories.SparklingDrinks)
-                findNavController().navigate(action)
+            try {
+                cvFirst.setOnClickListener {
+                    val action = HomeFragmentDirections.actionHomeFragmentToShowItemsFragment(Categories.SparklingDrinks)
+                    findNavController().navigate(action)
+                }
+                cvFourth.setOnClickListener {
+                    val action = HomeFragmentDirections.actionHomeFragmentToShowItemsFragment(Categories.Cakes)
+                    findNavController().navigate(action)
+                }
+            } catch (e: Exception){
+                Log.d(my_tag, "Navigation exception: $e")
             }
-            cvFourth.setOnClickListener {
-                val action = HomeFragmentDirections.actionHomeFragmentToShowItemsFragment(Categories.Cakes)
-                findNavController().navigate(action)
-            }
+
         }
 
     }
 
     override fun onResume() {
         super.onResume()
-        Log.d(myTag, "onResume")
+        Log.d(my_tag, "onResume")
     }
 
     override fun onDestroyView() {

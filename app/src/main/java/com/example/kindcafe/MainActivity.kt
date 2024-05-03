@@ -12,22 +12,29 @@ import androidx.annotation.IdRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
 import androidx.core.view.isVisible
+import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
-import com.example.kindcafe.data.Categories
 import com.example.kindcafe.database.Dish
 import com.example.kindcafe.databinding.ActivityMainBinding
 import com.example.kindcafe.firebase.AccountHelper
 import com.example.kindcafe.firebase.DbManager
-import com.example.kindcafe.firebase.firebaseInterfaces.ReadAndSplitCategories
+import com.example.kindcafe.firebase.StorageManager
+import com.example.kindcafe.firebase.firebaseEnums.UriSize
+import com.example.kindcafe.firebase.firebaseInterfaces.GetUrisCallback
+import com.example.kindcafe.firebase.firebaseInterfaces.ReadAllData
 import com.example.kindcafe.utils.GeneralAccessTypes
 import com.example.kindcafe.viewModels.MainViewModel
 import com.squareup.picasso.OkHttp3Downloader
 import com.squareup.picasso.Picasso
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.launch
 
 
 class MainActivity : AppCompatActivity()/*, NavigationView.OnNavigationItemSelectedListener*/ {
@@ -47,14 +54,25 @@ class MainActivity : AppCompatActivity()/*, NavigationView.OnNavigationItemSelec
     * among the navGraph. It also changes fragments in NavHostFrament*/
     lateinit var navController: NavController
 
-    private val MY_TAG = "MainActivityTag"
+    private val my_tag = "MainActivityTag"
     private val cacheSize: Long = 2048 * 2048 * 50 //+-209 MB
     private lateinit var picasso : Picasso
 
     private val accountHelper = AccountHelper(this, R.id.lDrawLayoutMain)
 
     /* Common viewModel to get data to fragment (for example Home_fragment) */
-    val mainViewModel: MainViewModel by viewModels()
+    val mainVM: MainViewModel by viewModels()
+
+    private val dbManager = DbManager()
+    private val storageManager = StorageManager()
+
+    private val listAllDishes = mutableListOf<Dish>()
+    private val listSmallUris = mutableListOf<Dish>()
+    private val listBigUris = mutableListOf<Dish>()
+
+    private val isDbServerDLDone = MutableStateFlow(false)
+    private val isSmallUrisDone = MutableStateFlow(false)
+    private val isBigUrisDone = MutableStateFlow(false)
 
     /*---------------------------------------- Functions -----------------------------------------*/
 
@@ -82,7 +100,7 @@ class MainActivity : AppCompatActivity()/*, NavigationView.OnNavigationItemSelec
         initialUISettingMain()
 
         /* When user name changed -- call this */
-        mainViewModel.nameData.observe(this) {
+        mainVM.nameData.observe(this) {
             updateMainUI()
         }
 
@@ -95,13 +113,13 @@ class MainActivity : AppCompatActivity()/*, NavigationView.OnNavigationItemSelec
 
         movingLogicN2()
 
-
-
         /* Set new cache size for Picasso */
         picasso = Picasso
             .Builder(this)
             .downloader(OkHttp3Downloader(this, cacheSize))
             .build()
+
+        downloadDbWhenStart()
     }
 
     /* Custom logic of moving between fragments */
@@ -122,7 +140,7 @@ class MainActivity : AppCompatActivity()/*, NavigationView.OnNavigationItemSelec
                 R.id.itemLogout -> {
                     if (accountHelper.signOut()) { // if we logout successfuly
                         binding.lDrawLayoutMain.closeDrawer(GravityCompat.START)
-                        mainViewModel.setData(resources.getString(R.string.default_username))
+                        mainVM.setData(resources.getString(R.string.default_username))
                     }
                 }
 
@@ -144,9 +162,9 @@ class MainActivity : AppCompatActivity()/*, NavigationView.OnNavigationItemSelec
     private fun initialUISettingMain(){
         val currentEmail = accountHelper.getUserEmail()
         if (currentEmail != null) {
-            mainViewModel.setData(currentEmail)
+            mainVM.setData(currentEmail)
         } else {
-            mainViewModel.setData(resources.getString(R.string.default_username))
+            mainVM.setData(resources.getString(R.string.default_username))
         }
     }
 
@@ -154,12 +172,12 @@ class MainActivity : AppCompatActivity()/*, NavigationView.OnNavigationItemSelec
     * - toolbar header - change name;
     * - viewmodels.name -> give this name to fragment Home*/
     fun updateMainUI() {
-        Log.d(MY_TAG, "updateMainUI ")
+        Log.d(my_tag, "updateMainUI ")
         //val currentEmail = accountHelper.getUserEmail()
         binding.apply {
             nvLeft
                 .getHeaderView(0)
-                .findViewById<TextView>(R.id.tvUserName).text = mainViewModel.nameData.value
+                .findViewById<TextView>(R.id.tvUserName).text = mainVM.nameData.value
         }
     }
 
@@ -237,5 +255,81 @@ class MainActivity : AppCompatActivity()/*, NavigationView.OnNavigationItemSelec
             Toast.makeText(this, "Search", Toast.LENGTH_SHORT).show()
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    private fun downloadDbWhenStart(){
+        /* Get data from RealtimeDB*/
+        dbManager.readAllDishDataFromDb(getCallbackReadAllData())
+
+        /* Get Data about small uri */
+        mainVM.viewModelScope.launch {
+            isDbServerDLDone.collect{
+                if (it){
+                    storageManager.readUri(listAllDishes, getUrisBySize(UriSize.Small, this), UriSize.Small)
+                }
+            }
+        }
+
+        /* Get Data about big uri */
+        mainVM.viewModelScope.launch{
+            isSmallUrisDone.collect{
+                if (it){
+                    storageManager.readUri(listSmallUris, getUrisBySize(UriSize.Big, this), UriSize.Big)
+                }
+            }
+        }
+
+        /* Get Data about big uri */
+        mainVM.viewModelScope.launch {
+            isBigUrisDone.collect{
+                if(it){
+                    mainVM.addDishLocal(listBigUris)
+                    Log.d(my_tag, "Home-ViewModel added to local DB added")
+                    mainVM.getAllDishes()
+                    Log.d(my_tag, "Home-ViewModel get to local DB added")
+                    isDbServerDLDone.value = false
+                    isSmallUrisDone.value = false
+                    isBigUrisDone.value = false
+                    cancel()
+                }
+            }
+        }
+
+//        this only to me (display result) -- delete after all
+/*        mainVM.viewModelScope.launch{
+            mainVM.allDishes.collect{
+                Log.d(my_tag, "All dishes: $it")
+            }
+        }*/
+    }
+
+    private fun getCallbackReadAllData(): ReadAllData {
+        return object : ReadAllData {
+            override fun readAll(data: List<Dish>) {
+                listAllDishes.clear()
+                listAllDishes.addAll(data)
+                Log.d(my_tag, "Main-ViewModel data added")
+                isDbServerDLDone.value = true
+            }
+        }
+    }
+
+    private fun getUrisBySize(uriSize: UriSize, job: CoroutineScope): GetUrisCallback {
+        return object : GetUrisCallback {
+            override fun getUris(newData: List<Dish>) {
+                if(uriSize == UriSize.Small){
+                    listSmallUris.clear()
+                    listSmallUris += newData
+                    isSmallUrisDone.value = true
+                    Log.d(my_tag, "Main-ViewModel Uri small added")
+                } else {
+                    listBigUris.clear()
+                    listBigUris += newData
+                    isBigUrisDone.value = true
+                    Log.d(my_tag, "Main-ViewModel Uri big added")
+                }
+                job.cancel()
+            }
+        }
     }
 }

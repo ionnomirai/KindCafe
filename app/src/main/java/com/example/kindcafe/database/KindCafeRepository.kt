@@ -19,6 +19,8 @@ class KindCafeRepository private constructor(
 
     suspend fun insertDish(dish: List<Dish>) = database.kindCafeDao().insertDish(dish)
 
+    fun getAllDishes(): Flow<List<Dish>> = database.kindCafeDao().getAllDishes()
+
     fun getDishByCategory(category: Categories): Flow<List<Dish>> =
         database.kindCafeDao().getDishesByCategory(category.categoryName)
 
