@@ -12,6 +12,7 @@ import androidx.annotation.IdRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
 import androidx.core.view.isVisible
+import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
@@ -20,7 +21,9 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
+import com.example.kindcafe.data.AllUserData
 import com.example.kindcafe.database.Dish
+import com.example.kindcafe.database.UserPersonal
 import com.example.kindcafe.databinding.ActivityMainBinding
 import com.example.kindcafe.firebase.AccountHelper
 import com.example.kindcafe.firebase.DbManager
@@ -28,6 +31,7 @@ import com.example.kindcafe.firebase.StorageManager
 import com.example.kindcafe.firebase.firebaseEnums.UriSize
 import com.example.kindcafe.firebase.firebaseInterfaces.GetUrisCallback
 import com.example.kindcafe.firebase.firebaseInterfaces.ReadAllData
+import com.example.kindcafe.firebase.firebaseInterfaces.ReadUsersData
 import com.example.kindcafe.utils.GeneralAccessTypes
 import com.example.kindcafe.viewModels.MainViewModel
 import com.squareup.picasso.OkHttp3Downloader
@@ -35,6 +39,7 @@ import com.squareup.picasso.Picasso
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 
@@ -57,7 +62,7 @@ class MainActivity : AppCompatActivity()/*, NavigationView.OnNavigationItemSelec
 
     private val my_tag = "MainActivityTag"
     private val cacheSize: Long = 2048 * 2048 * 50 //+-209 MB
-    private lateinit var picasso : Picasso
+    private lateinit var picasso: Picasso
 
     private val accountHelper = AccountHelper(this, R.id.lDrawLayoutMain)
 
@@ -70,10 +75,12 @@ class MainActivity : AppCompatActivity()/*, NavigationView.OnNavigationItemSelec
     private val listAllDishes = mutableListOf<Dish>()
     private val listSmallUris = mutableListOf<Dish>()
     private val listBigUris = mutableListOf<Dish>()
+    private var listUserInfo = AllUserData()
 
     private val isDbServerDLDone = MutableStateFlow(false)
     private val isSmallUrisDone = MutableStateFlow(false)
     private val isBigUrisDone = MutableStateFlow(false)
+    private val isUsersInfoDone = MutableStateFlow(false)
 
     /*---------------------------------------- Functions -----------------------------------------*/
 
@@ -107,12 +114,28 @@ class MainActivity : AppCompatActivity()/*, NavigationView.OnNavigationItemSelec
 
         binding.apply {
             ibHome.setOnClickListener {
-                val verif = accountHelper.myAuth.currentUser?.isEmailVerified
-                Toast.makeText(this@MainActivity, "$verif", Toast.LENGTH_SHORT).show()
+                dbManager.setTestData(KindCafeApplication.myAuth.currentUser)
+                /*                val userC = UserPersonal(name = "Jack", email = "some@fff")
+                                DbManager().setPrimaryData(KindCafeApplication.myAuth.currentUser, userC)*/
             }
 
             ibBag.setOnClickListener {
-                navController.navigate(R.id.action_homeFragment_to_basketFrag)
+                if (KindCafeApplication.myAuth.currentUser != null) {
+                    navController.popBackStack(R.id.homeFragment, false)
+                    navController.navigate(R.id.action_homeFragment_to_basketFrag)
+                } else {
+                    Toast.makeText(this@MainActivity, "Please login", Toast.LENGTH_SHORT).show()
+                }
+            }
+
+            ibHeart.setOnClickListener {
+                if (KindCafeApplication.myAuth.currentUser != null) {
+                    navController.popBackStack(R.id.homeFragment, false)
+                    navController.navigate(R.id.action_homeFragment_to_favoriteFragment)
+                } else {
+                    Toast.makeText(this@MainActivity, "Please login", Toast.LENGTH_SHORT).show()
+                }
+
             }
         }
 
@@ -127,6 +150,8 @@ class MainActivity : AppCompatActivity()/*, NavigationView.OnNavigationItemSelec
             .build()
 
         downloadDbWhenStart()
+
+        doWhenStartOrLogin()
     }
 
     /* Custom logic of moving between fragments */
@@ -139,11 +164,13 @@ class MainActivity : AppCompatActivity()/*, NavigationView.OnNavigationItemSelec
                         moveTo(R.id.action_homeFragment_to_loginFragment)
                     }
                 }
+
                 R.id.itemRegistrationFragment -> {
                     if (!accountHelper.isUserLogin()) {
                         moveTo(R.id.action_homeFragment_to_registrationFragment)
                     }
                 }
+
                 R.id.itemLogout -> {
                     if (accountHelper.signOut()) { // if we logout successfuly
                         binding.lDrawLayoutMain.closeDrawer(GravityCompat.START)
@@ -166,7 +193,7 @@ class MainActivity : AppCompatActivity()/*, NavigationView.OnNavigationItemSelec
     }
 
     /* Initinal UI main setting */
-    private fun initialUISettingMain(){
+    private fun initialUISettingMain() {
         val currentEmail = accountHelper.getUserEmail()
         if (currentEmail != null) {
             mainVM.setData(currentEmail)
@@ -264,32 +291,40 @@ class MainActivity : AppCompatActivity()/*, NavigationView.OnNavigationItemSelec
         return super.onOptionsItemSelected(item)
     }
 
-    private fun downloadDbWhenStart(){
+    private fun downloadDbWhenStart() {
         /* Get data from RealtimeDB*/
         dbManager.readAllDishDataFromDb(getCallbackReadAllData())
 
         /* Get Data about small uri */
         mainVM.viewModelScope.launch {
-            isDbServerDLDone.collect{
-                if (it){
-                    storageManager.readUri(listAllDishes, getUrisBySize(UriSize.Small, this), UriSize.Small)
-                }
-            }
-        }
-
-        /* Get Data about big uri */
-        mainVM.viewModelScope.launch{
-            isSmallUrisDone.collect{
-                if (it){
-                    storageManager.readUri(listSmallUris, getUrisBySize(UriSize.Big, this), UriSize.Big)
+            isDbServerDLDone.collect {
+                if (it) {
+                    storageManager.readUri(
+                        listAllDishes,
+                        getUrisBySize(UriSize.Small, this),
+                        UriSize.Small
+                    )
                 }
             }
         }
 
         /* Get Data about big uri */
         mainVM.viewModelScope.launch {
-            isBigUrisDone.collect{
-                if(it){
+            isSmallUrisDone.collect {
+                if (it) {
+                    storageManager.readUri(
+                        listSmallUris,
+                        getUrisBySize(UriSize.Big, this),
+                        UriSize.Big
+                    )
+                }
+            }
+        }
+
+        /* Get Data about big uri */
+        mainVM.viewModelScope.launch {
+            isBigUrisDone.collect {
+                if (it) {
                     mainVM.addDishLocal(listBigUris)
                     Log.d(my_tag, "Home-ViewModel added to local DB added")
                     mainVM.getAllDishes()
@@ -303,11 +338,11 @@ class MainActivity : AppCompatActivity()/*, NavigationView.OnNavigationItemSelec
         }
 
 //        this only to me (display result) -- delete after all
-/*        mainVM.viewModelScope.launch{
-            mainVM.allDishes.collect{
-                Log.d(my_tag, "All dishes: $it")
-            }
-        }*/
+        /*        mainVM.viewModelScope.launch{
+                    mainVM.allDishes.collect{
+                        Log.d(my_tag, "All dishes: $it")
+                    }
+                }*/
     }
 
     private fun getCallbackReadAllData(): ReadAllData {
@@ -324,7 +359,7 @@ class MainActivity : AppCompatActivity()/*, NavigationView.OnNavigationItemSelec
     private fun getUrisBySize(uriSize: UriSize, job: CoroutineScope): GetUrisCallback {
         return object : GetUrisCallback {
             override fun getUris(newData: List<Dish>) {
-                if(uriSize == UriSize.Small){
+                if (uriSize == UriSize.Small) {
                     listSmallUris.clear()
                     listSmallUris += newData
                     isSmallUrisDone.value = true
@@ -338,5 +373,52 @@ class MainActivity : AppCompatActivity()/*, NavigationView.OnNavigationItemSelec
                 job.cancel()
             }
         }
+    }
+
+    fun doWhenStartOrLogin() {
+
+        val user = KindCafeApplication.myAuth.currentUser
+        if (user != null) {
+            // read data about personal
+            dbManager.readUsersData(user, object : ReadUsersData {
+                override fun readAllUserData(data: AllUserData) {
+                    listUserInfo = data
+                    isUsersInfoDone.value = true
+                }
+            })
+
+            // write into local db
+            lifecycleScope.launch {
+                isUsersInfoDone.collect{
+                    if(it){
+                        listUserInfo.personal?.let {mainVM.setPersonalDataLocal(it)}
+                        listUserInfo.favorites?.let {
+                            for (i in it){
+                                mainVM.addFavoritesLocal(i)
+                                Log.d(my_tag, "in favorite")
+                            }
+                            Log.d(my_tag, "out of favorite")
+                        }
+                        mainVM.getAllFavorites()
+                        Log.d(my_tag, "person and fav done")
+                    }
+                }
+            }
+
+
+
+            // update screen about personal
+
+
+            // read data about order
+            // write into local db
+        }
+    }
+
+    private fun doWhenLogout() {
+        /* remove data from local db about:
+        * - personal
+        * - favorites
+        * - order*/
     }
 }

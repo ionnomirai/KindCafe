@@ -4,10 +4,13 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.kindcafe.data.Categories
 import com.example.kindcafe.database.Dish
+import com.example.kindcafe.database.Favorites
 import com.example.kindcafe.database.KindCafeRepository
+import com.example.kindcafe.database.UserPersonal
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collect
 
 
 class MainViewModel : ViewModel() {
@@ -43,6 +46,8 @@ class MainViewModel : ViewModel() {
     /*---------------------------------------------------------------------------------------------------*/
     /*------------------------------------------ database data ------------------------------------------*/
 
+
+    /*----------------------------------dishes-----------------------------------------------*/
     private var _allDishes: MutableStateFlow<List<Dish>> = MutableStateFlow(emptyList())
     val allDishes: StateFlow<List<Dish>>
         get() = _allDishes.asStateFlow()
@@ -59,7 +64,24 @@ class MainViewModel : ViewModel() {
     val currentDish: StateFlow<Dish>
         get() = _currentDish
 
+    /*----------------------------------favorites-----------------------------------------------*/
 
+    private var _favorites: MutableStateFlow<List<Favorites>> = MutableStateFlow(emptyList())
+    val favorites: StateFlow<List<Favorites>>
+        get() = _favorites
+
+    private var _favoritesLikeDish: MutableStateFlow<List<Dish>> = MutableStateFlow(emptyList())
+    val favoritesLikeDish: StateFlow<List<Dish>>
+        get() = _favoritesLikeDish
+
+    /*----------------------------------personal-----------------------------------------------*/
+    private var _personal: MutableStateFlow<UserPersonal> = MutableStateFlow(UserPersonal())
+    val personal: StateFlow<UserPersonal>
+        get() = _personal
+
+
+
+    /*----------------------------------FUN dishes-----------------------------------------------*/
     suspend fun addDishLocal(dish: List<Dish>) {
         repository.insertDish(dish)
     }
@@ -88,5 +110,47 @@ class MainViewModel : ViewModel() {
              _currentDish.value = it
          }
     }
+
+    /*----------------------------------FUN favorites-----------------------------------------------*/
+
+    suspend fun getLikeDish(id: String, name: String): Dish{
+        return repository.getDish1(id, name)
+    }
+
+    suspend fun addFavoritesLocal(favoriteDish: Favorites) {
+        repository.insertFavorite(favoriteDish)
+    }
+
+    suspend fun getAllFavorites(){
+        repository.getFavorites().collect{
+            _favorites.value = it
+        }
+    }
+
+    fun addToFavLikeDish(data: List<Dish>){
+        _favoritesLikeDish.value = data
+    }
+
+    suspend fun deleteFavDish(fav: Favorites){
+        repository.deleteFavDish(fav)
+    }
+
+    /*----------------------------------FUN personal-----------------------------------------------*/
+
+    suspend fun getPersonalDataLocal(){
+        repository.getPersonalDataLocal().collect{
+            _personal.value = it
+        }
+    }
+
+    suspend fun setPersonalDataLocal(personal: UserPersonal){
+        repository.setPersonalDataLocal(personal)
+    }
+
+    suspend fun deletePersonalDataLocal(personal: UserPersonal){
+        repository.deletePersonalDataLocal(personal)
+    }
+
+
 
 }

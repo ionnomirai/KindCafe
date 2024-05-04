@@ -5,12 +5,14 @@ import androidx.annotation.IdRes
 import com.example.kindcafe.KindCafeApplication
 import com.example.kindcafe.MainActivity
 import com.example.kindcafe.R
+import com.example.kindcafe.database.UserPersonal
 import com.example.kindcafe.firebase.firebaseInterfaces.DefinitionOfStatus
 import com.example.kindcafe.utils.AuxillaryFunctions
 import com.google.firebase.auth.FirebaseUser
 
 class AccountHelper(val activity: MainActivity, @IdRes val currentView: Int) {
     val myAuth = KindCafeApplication.myAuth
+    private val dbManager = DbManager()
     private val MY_TAG = "AccountHelperTag"
 
     /* Registration
@@ -25,7 +27,9 @@ class AccountHelper(val activity: MainActivity, @IdRes val currentView: Int) {
                         /* if it is ok, then send verification to user */
                         sendEmailVerification(task.result?.user!!)
                         status?.onSuccess()
-                        activity.mainVM.setData(task.result?.user!!.email!!)
+                        //activity.mainVM.setData(task.result?.user!!.email!!)
+                        activity.mainVM.setData(name)
+                        dbManager.setPrimaryData(myAuth.currentUser, UserPersonal(name = name, email = email))
                     } else {
                         /* Get the current error */
                         Log.d(MY_TAG, "Global Exception: ${task.exception}")
@@ -47,7 +51,9 @@ class AccountHelper(val activity: MainActivity, @IdRes val currentView: Int) {
                 .addOnCompleteListener { task ->
                     if (task.isSuccessful){
                         AuxillaryFunctions.showSnackBar(R.string.success_login, activity)
+                        //activity.mainVM.setData(task.result?.user!!.email!!)
                         activity.mainVM.setData(task.result?.user!!.email!!)
+                        // read data from db
                         status?.onSuccess()
                     }
                     else {

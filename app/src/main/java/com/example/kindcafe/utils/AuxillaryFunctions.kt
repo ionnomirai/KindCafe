@@ -6,6 +6,7 @@ import androidx.annotation.IdRes
 import androidx.annotation.StringRes
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import com.example.kindcafe.MainActivity
 import com.example.kindcafe.R
 import com.example.kindcafe.firebase.firebaseInterfaces.DefinitionOfStatus
 import com.google.android.material.snackbar.Snackbar
@@ -38,6 +39,7 @@ private val MY_TAG = "AuxillaryFunctionsTAG"
         return object : DefinitionOfStatus{
             override fun onSuccess() {
                 try {
+                    (frag.activity as MainActivity).doWhenStartOrLogin()
                     val curFrag = frag.parentFragmentManager.findFragmentById(fragContainer)
                     when(direction){
                         SimplePopDirections.TOP_DESTINATION -> curFrag?.findNavController()?.popBackStack(R.id.homeFragment, false)

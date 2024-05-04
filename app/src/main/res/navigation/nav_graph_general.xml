@@ -23,6 +23,9 @@
         <action
             android:id="@+id/action_homeFragment_to_basketFrag"
             app:destination="@id/basketFrag" />
+        <action
+            android:id="@+id/action_homeFragment_to_favoriteFragment"
+            app:destination="@id/favoriteFragment" />
     </fragment>
     <fragment
         android:id="@+id/registrationFragment"
@@ -67,7 +70,10 @@
         <action
             android:id="@+id/action_showItemsFragment_to_detailFragment"
             app:destination="@id/detailFragment" />
-    </fragment>
+         <action
+             android:id="@+id/action_showItemsFragment_to_favoriteFragment"
+             app:destination="@id/favoriteFragment" />
+     </fragment>
     <fragment
         android:id="@+id/detailFragment"
         android:name="com.example.kindcafe.fragments.DetailFragment"
@@ -85,4 +91,12 @@
         android:name="com.example.kindcafe.fragments.BasketFrag"
         android:label="BasketFrag"
         tools:layout="@layout/frag_basket"/>
+    <fragment
+        android:id="@+id/favoriteFragment"
+        android:name="com.example.kindcafe.fragments.FavoriteFragment"
+        android:label="FavoriteFragment" >
+        <action
+            android:id="@+id/action_favoriteFragment_to_detailFragment"
+            app:destination="@id/detailFragment" />
+    </fragment>
 </navigation>

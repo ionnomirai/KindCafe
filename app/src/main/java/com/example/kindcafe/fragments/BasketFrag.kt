@@ -15,6 +15,7 @@ import com.example.kindcafe.adapters.AdapterShowItems
 import com.example.kindcafe.adapters.callbacks.ItemMoveDirections
 import com.example.kindcafe.data.Categories
 import com.example.kindcafe.database.Dish
+import com.example.kindcafe.database.Favorites
 import com.example.kindcafe.databinding.FragBasketBinding
 import com.example.kindcafe.databinding.FragHomeBinding
 import com.example.kindcafe.viewModels.MainViewModel
@@ -83,6 +84,18 @@ class BasketFrag: Fragment() {
             }
 
             override fun putToBag(dish: Dish) {
+                TODO("Not yet implemented")
+            }
+
+            override fun putToFavorite(favoriteDish: Favorites) {
+                TODO("Not yet implemented")
+            }
+
+            override fun delFromFavorite(favoriteDish: Favorites) {
+                TODO("Not yet implemented")
+            }
+
+            override fun checkFavorites(favoriteDish: Favorites): Boolean {
                 TODO("Not yet implemented")
             }
         }

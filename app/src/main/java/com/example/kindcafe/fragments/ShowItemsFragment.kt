@@ -11,11 +11,13 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.kindcafe.KindCafeApplication
 import com.example.kindcafe.MainActivity
 import com.example.kindcafe.adapters.AdapterShowItems
 import com.example.kindcafe.adapters.callbacks.ItemMoveDirections
 import com.example.kindcafe.data.Categories
 import com.example.kindcafe.database.Dish
+import com.example.kindcafe.database.Favorites
 import com.example.kindcafe.databinding.FragItemsBinding
 import com.example.kindcafe.firebase.DbManager
 import com.example.kindcafe.firebase.StorageManager
@@ -23,7 +25,9 @@ import com.example.kindcafe.firebase.firebaseEnums.UriSize
 import com.example.kindcafe.firebase.firebaseInterfaces.GetUrisCallback
 import com.example.kindcafe.firebase.firebaseInterfaces.ReadAndSplitCategories
 import com.example.kindcafe.viewModels.MainViewModel
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 class ShowItemsFragment: Fragment() {
@@ -177,6 +181,29 @@ class ShowItemsFragment: Fragment() {
 
             override fun putToBag(dish: Dish) {
                 TODO("Not yet implemented")
+            }
+
+            override fun putToFavorite(favoriteDish: Favorites) {
+                viewLifecycleOwner.lifecycleScope.launch{
+                    mainVM.addFavoritesLocal(favoriteDish)
+                    dbManager.setFavoriteDishes(KindCafeApplication.myAuth.currentUser, favoriteDish)
+                    // delete after all
+                    mainVM.getAllFavorites()
+                    cancel()
+                }
+            }
+
+            override fun delFromFavorite(favoriteDish: Favorites) {
+                viewLifecycleOwner.lifecycleScope.launch {
+                    mainVM.deleteFavDish(favoriteDish)
+                    dbManager.deleteFavoriteDish(KindCafeApplication.myAuth.currentUser, favoriteDish)
+                    mainVM.getAllFavorites()
+                    cancel()
+                }
+            }
+
+            override fun checkFavorites(favoriteDish: Favorites): Boolean {
+                return favoriteDish in mainVM.favorites.value
             }
         }
     }

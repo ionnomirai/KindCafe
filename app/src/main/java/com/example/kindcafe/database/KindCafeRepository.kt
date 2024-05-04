@@ -16,7 +16,7 @@ class KindCafeRepository private constructor(
             DATABASE_NAME
         )
         .build()
-
+    /*------------------------------------Dish------------------------------------*/
     suspend fun insertDish(dish: List<Dish>) = database.kindCafeDao().insertDish(dish)
 
     fun getAllDishes(): Flow<List<Dish>> = database.kindCafeDao().getAllDishes()
@@ -26,6 +26,27 @@ class KindCafeRepository private constructor(
 
     fun getDish(id: String, name: String): Flow<Dish> =
         database.kindCafeDao().getDish(id, name)
+
+    suspend fun getDish1(id: String, name: String): Dish =
+        database.kindCafeDao().getDishSimple(id, name)
+
+
+    /*------------------------------------Favorite------------------------------------*/
+
+    suspend fun insertFavorite(favorite: Favorites) = database.kindCafeDao().insertFavorites(favorite)
+
+    fun getFavorites(): Flow<List<Favorites>> = database.kindCafeDao().getAllFavorites()
+
+    suspend fun deleteFavDish(fav: Favorites) = database.kindCafeDao().deleteFavDish(fav)
+
+    /*------------------------------------Personal------------------------------------*/
+
+    suspend fun getPersonalDataLocal() = database.kindCafeDao().getPersonalLocal()
+
+    suspend fun setPersonalDataLocal(personal: UserPersonal) = database.kindCafeDao().setPersonalLocal(personal)
+
+    suspend fun deletePersonalDataLocal(personal: UserPersonal) = database.kindCafeDao().deletePersonalLocal(personal)
+
 
     companion object{
         private var INSTANCE: KindCafeRepository? = null

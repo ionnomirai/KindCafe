@@ -4,7 +4,7 @@ import androidx.room.Database
 import androidx.room.RoomDatabase
 
 @Database(
-    entities = [Dish::class],
+    entities = [Dish::class, Favorites::class, UserPersonal::class],
     version = 1
 )
 abstract class KindCafeDatabase: RoomDatabase() {
