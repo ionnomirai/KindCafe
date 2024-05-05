@@ -112,7 +112,14 @@ class MainActivity : AppCompatActivity()/*, NavigationView.OnNavigationItemSelec
 
         binding.apply {
             ibHome.setOnClickListener {
-                //dbManager.setTestData(KindCafeApplication.myAuth.currentUser)
+                lifecycleScope.launch {
+                    mainVM.getOrderItemsLocal()
+                }
+                lifecycleScope.launch {
+                    mainVM.orderBasket.collect{
+                        Log.d(my_tag, "orderBasket: $it")
+                    }
+                }
             }
 
             ibBag.setOnClickListener {
@@ -400,7 +407,10 @@ class MainActivity : AppCompatActivity()/*, NavigationView.OnNavigationItemSelec
 
             lifecycleScope.launch {
                 mainVM.getAllFavorites()
-                cancel()
+            }
+
+            lifecycleScope.launch {
+                mainVM.getOrderItemsLocal()
             }
 
             // read data about order

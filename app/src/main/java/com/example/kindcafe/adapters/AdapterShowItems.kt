@@ -1,8 +1,11 @@
 package com.example.kindcafe.adapters
 
+import android.app.Activity
+import android.content.res.ColorStateList
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.kindcafe.R
@@ -10,6 +13,7 @@ import com.example.kindcafe.adapters.callbacks.ItemMoveDirections
 import com.example.kindcafe.database.Dish
 import com.example.kindcafe.database.Favorites
 import com.example.kindcafe.databinding.ItemChooseRvBinding
+import com.example.kindcafe.utils.IconsOnItem
 import com.squareup.picasso.Picasso
 
 class AdapterShowItems(
@@ -57,16 +61,36 @@ class AdapterShowItems(
                     if (itemMoveDirectionsInner.checkFavorites(currentFav)){
                         Log.d(my_tag_inner, "data fav: ${data}")
                         bindingInner.ibLike.setImageResource(R.drawable.ic_heart_filled)
+                        setTintIcons(IconsOnItem.FAVORITE, true)
+                    }
+
+                    if (itemMoveDirectionsInner.checkBag(data)){
+                        setTintIcons(IconsOnItem.BAG, true)
                     }
 
                     ibLike.setOnClickListener {
                         if(itemMoveDirectionsInner.checkFavorites(currentFav)){
                             itemMoveDirectionsInner.delFromFavorite(currentFav)
                             ibLike.setImageResource(R.drawable.ic_heart)
+                            setTintIcons(IconsOnItem.FAVORITE, false)
+
                         } else {
                             itemMoveDirectionsInner.putToFavorite(Favorites( id = data.id, dishId = data.id, dishName = data.name))
                             ibLike.setImageResource(R.drawable.ic_heart_filled)
+                            setTintIcons(IconsOnItem.FAVORITE, true)
+
                         }
+                    }
+
+                    ibPutToOrder.setOnClickListener {
+                        if(itemMoveDirectionsInner.checkBag(data)){
+                            itemMoveDirectionsInner.delFromBag(data)
+                            setTintIcons(IconsOnItem.BAG, false)
+                        } else {
+                            itemMoveDirectionsInner.putToBag(data)
+                            setTintIcons(IconsOnItem.BAG, true)
+                        }
+
                     }
                 }
 
@@ -76,6 +100,18 @@ class AdapterShowItems(
 
 
 
+            }
+        }
+
+        private fun setTintIcons(ic: IconsOnItem, isPress: Boolean){
+            bindingInner.apply {
+                val colorStateList = itemMoveDirectionsInner.getTint(isPress)
+                colorStateList?.let {
+                    when(ic){
+                        IconsOnItem.BAG -> ibPutToOrder.imageTintList = it
+                        IconsOnItem.FAVORITE -> ibLike.imageTintList = it
+                    }
+                }
             }
         }
     }

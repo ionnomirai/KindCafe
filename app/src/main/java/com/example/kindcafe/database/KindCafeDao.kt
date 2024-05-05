@@ -52,4 +52,18 @@ interface KindCafeDao {
 
     @Query("DELETE FROM userpersonal")
     suspend fun deleteAllPersonal()
+
+    /*------------------------------------Order------------------------------------*/
+
+    @Query("SELECT * FROM orderitem")
+    fun getOrderItemsLocal(): Flow<List<OrderItem>>
+
+    @Upsert
+    suspend fun setOrderItemsLocal(order: OrderItem)
+
+    @Delete
+    suspend fun deleteOrderItemsLocal(order: OrderItem)
+
+    @Query("DELETE FROM orderitem")
+    suspend fun deleteAllOrderItemsLocal()
 }

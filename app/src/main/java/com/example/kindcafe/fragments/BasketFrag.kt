@@ -1,5 +1,6 @@
 package com.example.kindcafe.fragments
 
+import android.content.res.ColorStateList
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -96,6 +97,22 @@ class BasketFrag: Fragment() {
             }
 
             override fun checkFavorites(favoriteDish: Favorites): Boolean {
+                return false
+            }
+
+            override fun checkUserExist(): Boolean {
+                return false
+            }
+
+            override fun getTint(isPress: Boolean): ColorStateList? {
+                TODO("Not yet implemented")
+            }
+
+            override fun delFromBag(dish: Dish) {
+                TODO("Not yet implemented")
+            }
+
+            override fun checkBag(dish: Dish): Boolean {
                 TODO("Not yet implemented")
             }
         }

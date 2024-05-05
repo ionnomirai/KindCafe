@@ -1,7 +1,10 @@
 package com.example.kindcafe.database
 
 import android.content.Context
+import androidx.room.Delete
+import androidx.room.Query
 import androidx.room.Room
+import androidx.room.Upsert
 import com.example.kindcafe.data.Categories
 import kotlinx.coroutines.flow.Flow
 
@@ -50,6 +53,16 @@ class KindCafeRepository private constructor(
     suspend fun deletePersonalDataLocal(personal: UserPersonal) = database.kindCafeDao().deletePersonalLocal(personal)
 
     suspend fun deleteAllPersonal() = database.kindCafeDao().deleteAllPersonal()
+
+    /*------------------------------------To Basket------------------------------------*/
+
+    fun getOrderItemsLocal(): Flow<List<OrderItem>> = database.kindCafeDao().getOrderItemsLocal()
+
+    suspend fun setOrderItemsLocal(order: OrderItem) = database.kindCafeDao().setOrderItemsLocal(order)
+
+    suspend fun deleteOrderItemsLocal(order: OrderItem) = database.kindCafeDao().deleteOrderItemsLocal(order)
+
+    suspend fun deleteAllOrderItemsLocal() = database.kindCafeDao().deleteAllOrderItemsLocal()
 
 
     companion object{

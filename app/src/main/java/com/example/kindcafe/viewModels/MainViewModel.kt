@@ -6,7 +6,9 @@ import com.example.kindcafe.data.Categories
 import com.example.kindcafe.database.Dish
 import com.example.kindcafe.database.Favorites
 import com.example.kindcafe.database.KindCafeRepository
+import com.example.kindcafe.database.OrderItem
 import com.example.kindcafe.database.UserPersonal
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -79,6 +81,10 @@ class MainViewModel : ViewModel() {
     val personal: StateFlow<UserPersonal>
         get() = _personal
 
+    /*------------------------------------To Basket------------------------------------*/
+    private var _orderBasket: MutableStateFlow<List<OrderItem>> = MutableStateFlow(emptyList())
+    val orderBasket: StateFlow<List<OrderItem>>
+        get() = _orderBasket
 
 
     /*----------------------------------FUN dishes-----------------------------------------------*/
@@ -159,11 +165,33 @@ class MainViewModel : ViewModel() {
         repository.deleteAllPersonal()
     }
 
+    /*------------------------------------FUN To Basket------------------------------------*/
+
+    suspend fun getOrderItemsLocal(){
+        repository.getOrderItemsLocal().collect{
+            _orderBasket.value = it
+        }
+    }
+
+    suspend fun addOrderItemsLocal(order: OrderItem){
+        repository.setOrderItemsLocal(order)
+    }
+
+    suspend fun deleteOrderItemsLocal(order: OrderItem){
+        repository.deleteOrderItemsLocal(order)
+    }
+
+    suspend fun deleteAllOrderItemsLocal(){
+        repository.deleteAllOrderItemsLocal()
+    }
+
+
     /*----------------------------------FUN common-----------------------------------------------*/
 
     suspend fun deleteAllLogout(){
         deleteAllPersonal()
         deleteAllFavorites()
+        deleteAllOrderItemsLocal()
     }
 
 

@@ -1,10 +1,12 @@
 package com.example.kindcafe.fragments
 
+import android.content.res.ColorStateList
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
@@ -13,11 +15,13 @@ import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.kindcafe.KindCafeApplication
 import com.example.kindcafe.MainActivity
+import com.example.kindcafe.R
 import com.example.kindcafe.adapters.AdapterShowItems
 import com.example.kindcafe.adapters.callbacks.ItemMoveDirections
 import com.example.kindcafe.data.Categories
 import com.example.kindcafe.database.Dish
 import com.example.kindcafe.database.Favorites
+import com.example.kindcafe.database.OrderItem
 import com.example.kindcafe.databinding.FragItemsBinding
 import com.example.kindcafe.firebase.DbManager
 import com.example.kindcafe.firebase.StorageManager
@@ -180,7 +184,11 @@ class ShowItemsFragment: Fragment() {
             }
 
             override fun putToBag(dish: Dish) {
-                TODO("Not yet implemented")
+                viewLifecycleOwner.lifecycleScope.launch{
+                    val orderObj = OrderItem(id = dish.id, name = dish.name)
+                    mainVM.addOrderItemsLocal(orderObj)
+                    cancel()
+                }
             }
 
             override fun putToFavorite(favoriteDish: Favorites) {
@@ -209,6 +217,31 @@ class ShowItemsFragment: Fragment() {
 
             override fun checkUserExist(): Boolean {
                 return KindCafeApplication.myAuth.currentUser != null
+            }
+
+            override fun getTint(isPress: Boolean): ColorStateList? {
+                context?.let {
+                    if(isPress){
+                        return AppCompatResources.getColorStateList(it, R.color.greeting_phrase_color)
+                    }
+                    return AppCompatResources.getColorStateList(it, R.color.item_icon)
+                }
+                return null
+            }
+
+            override fun delFromBag(dish: Dish) {
+                viewLifecycleOwner.lifecycleScope.launch {
+                    val cur = mainVM.orderBasket.value.find { (it.id == dish.id && it.name == dish.name) }
+                    cur?.let {
+                        mainVM.deleteOrderItemsLocal(cur)
+                    }
+                    cancel()
+                }
+            }
+
+            // if true, dish in bag
+            override fun checkBag(dish: Dish): Boolean {
+                return mainVM.orderBasket.value.filter { (it.id == dish.id && it.name == dish.name) }.isNotEmpty()
             }
         }
     }
