@@ -105,8 +105,6 @@ class MainActivity : AppCompatActivity()/*, NavigationView.OnNavigationItemSelec
         //setupNavigationMenu(navController)
         setupActionBar(navController, appBarConfiguration)
 
-        initialUISettingMain()
-
         /* When user name changed -- call this */
         mainVM.nameData.observe(this) {
             updateMainUI()
@@ -114,9 +112,7 @@ class MainActivity : AppCompatActivity()/*, NavigationView.OnNavigationItemSelec
 
         binding.apply {
             ibHome.setOnClickListener {
-                dbManager.setTestData(KindCafeApplication.myAuth.currentUser)
-                /*                val userC = UserPersonal(name = "Jack", email = "some@fff")
-                                DbManager().setPrimaryData(KindCafeApplication.myAuth.currentUser, userC)*/
+                //dbManager.setTestData(KindCafeApplication.myAuth.currentUser)
             }
 
             ibBag.setOnClickListener {
@@ -175,6 +171,7 @@ class MainActivity : AppCompatActivity()/*, NavigationView.OnNavigationItemSelec
                     if (accountHelper.signOut()) { // if we logout successfuly
                         binding.lDrawLayoutMain.closeDrawer(GravityCompat.START)
                         mainVM.setData(resources.getString(R.string.default_username))
+                        doWhenLogout()
                     }
                 }
 
@@ -189,16 +186,6 @@ class MainActivity : AppCompatActivity()/*, NavigationView.OnNavigationItemSelec
         navController.navigate(idDest)
         if (needCloseSideMenu) {
             binding.lDrawLayoutMain.closeDrawer(GravityCompat.START)
-        }
-    }
-
-    /* Initinal UI main setting */
-    private fun initialUISettingMain() {
-        val currentEmail = accountHelper.getUserEmail()
-        if (currentEmail != null) {
-            mainVM.setData(currentEmail)
-        } else {
-            mainVM.setData(resources.getString(R.string.default_username))
         }
     }
 
@@ -391,7 +378,13 @@ class MainActivity : AppCompatActivity()/*, NavigationView.OnNavigationItemSelec
             lifecycleScope.launch {
                 isUsersInfoDone.collect{
                     if(it){
-                        listUserInfo.personal?.let {mainVM.setPersonalDataLocal(it)}
+                        mainVM.deleteAllFavorites()
+                        mainVM.deleteAllPersonal()
+
+                        listUserInfo.personal?.let {
+                            mainVM.setPersonalDataLocal(it)
+                            mainVM.setData(it.name)
+                        }
                         listUserInfo.favorites?.let {
                             for (i in it){
                                 mainVM.addFavoritesLocal(i)
@@ -399,23 +392,29 @@ class MainActivity : AppCompatActivity()/*, NavigationView.OnNavigationItemSelec
                             }
                             Log.d(my_tag, "out of favorite")
                         }
-                        mainVM.getAllFavorites()
+                        isUsersInfoDone.value = false
                         Log.d(my_tag, "person and fav done")
                     }
                 }
             }
 
-
-
-            // update screen about personal
-
+            lifecycleScope.launch {
+                mainVM.getAllFavorites()
+                cancel()
+            }
 
             // read data about order
             // write into local db
+        } else {
+            mainVM.setData(resources.getString(R.string.default_username))
         }
     }
 
     private fun doWhenLogout() {
+        lifecycleScope.launch {
+            mainVM.deleteAllLogout()
+            cancel()
+        }
         /* remove data from local db about:
         * - personal
         * - favorites

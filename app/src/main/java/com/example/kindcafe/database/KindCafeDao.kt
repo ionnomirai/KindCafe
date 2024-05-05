@@ -35,6 +35,10 @@ interface KindCafeDao {
     @Delete
     suspend fun deleteFavDish(fav: Favorites)
 
+    // delete all records
+    @Query("DELETE FROM favorites")
+    suspend fun deleteAllFav()
+
     /*------------------------------------Personal------------------------------------*/
 
     @Query("SELECT * FROM userpersonal")
@@ -45,4 +49,7 @@ interface KindCafeDao {
 
     @Delete
     suspend fun deletePersonalLocal(personal: UserPersonal)
+
+    @Query("DELETE FROM userpersonal")
+    suspend fun deleteAllPersonal()
 }

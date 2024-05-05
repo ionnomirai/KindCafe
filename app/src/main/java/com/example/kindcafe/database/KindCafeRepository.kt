@@ -39,6 +39,8 @@ class KindCafeRepository private constructor(
 
     suspend fun deleteFavDish(fav: Favorites) = database.kindCafeDao().deleteFavDish(fav)
 
+    suspend fun deleteAllFav() = database.kindCafeDao().deleteAllFav()
+
     /*------------------------------------Personal------------------------------------*/
 
     suspend fun getPersonalDataLocal() = database.kindCafeDao().getPersonalLocal()
@@ -46,6 +48,8 @@ class KindCafeRepository private constructor(
     suspend fun setPersonalDataLocal(personal: UserPersonal) = database.kindCafeDao().setPersonalLocal(personal)
 
     suspend fun deletePersonalDataLocal(personal: UserPersonal) = database.kindCafeDao().deletePersonalLocal(personal)
+
+    suspend fun deleteAllPersonal() = database.kindCafeDao().deleteAllPersonal()
 
 
     companion object{

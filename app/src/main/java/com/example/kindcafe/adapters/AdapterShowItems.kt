@@ -52,24 +52,28 @@ class AdapterShowItems(
                 catch (e: Exception){ Log.d(my_tag_inner, e.toString()) }
                 //Picasso.get().load("https://firebasestorage.googleapis.com/v0/b/kindcafe-5c04a.appspot.com/o/dish_images%2FFanta_2.png?alt=media&token=030b0397-2fe3-44b0-ac28-2d1bbe6e47cc").into(ivItemPhoto)
 
-                if (itemMoveDirectionsInner.checkFavorites(currentFav)){
-                    Log.d(my_tag_inner, "data fav: ${data}")
-                    bindingInner.ibLike.setImageResource(R.drawable.ic_heart_filled)
+                /* Allow these functions only when user login */
+                if(itemMoveDirectionsInner.checkUserExist()){
+                    if (itemMoveDirectionsInner.checkFavorites(currentFav)){
+                        Log.d(my_tag_inner, "data fav: ${data}")
+                        bindingInner.ibLike.setImageResource(R.drawable.ic_heart_filled)
+                    }
+
+                    ibLike.setOnClickListener {
+                        if(itemMoveDirectionsInner.checkFavorites(currentFav)){
+                            itemMoveDirectionsInner.delFromFavorite(currentFav)
+                            ibLike.setImageResource(R.drawable.ic_heart)
+                        } else {
+                            itemMoveDirectionsInner.putToFavorite(Favorites( id = data.id, dishId = data.id, dishName = data.name))
+                            ibLike.setImageResource(R.drawable.ic_heart_filled)
+                        }
+                    }
                 }
 
                 tvItemInfo.setOnClickListener {
                     itemMoveDirectionsInner.detailed(data)
                 }
 
-                ibLike.setOnClickListener {
-                    if(itemMoveDirectionsInner.checkFavorites(currentFav)){
-                        itemMoveDirectionsInner.delFromFavorite(currentFav)
-                        ibLike.setImageResource(R.drawable.ic_heart)
-                    } else {
-                        itemMoveDirectionsInner.putToFavorite(Favorites( id = data.id, dishId = data.id, dishName = data.name))
-                        ibLike.setImageResource(R.drawable.ic_heart_filled)
-                    }
-                }
 
 
             }

@@ -12,4 +12,6 @@ interface ItemMoveDirections {
     fun delFromFavorite(favoriteDish: Favorites)
 
     fun checkFavorites(favoriteDish: Favorites): Boolean
+
+    fun checkUserExist(): Boolean
 }

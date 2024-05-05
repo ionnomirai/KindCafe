@@ -135,6 +135,10 @@ class MainViewModel : ViewModel() {
         repository.deleteFavDish(fav)
     }
 
+    suspend fun deleteAllFavorites(){
+        repository.deleteAllFav()
+    }
+
     /*----------------------------------FUN personal-----------------------------------------------*/
 
     suspend fun getPersonalDataLocal(){
@@ -151,6 +155,16 @@ class MainViewModel : ViewModel() {
         repository.deletePersonalDataLocal(personal)
     }
 
+    suspend fun deleteAllPersonal(){
+        repository.deleteAllPersonal()
+    }
+
+    /*----------------------------------FUN common-----------------------------------------------*/
+
+    suspend fun deleteAllLogout(){
+        deleteAllPersonal()
+        deleteAllFavorites()
+    }
 
 
 }

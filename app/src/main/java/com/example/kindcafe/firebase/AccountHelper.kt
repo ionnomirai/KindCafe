@@ -52,7 +52,7 @@ class AccountHelper(val activity: MainActivity, @IdRes val currentView: Int) {
                     if (task.isSuccessful){
                         AuxillaryFunctions.showSnackBar(R.string.success_login, activity)
                         //activity.mainVM.setData(task.result?.user!!.email!!)
-                        activity.mainVM.setData(task.result?.user!!.email!!)
+                        //activity.mainVM.setData(task.result?.user!!.email!!)
                         // read data from db
                         status?.onSuccess()
                     }

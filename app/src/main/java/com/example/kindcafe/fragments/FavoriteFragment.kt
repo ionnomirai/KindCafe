@@ -133,6 +133,10 @@ class FavoriteFragment : Fragment() {
             override fun checkFavorites(favoriteDish: Favorites): Boolean {
                 return favoriteDish in mainVM.favorites.value
             }
+
+            override fun checkUserExist(): Boolean {
+                return KindCafeApplication.myAuth.currentUser != null
+            }
         }
     }
 

@@ -184,13 +184,14 @@ class ShowItemsFragment: Fragment() {
             }
 
             override fun putToFavorite(favoriteDish: Favorites) {
-                viewLifecycleOwner.lifecycleScope.launch{
-                    mainVM.addFavoritesLocal(favoriteDish)
-                    dbManager.setFavoriteDishes(KindCafeApplication.myAuth.currentUser, favoriteDish)
-                    // delete after all
-                    mainVM.getAllFavorites()
-                    cancel()
-                }
+                    Log.d(my_tag, "cuurent user: ${KindCafeApplication.myAuth.currentUser}")
+                    viewLifecycleOwner.lifecycleScope.launch{
+                        mainVM.addFavoritesLocal(favoriteDish)
+                        dbManager.setFavoriteDishes(KindCafeApplication.myAuth.currentUser, favoriteDish)
+                        // delete after all
+                        mainVM.getAllFavorites()
+                        cancel()
+                    }
             }
 
             override fun delFromFavorite(favoriteDish: Favorites) {
@@ -204,6 +205,10 @@ class ShowItemsFragment: Fragment() {
 
             override fun checkFavorites(favoriteDish: Favorites): Boolean {
                 return favoriteDish in mainVM.favorites.value
+            }
+
+            override fun checkUserExist(): Boolean {
+                return KindCafeApplication.myAuth.currentUser != null
             }
         }
     }
