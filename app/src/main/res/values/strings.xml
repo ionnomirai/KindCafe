@@ -39,11 +39,16 @@
     <string name="send_restore_message_failed">Failed to send recovery message with password.</string>
     <string name="email_not_entered">You have not entered your account email.</string>
 
-    <!-- frag_too_much_wrong_attempts-->
+    <!-- frag_too_much_wrong_attempts -->
     <string name="sorry">Sorry</string>
     <string name="sorry_message_wrong_password">\t\tSorry, you enter\na wrong password.\nPlease try again</string>
     <string name="try_again">Try again</string>
     <string name="new_registration">Do you want to register a new account?</string>
+
+    <!--order summary -->
+    <string name="title_check_bill">Please see bill summary</string>
+    <string name="bill_summary">Bill summary</string>
+    <string name="send">Send</string>
 
     <!-- Navigation View menu (dsm = drawer_side_menu.xml) -->
     <string name="dsm_login">Login</string>
@@ -73,5 +78,71 @@
     <string name="size_big">Big</string>
     <string name="data_updated">Data is updated</string>
 
+    <string name="test_string_big">The time has come\n
+For me to talk to you\n
+And I don\'t mean\n
+To hurt your pride\n
+But everybody needs a friend sometimes\n
+To make you see the light\n\n
+
+In the game of life\n
+The strong survive\n
+We\'re on a one-way street\n
+We gotta make it out alive\n
+And never let \'em drag us down\n
+In the game of life\n
+We live and die\n
+Another breath begins\n
+Another chance to win the fight\n
+From the moment that you hit the ground\n
+In the game of life\n\n
+
+You\'re born to hunt\n
+And never run away\n
+And then you\'re hunted\n
+By the prey\n
+The wounded deer\n
+Leaps highest to the sun\n
+Until his day is done\n\n
+
+In the game of life\n
+The strong survive\n
+We\'re on a one-way street\n
+We gotta make it out alive\n
+And never let \'em drag us down\n
+In the game of life\n
+We live and die\n
+Another breath begins\n
+Another chance to win the fight\n
+From the moment that you hit the ground\n\n
+
+Here comes the morning\n
+It\'s time to play\n
+The game of life\n
+The game of life\n\n
+
+In the game of life\n
+The strong survive\n
+We\'re on a one-way street\n
+We gotta make it out alive\n
+And never let \'em drag us down\n
+In the game of life\n
+We live and die\n
+Another breath begins\n
+Another chance to win the fight\n
+From the moment that you hit the ground\n
+It\'s the game of life\n
+The game of life</string>
+
+    <string name="test_real_case">
+        Espresso, 3 items, +milk, small = (2.50+1.00+0.00)*3= 10.50\n\n
+
+Espresso, 2 items, +milk, medium = (2.50 + 1.00 + 0.80)*2= 8.60\n\n
+
+Espresso, 3 items, +milk, small = (2.50+1.00+0.00)*3= 10.50\n\n
+
+Espresso, 3 items, +milk, small = (2.50+1.00+0.00)*3= 10.50\n\n
+
+Espresso, 2 items, +milk, medium = (2.50 + 1.00 + 0.80)*2= 8.60</string>
 
 </resources>

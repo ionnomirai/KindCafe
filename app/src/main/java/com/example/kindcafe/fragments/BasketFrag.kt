@@ -109,6 +109,10 @@ class BasketFrag: Fragment() {
             }
         }
 
+        binding.clButtonMakeOrder.setOnClickListener {
+            findNavController().navigate(R.id.action_basketFrag_to_orderSummaryFragment)
+        }
+
 /*        mainVM.orderBasket.value.forEachIndexed{index, orderItem ->
             val dish = mainVM.allDishes.value.find{(it.id == orderItem.id && it.name == orderItem.name)}
             dish?.let { tempDishes.add(it) }
