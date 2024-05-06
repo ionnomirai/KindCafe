@@ -20,6 +20,7 @@ import com.example.kindcafe.adapters.callbacks.ItemMoveDirections
 import com.example.kindcafe.data.Categories
 import com.example.kindcafe.database.Dish
 import com.example.kindcafe.database.Favorites
+import com.example.kindcafe.database.OrderItem
 import com.example.kindcafe.databinding.FragFavoritesBinding
 import com.example.kindcafe.databinding.FragHomeBinding
 import com.example.kindcafe.firebase.DbManager
@@ -113,7 +114,11 @@ class FavoriteFragment : Fragment() {
             }
 
             override fun putToBag(dish: Dish) {
-                TODO("Not yet implemented")
+                viewLifecycleOwner.lifecycleScope.launch{
+                    val orderObj = OrderItem(id = dish.id, name = dish.name)
+                    mainVM.addOrderItemsLocal(orderObj)
+                    cancel()
+                }
             }
 
             override fun putToFavorite(favoriteDish: Favorites) {

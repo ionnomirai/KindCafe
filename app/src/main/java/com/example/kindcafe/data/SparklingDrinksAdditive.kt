@@ -1,7 +1,7 @@
 package com.example.kindcafe.data
 
-enum class SparklingDrinksAdditive {
-    Lemon,
-    Ice,
-    NoSugar
+enum class SparklingDrinksAdditive(val addsName: String) {
+    LEMON("Lemon"),
+    ICE("Ice"),
+    NO_SUGAR("No sugar")
 }

@@ -161,16 +161,16 @@
                     android:foreground="@drawable/reg_ripple_button"
                     app:cardElevation="0dp">
 
-                <TextView
-                    android:id="@+id/tvAdd1"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:background="@drawable/back_additioanl_card"
-                    android:gravity="center"
-                    tools:text="Milk"
-                    android:textStyle="bold"
-                    android:textColor="@color/user_name_home_screen"
-                    android:textSize="14sp" />
+                        <TextView
+                            android:id="@+id/tvAdd1"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:background="@drawable/back_additioanl_card"
+                            android:gravity="center"
+                            android:textColor="@color/user_name_home_screen"
+                            android:textSize="14sp"
+                            android:textStyle="bold"
+                            tools:text="Milk" />
                 </androidx.cardview.widget.CardView>
 
                 <androidx.cardview.widget.CardView
@@ -249,9 +249,9 @@
                             android:background="@drawable/back_additioanl_card"
                             android:gravity="center"
                             android:text="@string/size_small"
-                            android:textStyle="bold"
                             android:textColor="@color/user_name_home_screen"
-                            android:textSize="14sp" />
+                            android:textSize="14sp"
+                            android:textStyle="bold" />
                 </androidx.cardview.widget.CardView>
 
                 <androidx.cardview.widget.CardView

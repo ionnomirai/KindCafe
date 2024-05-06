@@ -3,6 +3,7 @@ package com.example.kindcafe.viewModels
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.kindcafe.data.Categories
+import com.example.kindcafe.data.DetailedOrderItem
 import com.example.kindcafe.database.Dish
 import com.example.kindcafe.database.Favorites
 import com.example.kindcafe.database.KindCafeRepository
@@ -85,6 +86,10 @@ class MainViewModel : ViewModel() {
     private var _orderBasket: MutableStateFlow<List<OrderItem>> = MutableStateFlow(emptyList())
     val orderBasket: StateFlow<List<OrderItem>>
         get() = _orderBasket
+
+    private var _orderDetailedBasket: MutableStateFlow<List<DetailedOrderItem>> = MutableStateFlow(emptyList())
+    val orderDetailedBasket: StateFlow<List<DetailedOrderItem>>
+        get() = _orderDetailedBasket
 
 
     /*----------------------------------FUN dishes-----------------------------------------------*/

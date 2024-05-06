@@ -58,16 +58,19 @@ class AdapterShowItems(
 
                 /* Allow these functions only when user login */
                 if(itemMoveDirectionsInner.checkUserExist()){
+                    // checking favorites list
                     if (itemMoveDirectionsInner.checkFavorites(currentFav)){
                         Log.d(my_tag_inner, "data fav: ${data}")
                         bindingInner.ibLike.setImageResource(R.drawable.ic_heart_filled)
                         setTintIcons(IconsOnItem.FAVORITE, true)
                     }
 
+                    // checking bag list to chage icon color
                     if (itemMoveDirectionsInner.checkBag(data)){
                         setTintIcons(IconsOnItem.BAG, true)
                     }
 
+                    // add to favorite all del from favorite
                     ibLike.setOnClickListener {
                         if(itemMoveDirectionsInner.checkFavorites(currentFav)){
                             itemMoveDirectionsInner.delFromFavorite(currentFav)

@@ -9,6 +9,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.annotation.IdRes
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
 import androidx.core.view.isVisible
@@ -25,6 +26,7 @@ import com.example.kindcafe.data.AllUserData
 import com.example.kindcafe.database.Dish
 import com.example.kindcafe.database.UserPersonal
 import com.example.kindcafe.databinding.ActivityMainBinding
+import com.example.kindcafe.dialogs.ProgressUpdateMain
 import com.example.kindcafe.firebase.AccountHelper
 import com.example.kindcafe.firebase.DbManager
 import com.example.kindcafe.firebase.StorageManager
@@ -81,6 +83,8 @@ class MainActivity : AppCompatActivity()/*, NavigationView.OnNavigationItemSelec
     private val isSmallUrisDone = MutableStateFlow(false)
     private val isBigUrisDone = MutableStateFlow(false)
     private val isUsersInfoDone = MutableStateFlow(false)
+
+    private lateinit var pbUpdate: AlertDialog
 
     /*---------------------------------------- Functions -----------------------------------------*/
 
@@ -321,22 +325,16 @@ class MainActivity : AppCompatActivity()/*, NavigationView.OnNavigationItemSelec
                 if (it) {
                     mainVM.addDishLocal(listBigUris)
                     Log.d(my_tag, "Home-ViewModel added to local DB added")
-                    mainVM.getAllDishes()
-                    Log.d(my_tag, "Home-ViewModel get to local DB added")
+                    pbUpdate.dismiss()
                     isDbServerDLDone.value = false
                     isSmallUrisDone.value = false
                     isBigUrisDone.value = false
+                    Log.d(my_tag, "Home-ViewModel get to local DB added")
+                    mainVM.getAllDishes()
                     cancel()
                 }
             }
         }
-
-//        this only to me (display result) -- delete after all
-        /*        mainVM.viewModelScope.launch{
-                    mainVM.allDishes.collect{
-                        Log.d(my_tag, "All dishes: $it")
-                    }
-                }*/
     }
 
     private fun getCallbackReadAllData(): ReadAllData {
@@ -346,6 +344,7 @@ class MainActivity : AppCompatActivity()/*, NavigationView.OnNavigationItemSelec
                 listAllDishes.addAll(data)
                 Log.d(my_tag, "Main-ViewModel data added")
                 isDbServerDLDone.value = true
+                pbUpdate = ProgressUpdateMain.createProgressDialog(this@MainActivity)
             }
         }
     }

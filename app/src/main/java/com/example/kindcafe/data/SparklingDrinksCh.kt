@@ -1,8 +1,8 @@
 package com.example.kindcafe.data
 
-enum class SparklingDrinksCh {
-    Fruity,
-    Cola,
-    Citrus,
-    Exotic
+enum class SparklingDrinksCh(chName: String) {
+    FRUITY ("Fruity"),
+    COLA ("Cola"),
+    CITRUS ("Citrus"),
+    EXOTIC("Exotic")
 }
