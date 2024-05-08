@@ -111,5 +111,10 @@
         android:id="@+id/orderSummaryFragment"
         android:name="com.example.kindcafe.fragments.OrderSummaryFragment"
         android:label="OrderSummaryFragment"
-        tools:layout="@layout/frag_order_summary"/>
+        tools:layout="@layout/frag_order_summary">
+        <argument
+            android:name="detailedOrder"
+            app:argType="com.example.kindcafe.data.DetailedOrderItem[]"
+            app:nullable="true" />
+    </fragment>
 </navigation>

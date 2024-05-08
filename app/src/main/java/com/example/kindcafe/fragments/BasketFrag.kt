@@ -52,6 +52,7 @@ class BasketFrag: Fragment() {
     private val dbManager = DbManager()
 
     private val tempDishes = mutableListOf<Dish>()
+    private val detailedListI = mutableListOf<DetailedOrderItem>()
 
     /*---------------------------------------- Functions -----------------------------------------*/
 
@@ -103,6 +104,10 @@ class BasketFrag: Fragment() {
                         count = mainVM.orderBasket.value[index].count
                     )
                 }
+
+                detailedListI.clear()
+                detailedListI.addAll(detailedList)
+
                 Log.d(my_tag, "size detailed list: ${detailedList.size}")
                 Log.d(my_tag, "list: ${detailedList}")
                 myAdapter.setNewData(detailedList)
@@ -110,7 +115,8 @@ class BasketFrag: Fragment() {
         }
 
         binding.clButtonMakeOrder.setOnClickListener {
-            findNavController().navigate(R.id.action_basketFrag_to_orderSummaryFragment)
+            val action = BasketFragDirections.actionBasketFragToOrderSummaryFragment(detailedListI.toTypedArray())
+            findNavController().navigate(action)
         }
 
 /*        mainVM.orderBasket.value.forEachIndexed{index, orderItem ->

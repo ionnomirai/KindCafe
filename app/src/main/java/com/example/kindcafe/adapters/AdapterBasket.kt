@@ -217,7 +217,7 @@ class AdapterBasket(
             bindingInner.apply {
                 tvAdd1.text = CakesAdditive.FRUITS.addsName
                 tvAdd2.text = CakesAdditive.NUTS.addsName
-                tvAdd3.text = CakesAdditive.SYRIP.addsName
+                tvAdd3.text = CakesAdditive.SYRUP.addsName
             }
         }
 

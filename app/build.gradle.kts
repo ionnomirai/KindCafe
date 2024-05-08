@@ -10,6 +10,9 @@ plugins {
 
     // For SafeArgs
     id("androidx.navigation.safeargs.kotlin")
+
+    // For parcelize generator
+    id("kotlin-parcelize")
 }
 
 android {

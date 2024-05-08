@@ -1,5 +1,10 @@
 package com.example.kindcafe.data
 
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
+
+
+@Parcelize
 data class DetailedOrderItem(
     val id: String = "0",
     val name: String? = null,
@@ -14,4 +19,4 @@ data class DetailedOrderItem(
     val add3: Boolean? = null,
     val size: String? = null,
     val count: String? = null
-)
+): Parcelable
