@@ -387,6 +387,15 @@ class MainActivity : AppCompatActivity()/*, NavigationView.OnNavigationItemSelec
                         mainVM.deleteAllFavorites()
                         mainVM.deleteAllPersonal()
 
+                        listUserInfo.order?.let {orderList ->
+                            // if we downloaded from server, then delete local (we will write further)
+                            mainVM.deleteAllOrderItemsLocal()
+                            orderList.forEach {
+                                mainVM.addOrderItemsLocal(it)
+                            }
+                            Log.d(my_tag, "update order from server")
+                        }
+
                         listUserInfo.personal?.let {
                             mainVM.setPersonalDataLocal(it)
                             mainVM.setData(it.name)

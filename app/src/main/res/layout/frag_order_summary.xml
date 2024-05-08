@@ -94,11 +94,12 @@
 
     <TextView
         android:id="@+id/tvSend"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="380dp"
+        android:layout_height="120dp"
         android:text="@string/send"
         android:textSize="25sp"
         android:textStyle="bold"
+        android:gravity="center"
         android:layout_marginBottom="20dp"
         android:textColor="@color/user_name_home_screen"
         app:layout_constraintStart_toStartOf="@id/ivBackgroundB"

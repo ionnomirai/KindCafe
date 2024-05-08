@@ -8,6 +8,7 @@ import com.example.kindcafe.database.Favorites
 import com.example.kindcafe.database.OrderItem
 import com.example.kindcafe.database.UserPersonal
 import com.example.kindcafe.firebase.firebaseEnums.CategoriesInUsers
+import com.example.kindcafe.firebase.firebaseInterfaces.DefinitionOfStatus
 import com.example.kindcafe.firebase.firebaseInterfaces.ReadAllData
 import com.example.kindcafe.firebase.firebaseInterfaces.ReadAndSplitCategories
 import com.example.kindcafe.firebase.firebaseInterfaces.ReadUsersData
@@ -23,38 +24,38 @@ class DbManager {
     private val myDatabase = Firebase.database.getReference("dishes")
     private val myDatabaseUser = Firebase.database.getReference("users")
 
-    /* old variant*/
-        fun readAllDishDataFromDb(callbackRead: ReadAllData) {
-            //val result: MutableMap<Int, List<Dish>> = mutableMapOf()
-            val result: MutableList<Dish> = mutableListOf()
+    /*-----------------------------------General-------------------------------------------*/
+    fun readAllDishDataFromDb(callbackRead: ReadAllData) {
+        //val result: MutableMap<Int, List<Dish>> = mutableMapOf()
+        val result: MutableList<Dish> = mutableListOf()
 
-            myDatabase.addListenerForSingleValueEvent(object : ValueEventListener {
+        myDatabase.addListenerForSingleValueEvent(object : ValueEventListener {
 
-                override fun onDataChange(snapshot: DataSnapshot) {
-                    // We will enter into each category
-                    for (i in Categories.entries) {
-                        // list of dishes from current category (sparkling, non-sparkling etc.
-                        //val dishList: MutableList<Dish> = mutableListOf()
+            override fun onDataChange(snapshot: DataSnapshot) {
+                // We will enter into each category
+                for (i in Categories.entries) {
+                    // list of dishes from current category (sparkling, non-sparkling etc.
+                    //val dishList: MutableList<Dish> = mutableListOf()
 
-                        // move to category. Every iteration outer cycle, will be different category
-                        val deeperSnapshot = snapshot.child(i.name).children
+                    // move to category. Every iteration outer cycle, will be different category
+                    val deeperSnapshot = snapshot.child(i.name).children
 
-                        // collect each dish
-                        for (item in deeperSnapshot) {
-                            item.getValue(Dish::class.java)?.let { result.add(it) }
-                        }
-
-                        // put to result map: key - index of category, value - lish of dish
-                        //result[i.ordinal] = dishList
+                    // collect each dish
+                    for (item in deeperSnapshot) {
+                        item.getValue(Dish::class.java)?.let { result.add(it) }
                     }
 
-                    callbackRead.readAll(result)
-                    Log.d(myTag, result.toString())
+                    // put to result map: key - index of category, value - lish of dish
+                    //result[i.ordinal] = dishList
                 }
 
-                override fun onCancelled(error: DatabaseError) {}
-            })
-        }
+                callbackRead.readAll(result)
+                Log.d(myTag, result.toString())
+            }
+
+            override fun onCancelled(error: DatabaseError) {}
+        })
+    }
 
     fun readDishDataFromDb(category: Categories, callbackRead: ReadAndSplitCategories) {
         myDatabase.addListenerForSingleValueEvent(object : ValueEventListener {
@@ -79,7 +80,7 @@ class DbManager {
     }
 
     /* Create personal package and put name there */
-    fun setPrimaryData(user: FirebaseUser?, userPersonal: UserPersonal){
+    fun setPrimaryData(user: FirebaseUser?, userPersonal: UserPersonal) {
         user?.let {
             myDatabaseUser.child(it.uid)
                 .child("personal")
@@ -87,25 +88,30 @@ class DbManager {
         }
     }
 
-    fun readUsersData(user: FirebaseUser, callbackRead: ReadUsersData){
+    fun readUsersData(user: FirebaseUser, callbackRead: ReadUsersData) {
         myDatabaseUser.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 val personalSnapshot = snapshot.child(user.uid).children
                 val allCategories = AllUserData(mutableListOf(), mutableListOf())
 
                 for (item in personalSnapshot) {
-                    when(item.key){
-                        CategoriesInUsers.FAVORITE.cName ->{
-                            for (itemDeep in item.children){
-                                itemDeep.getValue(Favorites::class.java)?.let { allCategories.favorites?.add(it) }
+                    when (item.key) {
+                        CategoriesInUsers.FAVORITE.cName -> {
+                            for (itemDeep in item.children) {
+                                itemDeep.getValue(Favorites::class.java)
+                                    ?.let { allCategories.favorites?.add(it) }
                             }
                         }
+
                         CategoriesInUsers.ORDER.cName -> {
-                            for (itemDeep in item.children){
-                                itemDeep.getValue(OrderItem::class.java)?.let { allCategories.order?.add(it) }
+                            for (itemDeep in item.children) {
+                                itemDeep.getValue(OrderItem::class.java)
+                                    ?.let { allCategories.order?.add(it) }
                             }
                         }
-                        CategoriesInUsers.PERSONAL.cName -> item.getValue(UserPersonal::class.java)?.let { allCategories.personal = it }
+
+                        CategoriesInUsers.PERSONAL.cName -> item.getValue(UserPersonal::class.java)
+                            ?.let { allCategories.personal = it }
                     }
                 }
                 callbackRead.readAllUserData(allCategories)
@@ -116,7 +122,9 @@ class DbManager {
         })
     }
 
-    fun setFavoriteDishes(user: FirebaseUser?, fav: Favorites){
+    /*-----------------------------------Favorites-------------------------------------------*/
+
+    fun setFavoriteDishes(user: FirebaseUser?, fav: Favorites) {
         user?.let {
             myDatabaseUser.child(it.uid)
                 .child("favorites")
@@ -125,7 +133,7 @@ class DbManager {
         }
     }
 
-    fun deleteFavoriteDish(user: FirebaseUser?, fav: Favorites){
+    fun deleteFavoriteDish(user: FirebaseUser?, fav: Favorites) {
         user?.let {
             myDatabaseUser.child(it.uid)
                 .child("favorites")
@@ -134,7 +142,31 @@ class DbManager {
         }
     }
 
-    fun setTestData(user: FirebaseUser?){
+    /*-----------------------------------Order-------------------------------------------*/
+
+    fun setOrderToRDB(user: FirebaseUser?, data: List<OrderItem>, defStatus: DefinitionOfStatus){
+        user?.let {u ->
+            data.forEach {item ->
+                myDatabaseUser
+                    .child(u.uid)
+                    .child("order")
+                    .child("itemOrder${item.id}")
+                    .setValue(item)
+            }
+            defStatus.onSuccess()
+        }
+    }
+
+    fun deleteOrderFromRDB(user: FirebaseUser?){
+        user?.let {
+            myDatabaseUser.child(it.uid)
+                .child("order")
+                .removeValue()
+        }
+    }
+
+
+    fun setTestData(user: FirebaseUser?) {
         user?.let {
             myDatabaseUser.child(it.uid)
                 .child("favorites")

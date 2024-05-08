@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.navArgs
+import com.example.kindcafe.KindCafeApplication
 import com.example.kindcafe.data.CakesAdditive
 import com.example.kindcafe.data.Categories
 import com.example.kindcafe.data.DetailedOrderItem
@@ -16,6 +17,9 @@ import com.example.kindcafe.data.Size
 import com.example.kindcafe.data.SparklingDrinksAdditive
 import com.example.kindcafe.data.SweetsAdditive
 import com.example.kindcafe.databinding.FragOrderSummaryBinding
+import com.example.kindcafe.firebase.DbManager
+import com.example.kindcafe.utils.AuxillaryFunctions
+import com.example.kindcafe.utils.SimplePopDirections
 import com.example.kindcafe.viewModels.MainViewModel
 import kotlin.math.log
 
@@ -31,6 +35,7 @@ class OrderSummaryFragment : Fragment() {
 
     /* Common viewModel between activity and this fragment */
     private val mainVM: MainViewModel by activityViewModels()
+    private val dbManager = DbManager()
 
     private val my_tag = "OrderSummaryFragmentTag"
     private val myArgs: OrderSummaryFragmentArgs by navArgs()
@@ -56,9 +61,18 @@ class OrderSummaryFragment : Fragment() {
         myArgs.detailedOrder?.let {
             listDetailed.addAll(it.toList())
             Log.d(my_tag, listDetailed.toString())
+            binding.tvBill.text = formBill(listDetailed)
         }
 
-        binding.tvBill.text = formBill(listDetailed)
+        binding.tvSend.setOnClickListener {
+            dbManager.setOrderToRDB(
+                user = KindCafeApplication.myAuth.currentUser,
+                data = mainVM.orderBasket.value,
+                defStatus = AuxillaryFunctions.defaultDefinitionOfStatusInterface(this, SimplePopDirections.TOP_DESTINATION)
+            )
+        }
+
+
     }
 
     private fun formBill(data: List<DetailedOrderItem>): String {
