@@ -6,6 +6,7 @@ import com.example.kindcafe.data.Categories
 import com.example.kindcafe.database.Dish
 import com.example.kindcafe.database.Favorites
 import com.example.kindcafe.database.OrderItem
+import com.example.kindcafe.database.OrderItemPlaced
 import com.example.kindcafe.database.UserPersonal
 import com.example.kindcafe.firebase.firebaseEnums.CategoriesInUsers
 import com.example.kindcafe.firebase.firebaseInterfaces.DefinitionOfStatus
@@ -92,7 +93,7 @@ class DbManager {
         myDatabaseUser.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 val personalSnapshot = snapshot.child(user.uid).children
-                val allCategories = AllUserData(mutableListOf(), mutableListOf())
+                val allCategories = AllUserData(mutableListOf(), mutableListOf(), mutableListOf())
 
                 for (item in personalSnapshot) {
                     when (item.key) {
@@ -103,10 +104,21 @@ class DbManager {
                             }
                         }
 
-                        CategoriesInUsers.ORDER.cName -> {
+                        CategoriesInUsers.ORDER_BASKET.cName -> {
                             for (itemDeep in item.children) {
                                 itemDeep.getValue(OrderItem::class.java)
-                                    ?.let { allCategories.order?.add(it) }
+                                    ?.let { allCategories.orderBasket?.add(it) }
+                            }
+                        }
+
+                        CategoriesInUsers.ORDER_PLACED.cName -> {
+                            for (itemDeep in item.children) {
+                                itemDeep.getValue(OrderItemPlaced::class.java)
+                                    ?.let {
+                                        //data passed normal
+                                        allCategories.orderPlaced?.add(it)
+                                        //Log.d(myTag, "Placed: ${allCategories.orderPlaced}")
+                                    }
                             }
                         }
 
@@ -142,14 +154,36 @@ class DbManager {
         }
     }
 
-    /*-----------------------------------Order-------------------------------------------*/
+    /*-----------------------------------OrderBasket-------------------------------------------*/
 
-    fun setOrderToRDB(user: FirebaseUser?, data: List<OrderItem>, defStatus: DefinitionOfStatus){
+    fun setOrderBasketToRDB(user: FirebaseUser?, data: List<OrderItem>){
         user?.let {u ->
             data.forEach {item ->
                 myDatabaseUser
                     .child(u.uid)
-                    .child("order")
+                    .child(CategoriesInUsers.ORDER_BASKET.cName)
+                    .child("itemOrder${item.id}")
+                    .setValue(item)
+            }
+        }
+    }
+
+    /* Has not test yet */
+    fun deleteOrderBasketFromRDB(user: FirebaseUser?){
+        user?.let {
+            myDatabaseUser.child(it.uid)
+                .child(CategoriesInUsers.ORDER_BASKET.cName)
+                .removeValue()
+        }
+    }
+
+    /*-----------------------------------OrderPlaced-------------------------------------------*/
+    fun setOrderPlacedToRDB(user: FirebaseUser?, data: List<OrderItemPlaced>, defStatus: DefinitionOfStatus){
+        user?.let {u ->
+            data.forEach {item ->
+                myDatabaseUser
+                    .child(u.uid)
+                    .child(CategoriesInUsers.ORDER_PLACED.cName)
                     .child("itemOrder${item.id}")
                     .setValue(item)
             }
@@ -157,42 +191,18 @@ class DbManager {
         }
     }
 
-    fun deleteOrderFromRDB(user: FirebaseUser?){
+    /* Has not test yet */
+    fun deleteOrderPlacedFromRDB(user: FirebaseUser?, defStatus: DefinitionOfStatus){
         user?.let {
             myDatabaseUser.child(it.uid)
-                .child("order")
+                .child(CategoriesInUsers.ORDER_PLACED.cName)
                 .removeValue()
+                .addOnCompleteListener {task ->
+                    if (task.isSuccessful){
+                        defStatus.onSuccess()
+                    }
+                }
+
         }
     }
-
-
-    fun setTestData(user: FirebaseUser?) {
-        user?.let {
-            myDatabaseUser.child(it.uid)
-                .child("favorites")
-                .child("favItems2")
-                .setValue(Favorites("2", "2", "Fanta"))
-
-            myDatabaseUser.child(it.uid)
-                .child("favorites")
-                .child("favItems3")
-                .setValue(Favorites("3", "3", "Pepsi"))
-
-            myDatabaseUser.child(it.uid)
-                .child("order")
-                .child("orderItem1")
-                .setValue(OrderItem("some order1"))
-
-            myDatabaseUser.child(it.uid)
-                .child("order")
-                .child("orderItem2")
-                .setValue(OrderItem("some order2"))
-            myDatabaseUser.child(it.uid)
-                .child("order")
-                .child("orderItem2")
-                .setValue(OrderItem("some order3"))
-        }
-    }
-
-
 }

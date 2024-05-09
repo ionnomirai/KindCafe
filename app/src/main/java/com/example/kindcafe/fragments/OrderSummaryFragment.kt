@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.viewModelScope
 import androidx.navigation.fragment.navArgs
 import com.example.kindcafe.KindCafeApplication
 import com.example.kindcafe.data.CakesAdditive
@@ -16,12 +17,15 @@ import com.example.kindcafe.data.NonSparklingAdditive
 import com.example.kindcafe.data.Size
 import com.example.kindcafe.data.SparklingDrinksAdditive
 import com.example.kindcafe.data.SweetsAdditive
+import com.example.kindcafe.database.Dish
+import com.example.kindcafe.database.OrderItemPlaced
 import com.example.kindcafe.databinding.FragOrderSummaryBinding
 import com.example.kindcafe.firebase.DbManager
 import com.example.kindcafe.utils.AuxillaryFunctions
 import com.example.kindcafe.utils.SimplePopDirections
 import com.example.kindcafe.viewModels.MainViewModel
-import kotlin.math.log
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.launch
 
 class OrderSummaryFragment : Fragment() {
     /*---------------------------------------- Properties ----------------------------------------*/
@@ -33,15 +37,21 @@ class OrderSummaryFragment : Fragment() {
             }
         }
 
+
+
     /* Common viewModel between activity and this fragment */
     private val mainVM: MainViewModel by activityViewModels()
     private val dbManager = DbManager()
 
     private val my_tag = "OrderSummaryFragmentTag"
-    private val myArgs: OrderSummaryFragmentArgs by navArgs()
+
+    //private val myNavArgs: OrderSummaryFragmentArgs by navArgs()
+    //private var myNavArgs: Array<DetailedOrderItem>? = null
+    private var argsDetailedOrderArray: Array<DetailedOrderItem>? = null
 
     /* if the args not null, save all data there */
     private val listDetailed: MutableList<DetailedOrderItem> = mutableListOf()
+    private var orderPlaced: List<OrderItemPlaced>? = null
 
     /*---------------------------------------- Functions -----------------------------------------*/
 
@@ -58,21 +68,118 @@ class OrderSummaryFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         Log.d(my_tag, "onViewCreated")
 
-        myArgs.detailedOrder?.let {
+/*
+        try {
+            val argsTemp: OrderSummaryFragmentArgs by navArgs()
+            myNavArgs = argsTemp.detailedOrder
+        } catch (e:Exception){
+            Log.d(my_tag, "exception = ${e.message}")
+        }
+*/
+        try {
+            arguments?.let {
+                argsDetailedOrderArray = OrderSummaryFragmentArgs.fromBundle(it).detailedOrder
+            }
+        } catch (e: Exception){
+            argsDetailedOrderArray = null
+            Log.d(my_tag, "exception = ${e.message}")
+        }
+
+        Log.d(my_tag, "argsDetailedOrderArray = ${argsDetailedOrderArray}")
+        argsDetailedOrderArray?.let {
             listDetailed.addAll(it.toList())
             Log.d(my_tag, listDetailed.toString())
             binding.tvBill.text = formBill(listDetailed)
+
+            orderPlaced = List(listDetailed.size) { index ->
+                OrderItemPlaced(
+                    id = listDetailed[index].id,
+                    name = listDetailed[index].name,
+                    add1 = listDetailed[index].add1,
+                    add2 = listDetailed[index].add2,
+                    add3 = listDetailed[index].add3,
+                    size = listDetailed[index].size,
+                    count = listDetailed[index].count
+                )
+            }
+            //Log.d(my_tag, "orderPlaced: ${orderPlaced.toString()}")
         }
+
+        // if nullm then we move here from Home and order has already placed
+        if(argsDetailedOrderArray == null){
+            val tempDishes = mutableListOf<Dish>()
+
+            mainVM.orderPlaced.value.forEach { placed ->
+                Log.d(my_tag, "placed ${placed}")
+                Log.d(my_tag, "allDishes ${mainVM.allDishes.value}")
+                val dish = mainVM.allDishes.value.find{(it.id == placed.id && it.name == placed.name)}
+                Log.d(my_tag, "dish ${dish}")
+                dish?.let { tempDishes.add(it) }
+            }
+
+            val detailedList = List(tempDishes.size){index ->
+                DetailedOrderItem(
+                    id = tempDishes[index].id,
+                    name = tempDishes[index].name,
+                    price = tempDishes[index].price,
+                    description = tempDishes[index].description,
+                    category = tempDishes[index].category,
+                    characteristic = tempDishes[index].characteristic,
+                    uriSmall = tempDishes[index].uriSmall,
+                    uriBig = tempDishes[index].uriBig,
+                    add1 = mainVM.orderPlaced.value[index].add1,
+                    add2 = mainVM.orderPlaced.value[index].add2,
+                    add3 = mainVM.orderPlaced.value[index].add3,
+                    size = mainVM.orderPlaced.value[index].size,
+                    count = mainVM.orderPlaced.value[index].count
+                )
+            }
+
+
+            binding.apply {
+                tvSend.visibility = View.GONE
+                tvReject.visibility = View.VISIBLE
+                tvBill.text = formBill(detailedList)
+            }
+
+        }
+
+
 
         binding.tvSend.setOnClickListener {
-            dbManager.setOrderToRDB(
-                user = KindCafeApplication.myAuth.currentUser,
-                data = mainVM.orderBasket.value,
-                defStatus = AuxillaryFunctions.defaultDefinitionOfStatusInterface(this, SimplePopDirections.TOP_DESTINATION)
-            )
+            // if we want to place order to server
+            orderPlaced?.let {listItemsPlaced ->
+                mainVM.viewModelScope.launch {
+                    listItemsPlaced.forEach { item ->
+                        mainVM.addOrderPlacedLocal(item)
+                    }
+                    mainVM.deleteAllOrderItemsLocal()
+                    dbManager.deleteOrderBasketFromRDB(KindCafeApplication.myAuth.currentUser)
+                    dbManager.setOrderPlacedToRDB(
+                        user = KindCafeApplication.myAuth.currentUser,
+                        data = listItemsPlaced,
+                        defStatus = AuxillaryFunctions.defaultDefinitionOfStatusInterface(
+                            this@OrderSummaryFragment,
+                            SimplePopDirections.TOP_DESTINATION
+                        )
+                    )
+                    cancel()
+                }
+            }
         }
 
-
+        binding.tvReject.setOnClickListener {
+            mainVM.viewModelScope.launch {
+                mainVM.deleteAllOrderPlacedLocal()
+                cancel()
+            }
+            dbManager.deleteOrderPlacedFromRDB(
+                KindCafeApplication.myAuth.currentUser,
+                AuxillaryFunctions.defaultDefinitionOfStatusInterface(
+                    this@OrderSummaryFragment,
+                    SimplePopDirections.TOP_DESTINATION
+                ))
+        }
     }
 
     private fun formBill(data: List<DetailedOrderItem>): String {
@@ -84,11 +191,25 @@ class OrderSummaryFragment : Fragment() {
             when (it.category) {
                 Categories.SparklingDrinks.categoryName -> {
                     // collect information about additional names and prices
-                    SparklingDrinksAdditive.entries.forEach { mapAdds.add(Pair(it.addsName, it.addsPrice)) }
+                    SparklingDrinksAdditive.entries.forEach {
+                        mapAdds.add(
+                            Pair(
+                                it.addsName,
+                                it.addsPrice
+                            )
+                        )
+                    }
                 }
 
                 Categories.NonSparklingDrinks.categoryName -> {
-                    NonSparklingAdditive.entries.forEach { mapAdds.add(Pair(it.addsName, it.addsPrice)) }
+                    NonSparklingAdditive.entries.forEach {
+                        mapAdds.add(
+                            Pair(
+                                it.addsName,
+                                it.addsPrice
+                            )
+                        )
+                    }
                 }
 
                 Categories.Sweets.categoryName -> {
@@ -99,9 +220,10 @@ class OrderSummaryFragment : Fragment() {
                     CakesAdditive.entries.forEach { mapAdds.add(Pair(it.addsName, it.addsPrice)) }
                 }
             }
-            val tempResult = checkAdditiveAndSize(it, mapAdds) // need to split to result and totalPrice
+            val tempResult =
+                checkAdditiveAndSize(it, mapAdds) // need to split to result and totalPrice
             result
-                .append( tempResult.first ) // create bill_item for one dish
+                .append(tempResult.first) // create bill_item for one dish
                 .append("\n\n")
             totalPrice += tempResult.second
         }

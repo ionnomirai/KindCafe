@@ -107,6 +107,22 @@
         app:layout_constraintBottom_toBottomOf="@id/ivBackgroundB"
         app:layout_constraintEnd_toEndOf="@id/ivBackgroundB"/>
 
+    <TextView
+        android:id="@+id/tvReject"
+        android:layout_width="380dp"
+        android:layout_height="120dp"
+        android:text="@string/cancel_order"
+        android:textSize="25sp"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:layout_marginBottom="20dp"
+        android:textColor="@color/user_name_home_screen"
+        app:layout_constraintStart_toStartOf="@id/ivBackgroundB"
+        app:layout_constraintTop_toTopOf="@+id/ivBackgroundB"
+        app:layout_constraintBottom_toBottomOf="@id/ivBackgroundB"
+        app:layout_constraintEnd_toEndOf="@id/ivBackgroundB"
+        android:visibility="gone"/>
+
     <ImageView
         android:id="@+id/ivCurlSend"
         android:layout_width="100dp"

@@ -49,6 +49,7 @@
     <string name="title_check_bill">Please see bill summary</string>
     <string name="bill_summary">Bill summary</string>
     <string name="send">Send</string>
+    <string name="cancel_order">Cancel the order</string>
 
     <!-- Navigation View menu (dsm = drawer_side_menu.xml) -->
     <string name="dsm_login">Login</string>

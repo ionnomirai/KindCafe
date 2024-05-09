@@ -64,6 +64,13 @@ class KindCafeRepository private constructor(
 
     suspend fun deleteAllOrderItemsLocal() = database.kindCafeDao().deleteAllOrderItemsLocal()
 
+    /*------------------------------------OrderItemPlaced - to server------------------------------------*/
+
+    fun getOrderPlacedLocal(): Flow<List<OrderItemPlaced>> = database.kindCafeDao().getOrderPlacedLocal()
+
+    suspend fun setOrderPlacedLocal(orderP: OrderItemPlaced) = database.kindCafeDao().setOrderPlacedLocal(orderP)
+
+    suspend fun deleteAllOrderPlacedLocal() = database.kindCafeDao().deleteAllOrderPlacedLocal()
 
     companion object{
         private var INSTANCE: KindCafeRepository? = null

@@ -82,6 +82,7 @@ class BasketFrag: Fragment() {
         viewLifecycleOwner.lifecycleScope.launch {
             mainVM.orderBasket.collect{
                 tempDishes.clear()
+                dbManager.setOrderBasketToRDB(KindCafeApplication.myAuth.currentUser, it)
                 it.forEachIndexed{index, orderItem ->
                     val dish = mainVM.allDishes.value.find{(it.id == orderItem.id && it.name == orderItem.name)}
                     dish?.let { tempDishes.add(it) }

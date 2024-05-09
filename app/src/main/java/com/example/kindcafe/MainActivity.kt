@@ -128,8 +128,14 @@ class MainActivity : AppCompatActivity()/*, NavigationView.OnNavigationItemSelec
 
             ibBag.setOnClickListener {
                 if (KindCafeApplication.myAuth.currentUser != null) {
-                    navController.popBackStack(R.id.homeFragment, false)
-                    navController.navigate(R.id.action_homeFragment_to_basketFrag)
+                    Log.d(my_tag, "orderplaced: ${mainVM.orderPlaced.value.toString()}")
+                    if(mainVM.orderPlaced.value.isEmpty()){
+                        navController.popBackStack(R.id.homeFragment, false)
+                        navController.navigate(R.id.action_homeFragment_to_basketFrag)
+                    } else {
+                        navController.popBackStack(R.id.homeFragment, false)
+                        navController.navigate(R.id.action_homeFragment_to_orderSummaryFragment)
+                    }
                 } else {
                     Toast.makeText(this@MainActivity, "Please login", Toast.LENGTH_SHORT).show()
                 }
@@ -159,6 +165,8 @@ class MainActivity : AppCompatActivity()/*, NavigationView.OnNavigationItemSelec
         downloadDbWhenStart()
 
         doWhenStartOrLogin()
+
+        downloadLocalDb()
     }
 
     /* Custom logic of moving between fragments */
@@ -204,8 +212,6 @@ class MainActivity : AppCompatActivity()/*, NavigationView.OnNavigationItemSelec
     * - toolbar header - change name;
     * - viewmodels.name -> give this name to fragment Home*/
     fun updateMainUI() {
-        Log.d(my_tag, "updateMainUI ")
-        //val currentEmail = accountHelper.getUserEmail()
         binding.apply {
             nvLeft
                 .getHeaderView(0)
@@ -297,6 +303,7 @@ class MainActivity : AppCompatActivity()/*, NavigationView.OnNavigationItemSelec
         mainVM.viewModelScope.launch {
             isDbServerDLDone.collect {
                 if (it) {
+                    Log.d(my_tag, "downloadDbWhenStart: downloadDbWhenStart")
                     storageManager.readUri(
                         listAllDishes,
                         getUrisBySize(UriSize.Small, this),
@@ -330,7 +337,6 @@ class MainActivity : AppCompatActivity()/*, NavigationView.OnNavigationItemSelec
                     isSmallUrisDone.value = false
                     isBigUrisDone.value = false
                     Log.d(my_tag, "Home-ViewModel get to local DB added")
-                    mainVM.getAllDishes()
                     cancel()
                 }
             }
@@ -375,6 +381,7 @@ class MainActivity : AppCompatActivity()/*, NavigationView.OnNavigationItemSelec
             // read data about personal
             dbManager.readUsersData(user, object : ReadUsersData {
                 override fun readAllUserData(data: AllUserData) {
+                    Log.d(my_tag, "Start or Login: in callback")
                     listUserInfo = data
                     isUsersInfoDone.value = true
                 }
@@ -384,42 +391,50 @@ class MainActivity : AppCompatActivity()/*, NavigationView.OnNavigationItemSelec
             lifecycleScope.launch {
                 isUsersInfoDone.collect{
                     if(it){
+                        Log.d(my_tag, "doWhenStartOrLogin: doWhenStartOrLogin")
                         mainVM.deleteAllFavorites()
                         mainVM.deleteAllPersonal()
 
-                        listUserInfo.order?.let {orderList ->
+                        mainVM.deleteAllOrderItemsLocal()
+                        mainVM.deleteAllOrderPlacedLocal()
+
+                        listUserInfo.orderBasket?.let {orderBList ->
                             // if we downloaded from server, then delete local (we will write further)
-                            mainVM.deleteAllOrderItemsLocal()
-                            orderList.forEach {
+                            //mainVM.deleteAllOrderItemsLocal()
+                            orderBList.forEach {
                                 mainVM.addOrderItemsLocal(it)
                             }
-                            Log.d(my_tag, "update order from server")
+                            Log.d(my_tag, "Start or Login: update basket from server")
+                        }
+
+                        listUserInfo.orderPlaced?.let {orderPList ->
+                            // if we downloaded from server, then delete local (we will write further)
+                            //mainVM.deleteAllOrderItemsLocal()
+                            Log.d(my_tag, "Start or Login-- orderPList: ${orderPList}")
+                            orderPList.forEach {
+                                mainVM.addOrderPlacedLocal(it)
+                            }
+                            Log.d(my_tag, "Start or Login: update placed from server")
                         }
 
                         listUserInfo.personal?.let {
                             mainVM.setPersonalDataLocal(it)
                             mainVM.setData(it.name)
+                            Log.d(my_tag, "Start or Login: update personal")
                         }
                         listUserInfo.favorites?.let {
                             for (i in it){
                                 mainVM.addFavoritesLocal(i)
-                                Log.d(my_tag, "in favorite")
+                                Log.d(my_tag, "Start or Login: in favorite")
                             }
-                            Log.d(my_tag, "out of favorite")
                         }
                         isUsersInfoDone.value = false
-                        Log.d(my_tag, "person and fav done")
+                        Log.d(my_tag, "Start or Login: person and fav done")
                     }
                 }
             }
 
-            lifecycleScope.launch {
-                mainVM.getAllFavorites()
-            }
 
-            lifecycleScope.launch {
-                mainVM.getOrderItemsLocal()
-            }
 
             // read data about order
             // write into local db
@@ -433,9 +448,32 @@ class MainActivity : AppCompatActivity()/*, NavigationView.OnNavigationItemSelec
             mainVM.deleteAllLogout()
             cancel()
         }
-        /* remove data from local db about:
-        * - personal
-        * - favorites
-        * - order*/
+    }
+
+    private fun downloadLocalDb(){
+        lifecycleScope.launch {
+            Log.d(my_tag, "Local: getAllFavorites()")
+            mainVM.getAllFavorites()
+        }
+
+        lifecycleScope.launch {
+            Log.d(my_tag, "Local: getBasketLocal()")
+            mainVM.getOrderItemsLocal()
+        }
+
+        lifecycleScope.launch {
+            Log.d(my_tag, "Local: getOrderPlacedLocal()")
+            mainVM.getOrderPlacedLocal()
+        }
+
+        lifecycleScope.launch {
+            Log.d(my_tag, "Local: getAllDishes()")
+            mainVM.getAllDishes()
+        }
+
+        lifecycleScope.launch {
+            Log.d(my_tag, "Local: getOrderPlacedLocal()")
+            mainVM.getOrderPlacedLocal()
+        }
     }
 }

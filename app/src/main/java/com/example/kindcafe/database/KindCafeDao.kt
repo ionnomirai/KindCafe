@@ -66,4 +66,16 @@ interface KindCafeDao {
 
     @Query("DELETE FROM orderitem")
     suspend fun deleteAllOrderItemsLocal()
+
+    /*------------------------------------OrderItemPlaced - to server------------------------------------*/
+
+    @Query("SELECT * FROM orderitemplaced")
+    fun getOrderPlacedLocal(): Flow<List<OrderItemPlaced>>
+
+    @Upsert
+    suspend fun setOrderPlacedLocal(orderP: OrderItemPlaced)
+
+    @Query("DELETE FROM orderitemplaced")
+    suspend fun deleteAllOrderPlacedLocal()
+
 }
