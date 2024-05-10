@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="105dp"
+    android:background="@drawable/show_items_back">
+
+    <include
+        android:id="@+id/header_setting"
+        layout="@layout/side_menu_header"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+    <TextView
+        android:id="@+id/tvSettingsGen"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:text="@string/dsm_settings"
+        android:textColor="@color/black"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/header_setting" />
+
+    <ImageView
+        android:id="@+id/ivSettingsPhone"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginStart="25dp"
+        android:layout_marginTop="32dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvSettingsGen"
+        app:srcCompat="@drawable/ic_phone" />
+
+    <EditText
+        android:id="@+id/etSetPhone"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:ems="10"
+        android:inputType="phone"
+        android:background="@color/transparent_my"
+        android:layout_marginHorizontal="15dp"
+        android:hint="@string/hint_phone"
+        android:textColor="@color/black"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@+id/ivSettingsPhone"
+        app:layout_constraintEnd_toStartOf="@+id/ivSettingsLocationE"
+        app:layout_constraintStart_toEndOf="@+id/ivSettingsPhone"
+        app:layout_constraintTop_toTopOf="@+id/ivSettingsPhone" />
+
+    <ImageView
+        android:id="@+id/ivSettingsPhoneE"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginEnd="25dp"
+        app:layout_constraintBottom_toBottomOf="@+id/etSetPhone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/etSetPhone"
+        app:srcCompat="@drawable/ic_edit" />
+
+    <ImageView
+        android:id="@+id/ivSettingsLocation"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginTop="32dp"
+        app:layout_constraintStart_toStartOf="@+id/ivSettingsPhone"
+        app:layout_constraintTop_toBottomOf="@+id/ivSettingsPhone"
+        app:srcCompat="@drawable/ic_location" />
+
+    <EditText
+        android:id="@+id/etSetLocation"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:ems="10"
+        android:inputType="text"
+        android:background="@color/transparent_my"
+        android:layout_marginHorizontal="15dp"
+        android:hint="@string/hint_location"
+        android:textColor="@color/black"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@+id/ivSettingsLocation"
+        app:layout_constraintEnd_toStartOf="@+id/ivSettingsLocationE"
+        app:layout_constraintStart_toEndOf="@+id/ivSettingsLocation"
+        app:layout_constraintTop_toTopOf="@+id/ivSettingsLocation" />
+
+    <ImageView
+        android:id="@+id/ivSettingsLocationE"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        app:layout_constraintBottom_toBottomOf="@+id/etSetLocation"
+        app:layout_constraintEnd_toEndOf="@+id/ivSettingsPhoneE"
+        app:layout_constraintTop_toTopOf="@+id/etSetLocation"
+        app:srcCompat="@drawable/ic_edit" />
+
+    <Button
+        android:id="@+id/bPersonalData"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="25dp"
+        android:layout_marginEnd="22dp"
+        android:background="@color/transparent_my"
+        android:text="@string/personal_data"
+        android:textColor="@color/black"
+        android:textSize="18sp"
+        android:gravity="start|center"
+        app:icon="@drawable/ic_user"
+        app:iconPadding="15dp"
+        app:iconSize="30dp"
+        app:iconTint="@color/black"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ivSettingsLocation" />
+
+    <Button
+        android:id="@+id/bLogOut"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:layout_marginEnd="22dp"
+        android:background="@color/transparent_my"
+        android:text="@string/dsm_log_out"
+        android:textColor="@color/black"
+        android:textSize="18sp"
+        android:gravity="start|center"
+        app:icon="@drawable/ic_log_out"
+        app:iconPadding="15dp"
+        app:iconSize="30dp"
+        app:iconTint="@color/black"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/bPersonalData" />
+
+    <Button
+        android:id="@+id/bExit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:layout_marginEnd="22dp"
+        android:background="@color/transparent_my"
+        android:text="@string/dsm_exit"
+        android:textColor="@color/black"
+        android:textSize="18sp"
+        android:gravity="start|center"
+        app:icon="@drawable/ic_turn_off"
+        app:iconPadding="15dp"
+        app:iconSize="30dp"
+        app:iconTint="@color/black"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/bLogOut" />
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

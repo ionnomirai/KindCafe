@@ -150,6 +150,13 @@ class MainActivity : AppCompatActivity()/*, NavigationView.OnNavigationItemSelec
                 }
 
             }
+
+            ibSettings.setOnClickListener {
+                if (KindCafeApplication.myAuth.currentUser != null){
+                    navController.popBackStack(R.id.homeFragment, false)
+                    navController.navigate(R.id.action_homeFragment_to_settingsGeneralFragment)
+                }
+            }
         }
 
         everyOpenHomeSettings()
@@ -186,13 +193,7 @@ class MainActivity : AppCompatActivity()/*, NavigationView.OnNavigationItemSelec
                     }
                 }
 
-                R.id.itemLogout -> {
-                    if (accountHelper.signOut()) { // if we logout successfuly
-                        binding.lDrawLayoutMain.closeDrawer(GravityCompat.START)
-                        mainVM.setData(resources.getString(R.string.default_username))
-                        doWhenLogout()
-                    }
-                }
+                R.id.itemLogout -> { logoutAction() }
 
                 else -> Toast.makeText(this, "fraeg", Toast.LENGTH_SHORT).show()
             }
@@ -443,6 +444,13 @@ class MainActivity : AppCompatActivity()/*, NavigationView.OnNavigationItemSelec
         }
     }
 
+    fun logoutAction(){
+        if (accountHelper.signOut()) { // if we logout successfuly
+            binding.lDrawLayoutMain.closeDrawer(GravityCompat.START)
+            mainVM.setData(resources.getString(R.string.default_username))
+            doWhenLogout()
+        }
+    }
     private fun doWhenLogout() {
         lifecycleScope.launch {
             mainVM.deleteAllLogout()
@@ -474,6 +482,11 @@ class MainActivity : AppCompatActivity()/*, NavigationView.OnNavigationItemSelec
         lifecycleScope.launch {
             Log.d(my_tag, "Local: getOrderPlacedLocal()")
             mainVM.getOrderPlacedLocal()
+        }
+
+        lifecycleScope.launch {
+            Log.d(my_tag, "Local: getPersonal()")
+            mainVM.getPersonalDataLocal()
         }
     }
 }

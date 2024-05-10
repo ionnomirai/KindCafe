@@ -29,6 +29,9 @@
         <action
             android:id="@+id/action_homeFragment_to_orderSummaryFragment"
             app:destination="@id/orderSummaryFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_settingsGeneralFragment"
+            app:destination="@id/settingsGeneralFragment" />
     </fragment>
     <fragment
         android:id="@+id/registrationFragment"
@@ -117,4 +120,9 @@
             app:argType="com.example.kindcafe.data.DetailedOrderItem[]"
             app:nullable="true" />
     </fragment>
+    <fragment
+        android:id="@+id/settingsGeneralFragment"
+        android:name="com.example.kindcafe.fragments.SettingsGeneralFragment"
+        android:label="SettingsGeneralFragment"
+        tools:layout="@layout/frag_general_settings"/>
 </navigation>

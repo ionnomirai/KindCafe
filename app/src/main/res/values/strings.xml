@@ -79,6 +79,11 @@
     <string name="size_big">Big</string>
     <string name="data_updated">Data is updated</string>
 
+    <!--Setting general-->
+    <string name="hint_phone">+38000000000 (optional)</string>
+    <string name="hint_location">Italy, Rome (optional)</string>
+    <string name="personal_data">Personal data</string>
+
     <string name="test_string_big">The time has come\n
 For me to talk to you\n
 And I don\'t mean\n
