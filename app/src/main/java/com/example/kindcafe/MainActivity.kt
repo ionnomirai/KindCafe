@@ -116,6 +116,8 @@ class MainActivity : AppCompatActivity()/*, NavigationView.OnNavigationItemSelec
 
         binding.apply {
             ibHome.setOnClickListener {
+                navController.popBackStack(R.id.homeFragment, false)
+                /*
                 lifecycleScope.launch {
                     mainVM.getOrderItemsLocal()
                 }
@@ -123,7 +125,7 @@ class MainActivity : AppCompatActivity()/*, NavigationView.OnNavigationItemSelec
                     mainVM.orderBasket.collect{
                         Log.d(my_tag, "orderBasket: $it")
                     }
-                }
+                }*/
             }
 
             ibBag.setOnClickListener {
@@ -155,6 +157,13 @@ class MainActivity : AppCompatActivity()/*, NavigationView.OnNavigationItemSelec
                 if (KindCafeApplication.myAuth.currentUser != null){
                     navController.popBackStack(R.id.homeFragment, false)
                     navController.navigate(R.id.action_homeFragment_to_settingsGeneralFragment)
+                }
+            }
+
+            ibProfile.setOnClickListener {
+                if (KindCafeApplication.myAuth.currentUser != null){
+                    navController.popBackStack(R.id.homeFragment, false)
+                    navController.navigate(R.id.action_homeFragment_to_settingsPersonalFragment)
                 }
             }
         }

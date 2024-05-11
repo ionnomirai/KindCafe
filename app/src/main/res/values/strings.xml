@@ -45,6 +45,9 @@
     <string name="try_again">Try again</string>
     <string name="new_registration">Do you want to register a new account?</string>
 
+    <!--basket-->
+    <string name="quatity_zero">You have not entered a quantity for one of the dishes.</string>
+
     <!--order summary -->
     <string name="title_check_bill">Please see bill summary</string>
     <string name="bill_summary">Bill summary</string>
@@ -70,7 +73,7 @@
     <string name="choose_item_to_buy">Please choose what you buy</string>
     <string name="info_title">Information</string>
     <string name="basket_make_order">Make order</string>
-    <string name="price_style">$%1$s</string>
+    <string name="price_style_usd">$%1$s</string>
     <string name="drop_it_out">DROP IT OUT</string>
     <string name="per">per</string>
 
@@ -83,6 +86,26 @@
     <string name="hint_phone">+38000000000 (optional)</string>
     <string name="hint_location">Italy, Rome (optional)</string>
     <string name="personal_data">Personal data</string>
+
+    <!--Setting personal-->
+    <string name="hint_name_opt">Name (optional)</string>
+    <string name="hint_surname_opt">Surname (optional)</string>
+    <string name="hint_birthday_opt">Birthday (optional)</string>
+    <string name="hint_email">E-mail</string>
+    <string name="hint_zodiac_opt">Sign of the zodiac (optional)</string>
+
+    <string name="title_name_opt">Name:</string>
+    <string name="title_surname_opt">Surname:</string>
+    <string name="title_birthday_opt">Birthday:</string>
+    <string name="title_email">E-mail</string>
+    <string name="title_zodiac_opt">Zodiac</string>
+
+
+    Name (optional)
+    Surname (optional)
+    Birthday (optional)
+    E-mail (optional)
+    Sign of the zodiac (optional)
 
     <string name="test_string_big">The time has come\n
 For me to talk to you\n

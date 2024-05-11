@@ -45,6 +45,7 @@ class FavoriteFragment : Fragment() {
     private val dbManager = DbManager()
 
     private val my_tag = "FavoriteFragmentTag"
+    private val currentFragmentName = "Favorites"
 
     /*---------------------------------------- Functions -----------------------------------------*/
 
@@ -61,6 +62,13 @@ class FavoriteFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         Log.d(my_tag, "onViewCreated")
+
+        val mainAct = activity as? MainActivity
+
+        mainAct?.let {
+            it.binding.tvToolbarTitle.text = currentFragmentName
+            it.supportActionBar?.title = ""
+        }
 
         binding.rvShowItems.apply {
             layoutManager = LinearLayoutManager(requireContext())
@@ -117,6 +125,19 @@ class FavoriteFragment : Fragment() {
                 viewLifecycleOwner.lifecycleScope.launch{
                     val orderObj = OrderItem(id = dish.id, name = dish.name)
                     mainVM.addOrderItemsLocal(orderObj)
+                    dbManager.setOrderItemBasketToRDB(KindCafeApplication.myAuth.currentUser, orderObj)
+                    cancel()
+                }
+            }
+
+            override fun delFromBag(dish: Dish) {
+                viewLifecycleOwner.lifecycleScope.launch {
+                    val cur = mainVM.orderBasket.value.find { (it.id == dish.id && it.name == dish.name) }
+                    cur?.let {oItem ->
+                        mainVM.deleteOrderItemsLocal(oItem)
+                        dbManager.deleteOrderBasketItemFromRDB(KindCafeApplication.myAuth.currentUser, oItem)
+
+                    }
                     cancel()
                 }
             }
@@ -156,15 +177,7 @@ class FavoriteFragment : Fragment() {
                 return null
             }
 
-            override fun delFromBag(dish: Dish) {
-                viewLifecycleOwner.lifecycleScope.launch {
-                    val cur = mainVM.orderBasket.value.find { (it.id == dish.id && it.name == dish.name) }
-                    cur?.let {
-                        mainVM.deleteOrderItemsLocal(cur)
-                    }
-                    cancel()
-                }
-            }
+
 
             // if true, dish in bag
             override fun checkBag(dish: Dish): Boolean {

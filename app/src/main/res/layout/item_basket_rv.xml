@@ -56,13 +56,16 @@
 
         <TextView
             android:id="@+id/tvItemName"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="4dp"
+            android:layout_marginEnd="8dp"
             android:textColor="@color/user_name_home_screen"
             android:textSize="20sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="@+id/ibLike"
+            app:layout_constraintEnd_toStartOf="@id/tvItemPrice"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toEndOf="@+id/ibLike"
             app:layout_constraintTop_toTopOf="@+id/ibLike"
             tools:text="Espresso" />

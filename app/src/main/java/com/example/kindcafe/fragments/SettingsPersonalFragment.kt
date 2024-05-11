@@ -1,33 +1,26 @@
 package com.example.kindcafe.fragments
 
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
+import android.text.InputType
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.viewModelScope
-import androidx.navigation.fragment.findNavController
-import com.example.kindcafe.KindCafeApplication
 import com.example.kindcafe.MainActivity
 import com.example.kindcafe.R
-import com.example.kindcafe.databinding.FragSettingsGeneralBinding
+import com.example.kindcafe.databinding.FragSettingsPersonalBinding
 import com.example.kindcafe.firebase.DbManager
 import com.example.kindcafe.viewModels.MainViewModel
-import kotlinx.coroutines.cancel
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
-class SettingsGeneralFragment: Fragment() {
+class SettingsPersonalFragment : Fragment() {
     /*---------------------------------------- Properties ----------------------------------------*/
-    private var _binding: FragSettingsGeneralBinding? = null
+    private var _binding: FragSettingsPersonalBinding? = null
     private val binding
-        get() : FragSettingsGeneralBinding {
+        get() : FragSettingsPersonalBinding {
             return checkNotNull(_binding) {
                 "Cannot access binding because it is null. Is the view visible"
             }
@@ -37,7 +30,7 @@ class SettingsGeneralFragment: Fragment() {
     private val mainVM: MainViewModel by activityViewModels()
     private val dbManager = DbManager()
 
-    private val my_tag = "SettingsGeneralFragmentTag"
+    private val my_tag = "SettingsPersonalFragmentTag"
 
     /*---------------------------------------- Functions -----------------------------------------*/
 
@@ -46,7 +39,7 @@ class SettingsGeneralFragment: Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        _binding = FragSettingsGeneralBinding.inflate(layoutInflater, container, false)
+        _binding = FragSettingsPersonalBinding.inflate(layoutInflater, container, false)
         return binding.root
     }
 
@@ -67,47 +60,27 @@ class SettingsGeneralFragment: Fragment() {
             viewLifecycleOwner.lifecycleScope.launch {
                 mainVM.personal.collect{userInfo ->
 
-                    // this null check need, because when logout, it is trigered and pull NullPointerException
-                    userInfo.name?.let {name->
-                        headerSetting.tvUserName.text = name
-                    }
 
-
-                    userInfo.phoneNumber?.let {phone ->
-                        etSetPhone.setText(phone)
-                    }
-
-                    userInfo.location?.let {location ->
-                        etSetLocation.setText(location)
-                    }
                 }
             }
 
-            binding.apply {
-                bLogOut.setOnClickListener {
-                    mainAct?.let{
-                        it.logoutAction()
-                        findNavController().popBackStack(R.id.homeFragment, false)
-                    }
-                }
-
-                bExit.setOnClickListener {
-                    findNavController().popBackStack(R.id.homeFragment, false)
-                    mainAct?.finish()
-                }
-
-                bPersonalData.setOnClickListener {
-                    findNavController().navigate(R.id.action_settingsGeneralFragment_to_settingsPersonalFragment)
-                }
-            }
         }
+
+        //binding.etSetEmail.inputType = InputType.TYPE_NULL
+
+/*        binding.tvSettingsGen.setOnClickListener {
+            Log.d(my_tag, "birthday ${binding.etSetBirthday.text.toString()}")
+            Log.d(my_tag, "zodiac ${binding.etSetZodiac.text.toString()}")
+            Log.d(my_tag, "email ${binding.etSetEmail.text.toString()}")
+
+        }*/
 
 
     }
 
     override fun onPause() {
         super.onPause()
-        mainVM.viewModelScope.launch {
+/*        mainVM.viewModelScope.launch {
             val phone = binding.etSetPhone.text.toString()
             val location = binding.etSetLocation.text.toString()
             val userInfoTemp = mainVM.personal.value.copy(phoneNumber = phone, location = location)
@@ -115,7 +88,7 @@ class SettingsGeneralFragment: Fragment() {
             mainVM.setPersonalDataLocal(userInfoTemp)
             dbManager.setPrimaryData(KindCafeApplication.myAuth.currentUser, userInfoTemp)
             cancel()
-        }
+        }*/
     }
 
     override fun onResume() {

@@ -2,6 +2,7 @@ package com.example.kindcafe.adapters
 
 import android.app.Activity
 import android.content.res.ColorStateList
+import android.text.method.ScrollingMovementMethod
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -48,7 +49,10 @@ class AdapterShowItems(
         fun setData(data: Dish){
             bindingInner.apply {
                 tvItemName.text = data.name
-                tvItemPrice.text = data.price
+                //tvItemPrice.text = data.price
+                tvItemPrice.text = bindingInner.root.context.getString(R.string.price_style_usd, data.price)
+                tvItemName.setHorizontallyScrolling(true)
+                tvItemName.movementMethod = ScrollingMovementMethod()
 
                 val currentFav = Favorites(data.id, data.id, data.name)
 

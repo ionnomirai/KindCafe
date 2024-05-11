@@ -32,6 +32,9 @@
         <action
             android:id="@+id/action_homeFragment_to_settingsGeneralFragment"
             app:destination="@id/settingsGeneralFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_settingsPersonalFragment"
+            app:destination="@id/settingsPersonalFragment" />
     </fragment>
     <fragment
         android:id="@+id/registrationFragment"
@@ -124,5 +127,14 @@
         android:id="@+id/settingsGeneralFragment"
         android:name="com.example.kindcafe.fragments.SettingsGeneralFragment"
         android:label="SettingsGeneralFragment"
-        tools:layout="@layout/frag_general_settings"/>
+        tools:layout="@layout/frag_settings_general">
+        <action
+            android:id="@+id/action_settingsGeneralFragment_to_settingsPersonalFragment"
+            app:destination="@id/settingsPersonalFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/settingsPersonalFragment"
+        android:name="com.example.kindcafe.fragments.SettingsPersonalFragment"
+        android:label="SettingsPersonalFragment"
+        tools:layout="@layout/frag_settings_personal"/>
 </navigation>

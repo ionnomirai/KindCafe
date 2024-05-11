@@ -10,6 +10,8 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.fragment.navArgs
 import com.example.kindcafe.KindCafeApplication
+import com.example.kindcafe.MainActivity
+import com.example.kindcafe.R
 import com.example.kindcafe.data.CakesAdditive
 import com.example.kindcafe.data.Categories
 import com.example.kindcafe.data.DetailedOrderItem
@@ -44,6 +46,7 @@ class OrderSummaryFragment : Fragment() {
     private val dbManager = DbManager()
 
     private val my_tag = "OrderSummaryFragmentTag"
+    private val currentFragmentName = "OrderSummary"
 
     //private val myNavArgs: OrderSummaryFragmentArgs by navArgs()
     //private var myNavArgs: Array<DetailedOrderItem>? = null
@@ -68,14 +71,14 @@ class OrderSummaryFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         Log.d(my_tag, "onViewCreated")
 
-/*
-        try {
-            val argsTemp: OrderSummaryFragmentArgs by navArgs()
-            myNavArgs = argsTemp.detailedOrder
-        } catch (e:Exception){
-            Log.d(my_tag, "exception = ${e.message}")
+        val mainAct = activity as? MainActivity
+
+        mainAct?.let {
+            it.binding.tbMain.menu.findItem(R.id.itbSearch).isVisible = false
+            it.binding.tvToolbarTitle.text = currentFragmentName
+            it.supportActionBar?.title = ""
         }
-*/
+
         try {
             arguments?.let {
                 argsDetailedOrderArray = OrderSummaryFragmentArgs.fromBundle(it).detailedOrder
@@ -191,25 +194,11 @@ class OrderSummaryFragment : Fragment() {
             when (it.category) {
                 Categories.SparklingDrinks.categoryName -> {
                     // collect information about additional names and prices
-                    SparklingDrinksAdditive.entries.forEach {
-                        mapAdds.add(
-                            Pair(
-                                it.addsName,
-                                it.addsPrice
-                            )
-                        )
-                    }
+                    SparklingDrinksAdditive.entries.forEach { mapAdds.add(Pair(it.addsName, it.addsPrice)) }
                 }
 
                 Categories.NonSparklingDrinks.categoryName -> {
-                    NonSparklingAdditive.entries.forEach {
-                        mapAdds.add(
-                            Pair(
-                                it.addsName,
-                                it.addsPrice
-                            )
-                        )
-                    }
+                    NonSparklingAdditive.entries.forEach { mapAdds.add(Pair(it.addsName, it.addsPrice)) }
                 }
 
                 Categories.Sweets.categoryName -> {
@@ -236,16 +225,11 @@ class OrderSummaryFragment : Fragment() {
     ): Pair<String, Double> {
         // depending on the size, set the coefficient.
         val sizeLikePrice = when (item.size) {
-            Size.Small.name -> Size.Small.coefficient
+            Size.Small.name, null -> Size.Small.coefficient
             Size.Medium.name -> Size.Medium.coefficient
             Size.Big.name -> Size.Big.coefficient
             else -> 1.0
         }
-
-        val resultText =
-            StringBuilder().append("${item.name}, ${item.count} item(s) (${item.price}$), ${item.size} size(*$sizeLikePrice),")
-        val resultPriceText = StringBuilder("\n= (${item.price}$ * $sizeLikePrice + ")
-        var resultPrice = 0.0
 
         // Creates a corresponding list of additives and their prices for a given dish
         val adds: List<Pair<String, Double>> =
@@ -257,6 +241,24 @@ class OrderSummaryFragment : Fragment() {
                         Pair("", -1.0)
                 }
                 .filter { it.first.isNotEmpty() }
+
+        val resultText =
+            StringBuilder()
+                .append("${item.name}, ${item.count} item(s) " +
+                        "(${item.price}$), ${item.size ?: "Small"} size(*$sizeLikePrice)")
+        val resultPriceText = StringBuilder("\n= (${item.price}$ * $sizeLikePrice")
+
+        if (adds.isNotEmpty()) {
+            resultText.append(",")
+            resultPriceText.append(" + ")
+        } else {
+            resultPriceText.append(") ")
+        }
+
+
+        var resultPrice = 0.0
+
+
 
         if (item.price?.toDoubleOrNull() != null && item.count?.toDoubleOrNull() != null) {
             resultPrice = sizeLikePrice * item.price.toDouble()

@@ -1,5 +1,6 @@
 package com.example.kindcafe.adapters
 
+import android.text.method.ScrollingMovementMethod
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -186,7 +187,10 @@ class AdapterBasket(
 
 
                 tvItemName.text = data.name
-                tvItemPrice.text = data.price
+                //tvItemPrice.text = data.price
+                tvItemPrice.text = bindingInner.root.context.getString(R.string.price_style_usd, data.price)
+                tvItemName.setHorizontallyScrolling(true)
+                tvItemName.movementMethod = ScrollingMovementMethod()
                 tvCount.text = data.count ?: "0"
                 try {
                     Picasso.get().load(data.uriSmall).into(ivItemPhoto)

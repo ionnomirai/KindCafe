@@ -66,7 +66,7 @@ class DetailFragment: Fragment() {
                 binding.apply {
                     Picasso.get().load(dish.uriBig).into(ivPicBig)
                     tvNameDish.text = dish.name
-                    tvPriceDish.text = resources.getString(R.string.price_style, dish.price)
+                    tvPriceDish.text = resources.getString(R.string.price_style_usd, dish.price)
                     tvDescription.text = dish.description
                 }
             }

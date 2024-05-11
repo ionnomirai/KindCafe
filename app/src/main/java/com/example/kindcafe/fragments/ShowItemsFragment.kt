@@ -187,6 +187,18 @@ class ShowItemsFragment: Fragment() {
                 viewLifecycleOwner.lifecycleScope.launch{
                     val orderObj = OrderItem(id = dish.id, name = dish.name)
                     mainVM.addOrderItemsLocal(orderObj)
+                    dbManager.setOrderItemBasketToRDB(KindCafeApplication.myAuth.currentUser, orderObj)
+                    cancel()
+                }
+            }
+
+            override fun delFromBag(dish: Dish) {
+                viewLifecycleOwner.lifecycleScope.launch {
+                    val cur = mainVM.orderBasket.value.find { (it.id == dish.id && it.name == dish.name) }
+                    cur?.let {oItem ->
+                        mainVM.deleteOrderItemsLocal(oItem)
+                        dbManager.deleteOrderBasketItemFromRDB(KindCafeApplication.myAuth.currentUser, oItem)
+                    }
                     cancel()
                 }
             }
@@ -227,16 +239,6 @@ class ShowItemsFragment: Fragment() {
                     return AppCompatResources.getColorStateList(it, R.color.item_icon)
                 }
                 return null
-            }
-
-            override fun delFromBag(dish: Dish) {
-                viewLifecycleOwner.lifecycleScope.launch {
-                    val cur = mainVM.orderBasket.value.find { (it.id == dish.id && it.name == dish.name) }
-                    cur?.let {
-                        mainVM.deleteOrderItemsLocal(cur)
-                    }
-                    cancel()
-                }
             }
 
             // if true, dish in bag

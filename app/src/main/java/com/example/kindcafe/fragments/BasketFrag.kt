@@ -6,6 +6,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -47,6 +48,7 @@ class BasketFrag: Fragment() {
     private val mainVM: MainViewModel by activityViewModels()
 
     private val my_tag = "BasketFragmentTag"
+    private val currentFragmentName = "Basket"
 
     private val myAdapter = AdapterBasket(clickItemElements(), clickSettingOrder())
     private val dbManager = DbManager()
@@ -67,6 +69,13 @@ class BasketFrag: Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        val mainAct = activity as? MainActivity
+
+        mainAct?.let {
+            it.binding.tvToolbarTitle.text = currentFragmentName
+            it.supportActionBar?.title = ""
+        }
 
         binding.rvItemsBuy.apply {
             layoutManager = LinearLayoutManager(requireContext())
@@ -116,41 +125,18 @@ class BasketFrag: Fragment() {
         }
 
         binding.clButtonMakeOrder.setOnClickListener {
-            val action = BasketFragDirections.actionBasketFragToOrderSummaryFragment(detailedListI.toTypedArray())
-            findNavController().navigate(action)
-        }
 
-/*        mainVM.orderBasket.value.forEachIndexed{index, orderItem ->
-            val dish = mainVM.allDishes.value.find{(it.id == orderItem.id && it.name == orderItem.name)}
-            dish?.let { tempDishes.add(it) }
-        }
-
-        val detailedList = List(tempDishes.size){index ->
-            DetailedOrderItem(
-                id = tempDishes[index].id,
-                name = tempDishes[index].name,
-                price = tempDishes[index].price,
-                description = tempDishes[index].description,
-                category = tempDishes[index].category,
-                characteristic = tempDishes[index].characteristic,
-                uriSmall = tempDishes[index].uriSmall,
-                uriBig = tempDishes[index].uriBig,
-                add1 = mainVM.orderBasket.value[index].add1,
-                add2 = mainVM.orderBasket.value[index].add2,
-                add3 = mainVM.orderBasket.value[index].add3,
-                size = mainVM.orderBasket.value[index].size,
-                count = mainVM.orderBasket.value[index].count
-            )
-        }
-
-        Log.d(my_tag, "size detailed list: $detailedList")
-        myAdapter.setNewData(detailedList)*/
-
-/*        viewLifecycleOwner.lifecycleScope.launch {
-            mainVM.allDishes.collect{
-                myAdapter.setNewData(it)
+            val someDishesHaveNotQuantity = detailedListI
+                .filter { it.count == "0" || it.count == null}
+                .isNotEmpty()
+            /* if all dishes have quantity (count), then we can move further */
+            if (!someDishesHaveNotQuantity){
+                val action = BasketFragDirections.actionBasketFragToOrderSummaryFragment(detailedListI.toTypedArray())
+                findNavController().navigate(action)
+            } else {
+                Toast.makeText(context, R.string.quatity_zero, Toast.LENGTH_SHORT).show()
             }
-        }*/
+        }
     }
 
     override fun onResume() {

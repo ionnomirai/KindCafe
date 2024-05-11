@@ -168,11 +168,30 @@ class DbManager {
         }
     }
 
+    fun setOrderItemBasketToRDB(user: FirebaseUser?, item: OrderItem){
+        user?.let {u ->
+            myDatabaseUser
+                .child(u.uid)
+                .child(CategoriesInUsers.ORDER_BASKET.cName)
+                .child("itemOrder${item.id}")
+                .setValue(item)
+        }
+    }
+
     /* Has not test yet */
     fun deleteOrderBasketFromRDB(user: FirebaseUser?){
         user?.let {
             myDatabaseUser.child(it.uid)
                 .child(CategoriesInUsers.ORDER_BASKET.cName)
+                .removeValue()
+        }
+    }
+
+    fun deleteOrderBasketItemFromRDB(user: FirebaseUser?, item: OrderItem){
+        user?.let {
+            myDatabaseUser.child(it.uid)
+                .child(CategoriesInUsers.ORDER_BASKET.cName)
+                .child("itemOrder${item.id}")
                 .removeValue()
         }
     }
