@@ -27,11 +27,25 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/header_setting" />
 
+    <TextView
+        android:id="@+id/tvName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="15dp"
+        android:textSize="16sp"
+        android:text="@string/title_name_opt"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@+id/etSetName"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/etSetName" />
+
+
+
     <EditText
         android:id="@+id/etSetName"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginStart="50dp"
+        android:layout_marginStart="100dp"
         android:layout_marginEnd="15dp"
         android:background="@color/transparent_my"
         android:ems="10"
@@ -39,6 +53,7 @@
         android:inputType="text"
         android:textColor="@color/black"
         android:textStyle="bold"
+        android:gravity="end"
         app:layout_constraintBottom_toBottomOf="@+id/ivSettingsNameE"
         app:layout_constraintEnd_toStartOf="@+id/ivSettingsNameE"
         app:layout_constraintStart_toStartOf="parent"
@@ -46,14 +61,25 @@
 
     <ImageView
         android:id="@+id/ivSettingsNameE"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
         android:layout_marginTop="20dp"
-        android:layout_marginEnd="20dp"
+        android:layout_marginEnd="15dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tvSettingsPersonal"
         app:srcCompat="@drawable/ic_edit"
         tools:layout_editor_absoluteY="321dp" />
+
+    <TextView
+        android:id="@+id/tvSurname"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/title_surname_opt"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@+id/etSetSurname"
+        app:layout_constraintStart_toStartOf="@+id/tvName"
+        app:layout_constraintTop_toTopOf="@+id/etSetSurname" />
 
     <EditText
         android:id="@+id/etSetSurname"
@@ -66,6 +92,7 @@
         android:inputType="text"
         android:textColor="@color/black"
         android:textStyle="bold"
+        android:gravity="end"
         app:layout_constraintBottom_toBottomOf="@+id/ivSettingsSurnameE"
         app:layout_constraintEnd_toStartOf="@+id/ivSettingsSurnameE"
         app:layout_constraintStart_toStartOf="@+id/etSetName"
@@ -74,14 +101,26 @@
 
     <ImageView
         android:id="@+id/ivSettingsSurnameE"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
         android:layout_marginTop="20dp"
-        android:layout_marginEnd="20dp"
+        android:layout_marginEnd="15dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/ivSettingsNameE"
         app:srcCompat="@drawable/ic_edit"
         tools:layout_editor_absoluteY="321dp" />
+
+    <TextView
+        android:id="@+id/tvBirthday"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/title_birthday_opt"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@+id/etSetBirthday"
+        app:layout_constraintStart_toStartOf="@+id/tvSurname"
+        app:layout_constraintTop_toTopOf="@+id/etSetBirthday" />
+
 
     <EditText
         android:id="@+id/etSetBirthday"
@@ -94,6 +133,7 @@
         android:inputType="date"
         android:textColor="@color/black"
         android:textStyle="bold"
+        android:gravity="end"
         app:layout_constraintBottom_toBottomOf="@+id/ivSettingsBirthdayE"
         app:layout_constraintEnd_toStartOf="@+id/ivSettingsBirthdayE"
         app:layout_constraintStart_toStartOf="@+id/etSetSurname"
@@ -102,67 +142,83 @@
 
     <ImageView
         android:id="@+id/ivSettingsBirthdayE"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
         android:layout_marginTop="20dp"
-        android:layout_marginEnd="20dp"
+        android:layout_marginEnd="15dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/ivSettingsSurnameE"
         app:srcCompat="@drawable/ic_edit"
         tools:layout_editor_absoluteY="321dp" />
 
-    <EditText
-        android:id="@+id/etSetZodiac"
+
+    <TextView
+        android:id="@+id/tvZodiac"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/title_zodiac_opt"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@+id/spZodiacSign"
+        app:layout_constraintStart_toStartOf="@+id/tvSurname"
+        app:layout_constraintTop_toTopOf="@+id/spZodiacSign" />
+
+
+    <Spinner
+        android:id="@+id/spZodiacSign"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginEnd="15dp"
-        android:background="@color/transparent_my"
-        android:ems="10"
-        android:hint="@string/hint_zodiac_opt"
-        android:inputType="text"
-        android:singleLine="true"
-        android:textColor="@color/black"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="@id/ivSettingsZodiacE"
+        android:textAlignment="textEnd"
+        app:layout_constraintBottom_toBottomOf="@+id/ivSettingsZodiacE"
         app:layout_constraintEnd_toStartOf="@+id/ivSettingsZodiacE"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="@+id/etSetBirthday"
         app:layout_constraintTop_toTopOf="@+id/ivSettingsZodiacE" />
 
-
     <ImageView
         android:id="@+id/ivSettingsZodiacE"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
         android:layout_marginTop="20dp"
-        android:layout_marginEnd="20dp"
+        android:layout_marginEnd="15dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/ivSettingsBirthdayE"
         app:srcCompat="@drawable/ic_edit"
         tools:layout_editor_absoluteY="321dp" />
 
-    <EditText
-        android:id="@+id/etSetEmail"
+    <TextView
+        android:id="@+id/tvEmail"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/title_email"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@+id/tvSetEmail"
+        app:layout_constraintStart_toStartOf="@+id/tvSurname"
+        app:layout_constraintTop_toTopOf="@+id/tvSetEmail" />
+
+    <TextView
+        android:id="@+id/tvSetEmail"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginEnd="15dp"
         android:background="@color/transparent_my"
-        android:ems="10"
+        android:textSize="18sp"
         android:hint="@string/hint_email"
-        android:inputType="none"
-        android:singleLine="false"
         android:textColor="@color/black"
         android:textStyle="bold"
+        android:gravity="end"
         app:layout_constraintBottom_toBottomOf="@id/ivSettingsEmailE"
         app:layout_constraintEnd_toStartOf="@id/ivSettingsEmailE"
-        app:layout_constraintStart_toStartOf="@id/etSetZodiac"
+        app:layout_constraintStart_toStartOf="@id/spZodiacSign"
         app:layout_constraintTop_toTopOf="@id/ivSettingsEmailE" />
 
     <ImageView
         android:id="@+id/ivSettingsEmailE"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
         android:layout_marginTop="20dp"
-        android:layout_marginEnd="20dp"
+        android:layout_marginEnd="15dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/ivSettingsZodiacE"
         tools:layout_editor_absoluteY="321dp" />

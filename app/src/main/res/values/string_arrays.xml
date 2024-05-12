@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string-array name="zodiac_signs">
+        <item>-nothing-</item>
+        <item>Aries (Ram)</item>
+        <item>Taurus (Bull)</item>
+        <item>Gemini (Twins)</item>
+        <item>Cancer (Crab)</item>
+        <item>Leo (Lion)</item>
+        <item>Virgo (Virgin)</item>
+        <item>Libra (Balance)</item>
+        <item>Scorpius (Scorpion)</item>
+        <item>Sagittarius (Archer)</item>
+        <item>Capricornus (Goat)</item>
+        <item>Aquarius (Water Bearer)</item>
+        <item>Pisces (Fish)</item>
+    </string-array>
+
+</resources>
