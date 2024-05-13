@@ -11,6 +11,7 @@ import androidx.navigation.fragment.findNavController
 import com.example.kindcafe.MainActivity
 import com.example.kindcafe.data.Categories
 import com.example.kindcafe.databinding.FragHomeBinding
+import com.example.kindcafe.utils.Locations
 import com.example.kindcafe.viewModels.MainViewModel
 
 
@@ -71,6 +72,7 @@ class HomeFragment : Fragment() {
     override fun onResume() {
         super.onResume()
         Log.d(my_tag, "onResume")
+        mainVM.currentLocation = Locations.HOME.nameL
     }
 
     override fun onDestroyView() {

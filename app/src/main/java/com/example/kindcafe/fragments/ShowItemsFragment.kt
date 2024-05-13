@@ -28,10 +28,10 @@ import com.example.kindcafe.firebase.StorageManager
 import com.example.kindcafe.firebase.firebaseEnums.UriSize
 import com.example.kindcafe.firebase.firebaseInterfaces.GetUrisCallback
 import com.example.kindcafe.firebase.firebaseInterfaces.ReadAndSplitCategories
+import com.example.kindcafe.utils.Locations
 import com.example.kindcafe.viewModels.MainViewModel
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 class ShowItemsFragment: Fragment() {
@@ -137,10 +137,12 @@ class ShowItemsFragment: Fragment() {
                 Categories.SparklingDrinks ->  mainVM.sparklingDrinks.collect{
                     myAdapter.setNewData(it)
                     Log.d(my_tag, "read when start: $it")
+                    mainVM.currentLocation = Locations.SHOW_SPARKLING_DRINKS.nameL
                 }
                 else -> mainVM.cakes.collect{
                     myAdapter.setNewData(it)
                     Log.d(my_tag, "read when start: $it")
+                    mainVM.currentLocation = Locations.SHOW_CAKES.nameL
                 }
             }
         }

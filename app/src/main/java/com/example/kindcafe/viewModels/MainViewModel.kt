@@ -24,6 +24,8 @@ class MainViewModel : ViewModel() {
     /*---------------------------------------------------------------------------------------------------*/
     /*------------------------------------------ Different funs -----------------------------------------*/
 
+    var currentLocation = "Home"
+
     val nameData: MutableLiveData<String> = MutableLiveData()
 
     val numberOfAttemptsLive: MutableLiveData<Int> = MutableLiveData()

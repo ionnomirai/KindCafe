@@ -3,8 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="130dp"
-    android:layout_marginTop="7dp">
+    android:layout_height="130dp">
 
 
 
@@ -16,18 +15,19 @@
             <ImageView
                 android:id="@+id/ivBackground"
                 android:layout_width="0dp"
-                android:layout_height="160dp"
+                android:layout_height="140dp"
                 android:scaleType="fitXY"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:srcCompat="@drawable/item_choose_back3" />
 
             <ImageView
                 android:id="@+id/ivItemPhoto"
-                android:layout_width="95dp"
-                android:layout_height="95dp"
+                android:layout_width="85dp"
+                android:layout_height="85dp"
                 android:layout_marginStart="32dp"
                 android:layout_marginBottom="10dp"
                 android:scaleType="fitXY"
@@ -96,7 +96,7 @@
                 android:id="@+id/ibPutToOrder"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="30dp"
+                android:layout_marginEnd="38dp"
                 android:background="@color/transparent_my"
                 android:src="@drawable/ic_shopping_bag"
                 app:layout_constraintBottom_toBottomOf="@+id/ivItemPhoto"
@@ -108,8 +108,8 @@
                 android:id="@+id/imageView2"
                 android:layout_width="100dp"
                 android:layout_height="52dp"
-                android:layout_marginEnd="17dp"
-                android:layout_marginBottom="14dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginBottom="19dp"
                 android:scaleType="fitXY"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"

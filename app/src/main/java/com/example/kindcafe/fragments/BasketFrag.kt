@@ -29,6 +29,7 @@ import com.example.kindcafe.database.Favorites
 import com.example.kindcafe.databinding.FragBasketBinding
 import com.example.kindcafe.databinding.FragHomeBinding
 import com.example.kindcafe.firebase.DbManager
+import com.example.kindcafe.utils.Locations
 import com.example.kindcafe.viewModels.MainViewModel
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.collect
@@ -70,6 +71,7 @@ class BasketFrag: Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        mainVM.currentLocation
         val mainAct = activity as? MainActivity
 
         mainAct?.let {
@@ -141,6 +143,7 @@ class BasketFrag: Fragment() {
 
     override fun onResume() {
         super.onResume()
+        mainVM.currentLocation = Locations.BASKET.nameL
         Log.d(my_tag, "onResume")
     }
 

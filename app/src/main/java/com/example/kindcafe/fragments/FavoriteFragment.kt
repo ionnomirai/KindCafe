@@ -24,6 +24,7 @@ import com.example.kindcafe.database.OrderItem
 import com.example.kindcafe.databinding.FragFavoritesBinding
 import com.example.kindcafe.databinding.FragHomeBinding
 import com.example.kindcafe.firebase.DbManager
+import com.example.kindcafe.utils.Locations
 import com.example.kindcafe.viewModels.MainViewModel
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.collect
@@ -189,6 +190,7 @@ class FavoriteFragment : Fragment() {
     override fun onResume() {
         super.onResume()
         Log.d(my_tag, "onResume")
+        mainVM.currentLocation = Locations.FAVORITES.nameL
     }
 
     override fun onDestroyView() {

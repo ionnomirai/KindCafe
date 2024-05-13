@@ -11,12 +11,12 @@ import androidx.activity.viewModels
 import androidx.annotation.IdRes
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.SearchView
 import androidx.core.view.GravityCompat
 import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
-import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
@@ -24,8 +24,8 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.example.kindcafe.data.AllUserData
 import com.example.kindcafe.database.Dish
-import com.example.kindcafe.database.UserPersonal
 import com.example.kindcafe.databinding.ActivityMainBinding
+import com.example.kindcafe.dialogs.DialogSearchGeneral
 import com.example.kindcafe.dialogs.ProgressUpdateMain
 import com.example.kindcafe.firebase.AccountHelper
 import com.example.kindcafe.firebase.DbManager
@@ -41,7 +41,6 @@ import com.squareup.picasso.Picasso
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 
@@ -300,7 +299,7 @@ class MainActivity : AppCompatActivity()/*, NavigationView.OnNavigationItemSelec
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == R.id.itbSearch) {
-            Toast.makeText(this, "Search", Toast.LENGTH_SHORT).show()
+            DialogSearchGeneral(mainVM.currentLocation).show(supportFragmentManager, null)
         }
         return super.onOptionsItemSelected(item)
     }
