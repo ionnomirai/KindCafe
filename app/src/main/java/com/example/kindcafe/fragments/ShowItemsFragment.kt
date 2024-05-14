@@ -28,25 +28,29 @@ import com.example.kindcafe.firebase.StorageManager
 import com.example.kindcafe.firebase.firebaseEnums.UriSize
 import com.example.kindcafe.firebase.firebaseInterfaces.GetUrisCallback
 import com.example.kindcafe.firebase.firebaseInterfaces.ReadAndSplitCategories
+import com.example.kindcafe.utils.AuxillaryFunctions
 import com.example.kindcafe.utils.Locations
 import com.example.kindcafe.viewModels.MainViewModel
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
-class ShowItemsFragment: Fragment() {
+class ShowItemsFragment : Fragment() {
     /*---------------------------------------- Properties ----------------------------------------*/
     private var _binding: FragItemsBinding? = null
     private val binding
         get() : FragItemsBinding {
-            return checkNotNull(_binding){
+            return checkNotNull(_binding) {
                 "Cannot access binding because it is null. Is the view visible"
             }
         }
 
     /* Common viewModel between activity and this fragment */
-    private val mainVM : MainViewModel by activityViewModels()
-    private val myAdapter = AdapterShowItems(clickItemElements())
+    private val mainVM: MainViewModel by activityViewModels()
+
+    //private val myAdapter = AdapterShowItems(clickItemElements())
+    private lateinit var myAdapter: AdapterShowItems
 
     private val my_tag = "ShowItemsFragment"
     private val navArgs: ShowItemsFragmentArgs by navArgs()
@@ -76,6 +80,17 @@ class ShowItemsFragment: Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        myAdapter = AdapterShowItems(
+            AuxillaryFunctions.deafultItemMoveDirections(
+                this, mainVM
+            ) { dish: Dish ->
+                ShowItemsFragmentDirections.actionShowItemsFragmentToDetailFragment(
+                    dish.id,
+                    dish.name!!
+                )
+            }
+        )
+
         val mainActivity = activity as MainActivity
         mainActivity.supportActionBar?.title = ""
         mainActivity.binding.tvToolbarTitle.text = navArgs.category.categoryName
@@ -100,26 +115,34 @@ class ShowItemsFragment: Fragment() {
 
         // First try if we retrieve data from RDB, then retrieve uriSmall
         viewLifecycleOwner.lifecycleScope.launch {
-            goForwardMainData.collect{
-                if (it){
+            goForwardMainData.collect {
+                if (it) {
                     Log.d(my_tag, "data added: Uri small")
-                    storageManager.readUri(dList, clarificationGetUris(UriSize.Small), UriSize.Small)
+                    storageManager.readUri(
+                        dList,
+                        clarificationGetUris(UriSize.Small),
+                        UriSize.Small
+                    )
                 }
             }
         }
 
         // Next retrieve uriBig
         viewLifecycleOwner.lifecycleScope.launch {
-            goForwardUriSmallData.collect{
-                if (it){
+            goForwardUriSmallData.collect {
+                if (it) {
                     Log.d(my_tag, "data added: : Uri big")
-                    storageManager.readUri(uSmallList, clarificationGetUris(UriSize.Big), UriSize.Big)
+                    storageManager.readUri(
+                        uSmallList,
+                        clarificationGetUris(UriSize.Big),
+                        UriSize.Big
+                    )
                 }
             }
         }
 
         viewLifecycleOwner.lifecycleScope.launch {
-            goForwardUriBigData.collect{ third ->
+            goForwardUriBigData.collect { third ->
                 if (third) {
                     mainVM.addDishLocal(uBigList)
                     Log.d(my_tag, "all added")
@@ -133,20 +156,42 @@ class ShowItemsFragment: Fragment() {
 
         // Data we pass to adapter
         viewLifecycleOwner.lifecycleScope.launch {
-            when(navArgs.category){
-                Categories.SparklingDrinks ->  mainVM.sparklingDrinks.collect{
-                    myAdapter.setNewData(it)
-                    Log.d(my_tag, "read when start: $it")
-                    mainVM.currentLocation = Locations.SHOW_SPARKLING_DRINKS.nameL
-                }
-                else -> mainVM.cakes.collect{
-                    myAdapter.setNewData(it)
-                    Log.d(my_tag, "read when start: $it")
-                    mainVM.currentLocation = Locations.SHOW_CAKES.nameL
+            checkCategoryAndAction(navArgs.category)
+        }
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            mainVM.needUpdate.collect {
+                if (it) {
+                    refreshDisplaying(navArgs.category)
+                    mainVM.needUpdate.value = false
                 }
             }
         }
 
+    }
+
+    private suspend fun checkCategoryAndAction(categoryCur: Categories) {
+        when (categoryCur) {
+            Categories.SparklingDrinks -> mainVM.sparklingDrinks.collect {
+                myAdapter.setNewData(it)
+                Log.d(my_tag, "read when start: $it")
+                mainVM.currentLocation = Locations.SHOW_SPARKLING_DRINKS.nameL
+            }
+
+            else -> mainVM.cakes.collect {
+                myAdapter.setNewData(it)
+                Log.d(my_tag, "read when start: $it")
+                mainVM.currentLocation = Locations.SHOW_CAKES.nameL
+            }
+        }
+    }
+
+    private fun refreshDisplaying(categoryCur: Categories) {
+        myAdapter.setNewData(emptyList())
+        when (categoryCur) {
+            Categories.SparklingDrinks -> myAdapter.setNewData(mainVM.sparklingDrinks.value)
+            else -> myAdapter.setNewData(mainVM.cakes.value)
+        }
     }
 
     private fun clarificationGetDataFirebase(): ReadAndSplitCategories {
@@ -159,10 +204,10 @@ class ShowItemsFragment: Fragment() {
         }
     }
 
-    private fun clarificationGetUris(uriSize: UriSize): GetUrisCallback{
-        return object : GetUrisCallback{
+    private fun clarificationGetUris(uriSize: UriSize): GetUrisCallback {
+        return object : GetUrisCallback {
             override fun getUris(newData: List<Dish>) {
-                if(uriSize == UriSize.Small){
+                if (uriSize == UriSize.Small) {
                     uSmallList.clear()
                     uSmallList += newData
                     goForwardUriSmallData.value = true
@@ -176,83 +221,88 @@ class ShowItemsFragment: Fragment() {
         }
     }
 
-    private fun clickItemElements(): ItemMoveDirections{
-        return object : ItemMoveDirections{
-            override fun detailed(dish: Dish) {
-                dish.name?.let {
-                    val action = ShowItemsFragmentDirections.actionShowItemsFragmentToDetailFragment(dish.id, dish.name)
-                    findNavController().navigate(action)
-                }
-            }
-
-            override fun putToBag(dish: Dish) {
-                viewLifecycleOwner.lifecycleScope.launch{
-                    val orderObj = OrderItem(id = dish.id, name = dish.name)
-                    mainVM.addOrderItemsLocal(orderObj)
-                    dbManager.setOrderItemBasketToRDB(KindCafeApplication.myAuth.currentUser, orderObj)
-                    cancel()
-                }
-            }
-
-            override fun delFromBag(dish: Dish) {
-                viewLifecycleOwner.lifecycleScope.launch {
-                    val cur = mainVM.orderBasket.value.find { (it.id == dish.id && it.name == dish.name) }
-                    cur?.let {oItem ->
-                        mainVM.deleteOrderItemsLocal(oItem)
-                        dbManager.deleteOrderBasketItemFromRDB(KindCafeApplication.myAuth.currentUser, oItem)
+    /*    private fun clickItemElements(): ItemMoveDirections{
+            return object : ItemMoveDirections{
+                override fun detailed(dish: Dish) {
+                    dish.name?.let {
+                        val action = ShowItemsFragmentDirections.actionShowItemsFragmentToDetailFragment(dish.id, dish.name)
+                        findNavController().navigate(action)
                     }
-                    cancel()
                 }
-            }
 
-            override fun putToFavorite(favoriteDish: Favorites) {
-                    Log.d(my_tag, "cuurent user: ${KindCafeApplication.myAuth.currentUser}")
+                override fun putToBag(dish: Dish) {
                     viewLifecycleOwner.lifecycleScope.launch{
-                        mainVM.addFavoritesLocal(favoriteDish)
-                        dbManager.setFavoriteDishes(KindCafeApplication.myAuth.currentUser, favoriteDish)
-                        // delete after all
+                        val orderObj = OrderItem(id = dish.id, name = dish.name)
+                        mainVM.addOrderItemsLocal(orderObj)
+                        dbManager.setOrderItemBasketToRDB(KindCafeApplication.myAuth.currentUser, orderObj)
+                        cancel()
+                    }
+                }
+
+                override fun delFromBag(dish: Dish) {
+                    viewLifecycleOwner.lifecycleScope.launch {
+                        val cur = mainVM.orderBasket.value.find { (it.id == dish.id && it.name == dish.name) }
+                        cur?.let {oItem ->
+                            mainVM.deleteOrderItemsLocal(oItem)
+                            dbManager.deleteOrderBasketItemFromRDB(KindCafeApplication.myAuth.currentUser, oItem)
+                        }
+                        cancel()
+                    }
+                }
+
+                override fun putToFavorite(favoriteDish: Favorites) {
+                        Log.d(my_tag, "cuurent user: ${KindCafeApplication.myAuth.currentUser}")
+                        viewLifecycleOwner.lifecycleScope.launch{
+                            mainVM.addFavoritesLocal(favoriteDish)
+                            dbManager.setFavoriteDishes(KindCafeApplication.myAuth.currentUser, favoriteDish)
+                            // delete after all
+                            mainVM.getAllFavorites()
+                            cancel()
+                        }
+                }
+
+                override fun delFromFavorite(favoriteDish: Favorites) {
+                    viewLifecycleOwner.lifecycleScope.launch {
+                        mainVM.deleteFavDish(favoriteDish)
+                        dbManager.deleteFavoriteDish(KindCafeApplication.myAuth.currentUser, favoriteDish)
                         mainVM.getAllFavorites()
                         cancel()
                     }
-            }
-
-            override fun delFromFavorite(favoriteDish: Favorites) {
-                viewLifecycleOwner.lifecycleScope.launch {
-                    mainVM.deleteFavDish(favoriteDish)
-                    dbManager.deleteFavoriteDish(KindCafeApplication.myAuth.currentUser, favoriteDish)
-                    mainVM.getAllFavorites()
-                    cancel()
                 }
-            }
 
-            override fun checkFavorites(favoriteDish: Favorites): Boolean {
-                return favoriteDish in mainVM.favorites.value
-            }
+                override fun checkFavorites(favoriteDish: Favorites): Boolean {
+                    return favoriteDish in mainVM.favorites.value
+                }
 
-            override fun checkUserExist(): Boolean {
-                return KindCafeApplication.myAuth.currentUser != null
-            }
+                override fun checkUserExist(): Boolean {
+                    return KindCafeApplication.myAuth.currentUser != null
+                }
 
-            override fun getTint(isPress: Boolean): ColorStateList? {
-                context?.let {
-                    if(isPress){
-                        return AppCompatResources.getColorStateList(it, R.color.greeting_phrase_color)
+                override fun getTint(isPress: Boolean): ColorStateList? {
+                    context?.let {
+                        if(isPress){
+                            return AppCompatResources.getColorStateList(it, R.color.greeting_phrase_color)
+                        }
+                        return AppCompatResources.getColorStateList(it, R.color.item_icon)
                     }
-                    return AppCompatResources.getColorStateList(it, R.color.item_icon)
+                    return null
                 }
-                return null
-            }
 
-            // if true, dish in bag
-            override fun checkBag(dish: Dish): Boolean {
-                return mainVM.orderBasket.value.filter { (it.id == dish.id && it.name == dish.name) }.isNotEmpty()
+                // if true, dish in bag
+                override fun checkBag(dish: Dish): Boolean {
+                    return mainVM.orderBasket.value.filter { (it.id == dish.id && it.name == dish.name) }.isNotEmpty()
+                }
             }
-        }
-    }
+        }*/
 
     override fun onResume() {
         super.onResume()
         Log.d(my_tag, "onResume")
+    }
+
+    override fun onPause() {
+        super.onPause()
+        Log.d(my_tag, "onPause")
     }
 
     override fun onDestroyView() {

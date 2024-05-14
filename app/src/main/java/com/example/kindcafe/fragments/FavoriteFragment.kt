@@ -143,13 +143,7 @@ class FavoriteFragment : Fragment() {
                 }
             }
 
-            override fun putToFavorite(favoriteDish: Favorites) {
-/*                viewLifecycleOwner.lifecycleScope.launch {
-                    mainVM.addFavoritesLocal(favoriteDish)
-                    dbManager.setFavoriteDishes(KindCafeApplication.myAuth.currentUser, favoriteDish)
-                    cancel()
-                }*/
-            }
+            override fun putToFavorite(favoriteDish: Favorites) {}
 
             override fun delFromFavorite(favoriteDish: Favorites) {
                 viewLifecycleOwner.lifecycleScope.launch {

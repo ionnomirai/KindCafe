@@ -8,6 +8,8 @@
     <color name="transparent_my">#00000000</color>
 
     <color name="menu_side_yellow">#FFEDBE</color>
+    <!--<color name="status_bar_yellow">#FFBC0F</color>-->
+    <color name="status_bar_yellow">@color/bottom_menu_color</color>
 
     <!-- header_side_menu_gradient -->
     <color name="header_gradient_start">#562B1A</color>

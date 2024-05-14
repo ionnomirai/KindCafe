@@ -10,6 +10,7 @@ import com.example.kindcafe.database.KindCafeRepository
 import com.example.kindcafe.database.OrderItem
 import com.example.kindcafe.database.OrderItemPlaced
 import com.example.kindcafe.database.UserPersonal
+import com.example.kindcafe.firebase.DbManager
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -19,12 +20,14 @@ import kotlinx.coroutines.flow.collect
 
 class MainViewModel : ViewModel() {
     private val repository = KindCafeRepository.get()
+    val dbManager = DbManager()
     private val my_tag = "MainViewModel"
 
     /*---------------------------------------------------------------------------------------------------*/
     /*------------------------------------------ Different funs -----------------------------------------*/
 
     var currentLocation = "Home"
+    var needUpdate = MutableStateFlow(false)
 
     val nameData: MutableLiveData<String> = MutableLiveData()
 
