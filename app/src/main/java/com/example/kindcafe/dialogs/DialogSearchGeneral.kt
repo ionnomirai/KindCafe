@@ -24,7 +24,15 @@ import java.util.Locale
 class DialogSearchGeneral(private val location: String) : DialogFragment() {
     private val my_tag = "DialogFragmentTag"
 
-    private lateinit var binding: DialogSearchGeneralBinding
+    //private lateinit var binding: DialogSearchGeneralBinding
+    private var _binding: DialogSearchGeneralBinding? = null
+    private val binding
+        get(): DialogSearchGeneralBinding {
+            return checkNotNull(_binding){
+                "Cannot access binding because it is null. Is the view visible"
+            }
+        }
+
     private val mainViewModel : MainViewModel by activityViewModels()
     private lateinit var myAdapterShowItems : AdapterShowItems
 
@@ -35,7 +43,7 @@ class DialogSearchGeneral(private val location: String) : DialogFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = DialogSearchGeneralBinding.inflate(inflater, container, false)
+        _binding = DialogSearchGeneralBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -64,7 +72,6 @@ class DialogSearchGeneral(private val location: String) : DialogFragment() {
             Locations.SHOW_CAKES.nameL -> currentListDishes.addAll( mainViewModel.cakes.value )
             else ->{ currentListDishes.addAll( mainViewModel.allDishes.value ) }
         }
-        myAdapterShowItems.setNewData(currentListDishes)
 
         binding.apply{
             ibCloseDialog.setOnClickListener {
@@ -90,6 +97,7 @@ class DialogSearchGeneral(private val location: String) : DialogFragment() {
 
             override fun onQueryTextChange(newText: String?): Boolean {
                 val tempList = filterListData(list, newText)
+                Log.d(my_tag, "search: $newText size: ${newText?.length}, |||| templist ${tempList}")
                 adapter.setNewData(tempList)
                 return true
             }
@@ -103,12 +111,14 @@ class DialogSearchGeneral(private val location: String) : DialogFragment() {
         if(searchText != null){
             listDishes.forEach {dish ->
                 dish.name?.let { dishName ->
-                    if(dishName.lowercase(Locale.ROOT).startsWith(searchText.lowercase(Locale.ROOT))){
+                    if(dishName.lowercase(Locale.ROOT).startsWith(searchText.lowercase(Locale.ROOT))
+                        && !searchText.isBlank()){
                         tempList.add(dish)
                     }
                 }
             }
         }
+
         return tempList
     }
 
@@ -122,6 +132,12 @@ class DialogSearchGeneral(private val location: String) : DialogFragment() {
             dialog.window!!.setLayout(width, height)
         }
     }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+
     override fun onDestroy() {
         super.onDestroy()
         mainViewModel.needUpdate.value = true

@@ -88,12 +88,6 @@
     <string name="personal_data">Personal data</string>
 
     <!--Setting personal-->
-<!--    <string name="hint_name_opt">Name (optional)</string>
-    <string name="hint_surname_opt">Surname (optional)</string>
-    <string name="hint_birthday_opt">Birthday (optional)</string>
-    <string name="hint_email">E-mail</string>
-    <string name="hint_zodiac_opt">Sign of the zodiac (optional)</string>-->
-
     <string name="hint_name_opt">Jack (optional)</string>
     <string name="hint_surname_opt">Jackson (optional)</string>
     <string name="hint_birthday_opt">01.01.1991 (optional)</string>
@@ -105,6 +99,9 @@
     <string name="title_birthday_opt">Birthday:</string>
     <string name="title_email">E-mail:</string>
     <string name="title_zodiac_opt">Zodiac sign:</string>
+
+    <!--Search dish-->
+    <string name="hint_search">Enter the name of the dish</string>
 
 
     Name (optional)

@@ -49,10 +49,17 @@ class AdapterShowItems(
         fun setData(data: Dish){
             bindingInner.apply {
                 tvItemName.text = data.name
-                //tvItemPrice.text = data.price
                 tvItemPrice.text = bindingInner.root.context.getString(R.string.price_style_usd, data.price)
                 tvItemName.setHorizontallyScrolling(true)
                 tvItemName.movementMethod = ScrollingMovementMethod()
+
+                /* this need because I don't understand(for now), why rv sometimes put wrong values.
+                * Example - click sparlking - (need all dishes non favorite - click search - do
+                * 2 dish like favorite - type anouther dishm and that dish also favorite - error */
+                ibLike.setImageResource(R.drawable.ic_heart)
+                setTintIcons(IconsOnItem.FAVORITE, false)
+                setTintIcons(IconsOnItem.BAG, false)
+
 
                 val currentFav = Favorites(data.id, data.id, data.name)
 
@@ -64,7 +71,7 @@ class AdapterShowItems(
                 if(itemMoveDirectionsInner.checkUserExist()){
                     // checking favorites list
                     if (itemMoveDirectionsInner.checkFavorites(currentFav)){
-                        Log.d(my_tag_inner, "data fav: ${data}")
+                        Log.d(my_tag_inner, "data fav: ${data.name}")
                         bindingInner.ibLike.setImageResource(R.drawable.ic_heart_filled)
                         setTintIcons(IconsOnItem.FAVORITE, true)
                     }

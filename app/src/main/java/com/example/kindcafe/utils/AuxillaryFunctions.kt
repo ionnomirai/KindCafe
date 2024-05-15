@@ -3,7 +3,6 @@ package com.example.kindcafe.utils
 import android.app.Activity
 import android.content.res.ColorStateList
 import android.util.Log
-import android.widget.Toast
 import androidx.annotation.IdRes
 import androidx.annotation.StringRes
 import androidx.appcompat.content.res.AppCompatResources
@@ -15,19 +14,18 @@ import com.example.kindcafe.KindCafeApplication
 import com.example.kindcafe.MainActivity
 import com.example.kindcafe.R
 import com.example.kindcafe.adapters.callbacks.ItemMoveDirections
-import com.example.kindcafe.data.Categories
 import com.example.kindcafe.database.Dish
 import com.example.kindcafe.database.Favorites
 import com.example.kindcafe.database.OrderItem
+import com.example.kindcafe.dialogs.DialogDetailedDish
 import com.example.kindcafe.firebase.firebaseInterfaces.DefinitionOfStatus
-import com.example.kindcafe.fragments.ShowItemsFragmentDirections
 import com.example.kindcafe.viewModels.MainViewModel
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 
 object AuxillaryFunctions {
-private val MY_TAG = "AuxillaryFunctionsTAG"
+private val my_tag = "AuxillaryFunctionsTAG"
     /* Show message on the screen */
     fun showSnackBar(
         @StringRes messageText: Int,
@@ -62,7 +60,7 @@ private val MY_TAG = "AuxillaryFunctionsTAG"
                     }
                 } catch (e: Exception){
                     /* If user close screen earlier than it would auto*/
-                    Log.d(MY_TAG, "LoginFrag exception: $e")
+                    Log.d(my_tag, "LoginFrag exception: $e")
                 }
             }
         }
@@ -74,10 +72,10 @@ private val MY_TAG = "AuxillaryFunctionsTAG"
             override fun detailed(dish: Dish) {
                 dish.name?.let {
                     //val action = ShowItemsFragmentDirections.actionShowItemsFragmentToDetailFragment(dish.id, dish.name)
-                    if(actionDetailed != null){
+                    if (actionDetailed != null) {
                         frag.findNavController().navigate(actionDetailed(dish))
                     } else {
-                        Toast.makeText(frag.requireContext(), "Detailed dialog", Toast.LENGTH_SHORT).show()
+                        DialogDetailedDish(dish).show(frag.parentFragmentManager, null)
                     }
                 }
             }
