@@ -14,6 +14,10 @@ import com.example.kindcafe.KindCafeApplication
 import com.example.kindcafe.MainActivity
 import com.example.kindcafe.R
 import com.example.kindcafe.adapters.callbacks.ItemMoveDirections
+import com.example.kindcafe.adapters.callbacks.SettingOrder
+import com.example.kindcafe.data.DetailedOrderItem
+import com.example.kindcafe.data.NumberAdd
+import com.example.kindcafe.data.Size
 import com.example.kindcafe.database.Dish
 import com.example.kindcafe.database.Favorites
 import com.example.kindcafe.database.OrderItem
@@ -71,7 +75,6 @@ private val my_tag = "AuxillaryFunctionsTAG"
         return object : ItemMoveDirections {
             override fun detailed(dish: Dish) {
                 dish.name?.let {
-                    //val action = ShowItemsFragmentDirections.actionShowItemsFragmentToDetailFragment(dish.id, dish.name)
                     if (actionDetailed != null) {
                         frag.findNavController().navigate(actionDetailed(dish))
                     } else {
@@ -141,6 +144,74 @@ private val my_tag = "AuxillaryFunctionsTAG"
             override fun checkBag(dish: Dish): Boolean {
                 return mainVM.orderBasket.value.filter { (it.id == dish.id && it.name == dish.name) }.isNotEmpty()
             }
+        }
+    }
+
+    fun defaultClickSettingOrder(frag: Fragment, mainVM: MainViewModel): SettingOrder {
+        return object : SettingOrder {
+            override fun setQuantity(id: String, name: String, quantity: String) {
+                frag.viewLifecycleOwner.lifecycleScope.launch {
+                    val newOrderQ = mainVM.orderBasket.value.find { (it.id == id && it.name == name) }
+                        ?.copy(count = quantity)
+                    newOrderQ?.let { mainVM.addOrderItemsLocal(it) }
+                    Log.d(my_tag,"set quantity")
+                    cancel()
+                }
+            }
+
+            override fun setSize(id: String, name: String, size: Size) {
+                frag.viewLifecycleOwner.lifecycleScope.launch {
+                    val newOrderI = mainVM.orderBasket.value.find { (it.id == id && it.name == name) }
+                        ?.copy(size = size.name)
+                    //Log.d(my_tag, newOrderI.toString())
+                    newOrderI?.let { mainVM.addOrderItemsLocal(it) }
+                    Log.d(my_tag,"set size")
+                    cancel()
+                }
+            }
+
+            override fun setAdds(id: String, name: String, addNumber: NumberAdd, value: Boolean) {
+                val newOrderI = mainVM.orderBasket.value.find { (it.id == id && it.name == name) }
+
+                frag.viewLifecycleOwner.lifecycleScope.launch {
+                    newOrderI?.let {
+                        when(addNumber){
+                            NumberAdd.ADD1 -> mainVM.addOrderItemsLocal(it.copy(add1 = value))
+                            NumberAdd.ADD2 -> mainVM.addOrderItemsLocal(it.copy(add2 = value))
+                            NumberAdd.ADD3 -> mainVM.addOrderItemsLocal(it.copy(add3 = value))
+                        }
+                    }
+                    Log.d(my_tag,"set add")
+                    cancel()
+                }
+            }
+        }
+    }
+
+    fun transformOrdItemToDishesDetailed(orderItems: List<OrderItem>, allDishes: List<Dish>): List<DetailedOrderItem>{
+        val tempDishes = mutableListOf<Dish>()
+
+        orderItems.forEachIndexed { index, orderItem ->
+            val dish = allDishes.find{(it.id == orderItem.id && it.name == orderItem.name)}
+            dish?.let { tempDishes.add(it) }
+        }
+
+        return List(tempDishes.size){index ->
+            DetailedOrderItem(
+                id = tempDishes[index].id,
+                name = tempDishes[index].name,
+                price = tempDishes[index].price,
+                description = tempDishes[index].description,
+                category = tempDishes[index].category,
+                characteristic = tempDishes[index].characteristic,
+                uriSmall = tempDishes[index].uriSmall,
+                uriBig = tempDishes[index].uriBig,
+                add1 = orderItems[index].add1,
+                add2 = orderItems[index].add2,
+                add3 = orderItems[index].add3,
+                size = orderItems[index].size,
+                count = orderItems[index].count
+            )
         }
     }
 }

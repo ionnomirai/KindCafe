@@ -191,6 +191,9 @@ class AdapterBasket(
                 tvItemPrice.text = bindingInner.root.context.getString(R.string.price_style_usd, data.price)
                 tvItemName.setHorizontallyScrolling(true)
                 tvItemName.movementMethod = ScrollingMovementMethod()
+
+                tvDrop.setHorizontallyScrolling(true)
+                tvDrop.movementMethod = ScrollingMovementMethod()
                 tvCount.text = data.count ?: "0"
                 try {
                     Picasso.get().load(data.uriSmall).into(ivItemPhoto)

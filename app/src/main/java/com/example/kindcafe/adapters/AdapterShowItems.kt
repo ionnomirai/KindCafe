@@ -44,7 +44,9 @@ class AdapterShowItems(
         diffResults.dispatchUpdatesTo(this)
     }
 
-    class ViewHolderMy(val bindingInner: ItemChooseRvBinding, val itemMoveDirectionsInner: ItemMoveDirections): RecyclerView.ViewHolder(bindingInner.root) {
+    class ViewHolderMy(val bindingInner: ItemChooseRvBinding,
+                       val itemMoveDirectionsInner: ItemMoveDirections)
+        : RecyclerView.ViewHolder(bindingInner.root) {
         private val my_tag_inner = "ItemTag"
         fun setData(data: Dish){
             bindingInner.apply {

@@ -10,13 +10,16 @@ import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.kindcafe.adapters.AdapterBasket
 import com.example.kindcafe.adapters.AdapterShowItems
-import com.example.kindcafe.data.Categories
+import com.example.kindcafe.data.DetailedOrderItem
 import com.example.kindcafe.database.Dish
 import com.example.kindcafe.databinding.DialogSearchGeneralBinding
+import com.example.kindcafe.fragments.LoginFragment
 import com.example.kindcafe.utils.AuxillaryFunctions
 import com.example.kindcafe.utils.Locations
 import com.example.kindcafe.viewModels.MainViewModel
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import java.util.Locale
 
@@ -35,8 +38,12 @@ class DialogSearchGeneral(private val location: String) : DialogFragment() {
 
     private val mainViewModel : MainViewModel by activityViewModels()
     private lateinit var myAdapterShowItems : AdapterShowItems
+    private var myAdapterBasket: AdapterBasket? = null
 
     private val currentListDishes = mutableListOf<Dish>()
+
+    private var jobBasket: Job? = null
+    private var detailedList = listOf<DetailedOrderItem>()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -52,20 +59,53 @@ class DialogSearchGeneral(private val location: String) : DialogFragment() {
 
         mainViewModel.needUpdate.value = false
 
-        myAdapterShowItems = AdapterShowItems(
-            AuxillaryFunctions.deafultItemMoveDirections(this, mainViewModel,null)
-        )
-
         binding.rvSearchResult.apply {
             layoutManager = LinearLayoutManager(requireContext())
-            adapter = myAdapterShowItems
+
         }
+
+        /* creating adapter */
+        if (location == Locations.BASKET.nameL){
+            myAdapterBasket = AdapterBasket(
+                AuxillaryFunctions.deafultItemMoveDirections(this, mainViewModel, null),
+                AuxillaryFunctions.defaultClickSettingOrder(this, mainViewModel)
+            )
+            binding.rvSearchResult.adapter = myAdapterBasket
+            setSearchViewListener(
+                searchView = binding.svSearch,
+                adapterBasket = myAdapterBasket,
+                listBasket = detailedList)
+        } else {
+            myAdapterShowItems = AdapterShowItems(
+                AuxillaryFunctions.deafultItemMoveDirections(this, mainViewModel,null)
+            )
+            binding.rvSearchResult.adapter = myAdapterShowItems
+            setSearchViewListener(myAdapterShowItems, binding.svSearch, currentListDishes)
+        }
+
+
+
 
         // current location - set title (it is need to create fun and correct output)
         binding.tvTitleDialog.text = location
         when(location){
             Locations.FAVORITES.nameL -> currentListDishes.addAll( mainViewModel.favoritesLikeDish.value )
-            Locations.BASKET.nameL -> ""
+            Locations.BASKET.nameL -> {
+                jobBasket = viewLifecycleOwner.lifecycleScope.launch {
+                    mainViewModel.orderBasket.collect{
+                        val detailedList1 = AuxillaryFunctions.transformOrdItemToDishesDetailed(
+                            it, mainViewModel.allDishes.value
+                        )
+
+                        setSearchViewListener(
+                            searchView = binding.svSearch,
+                            adapterBasket = myAdapterBasket,
+                            listBasket = detailedList1)
+
+                        //myAdapterBasket?.setNewData(detailedList1)
+                    }
+                }
+            }
             Locations.SHOW_SPARKLING_DRINKS.nameL -> currentListDishes.addAll( mainViewModel.sparklingDrinks.value )
             Locations.SHOW_NON_SPARKLING_DRINKS.nameL -> ""
             Locations.SHOW_SWEETS.nameL -> ""
@@ -78,33 +118,36 @@ class DialogSearchGeneral(private val location: String) : DialogFragment() {
                 this@DialogSearchGeneral.dismiss()
             }
 
-            tvTitleDialog.setOnClickListener {
-                DialogSearchGeneral(Locations.HOME.nameL).show(parentFragmentManager,null)
-            }
-
-            setSearchViewListener(myAdapterShowItems, currentListDishes, svSearch)
-
         }
     }
 
     private fun setSearchViewListener(
-        adapter: AdapterShowItems,
-        list: List<Dish>,
-        searchView: SearchView?
+        adapter: AdapterShowItems? = null,
+        searchView: SearchView? = null,
+        list: List<Dish>? = null,
+        adapterBasket: AdapterBasket? = null,
+        listBasket: List<DetailedOrderItem>? = null,
     ){
         searchView?.setOnQueryTextListener(object : SearchView.OnQueryTextListener{
             override fun onQueryTextSubmit(query: String?): Boolean { return false }
 
             override fun onQueryTextChange(newText: String?): Boolean {
-                val tempList = filterListData(list, newText)
-                Log.d(my_tag, "search: $newText size: ${newText?.length}, |||| templist ${tempList}")
-                adapter.setNewData(tempList)
+                if(listBasket == null){
+                    val tempList =  list?.let { filterListDataShow(it, newText)} ?: emptyList()
+                    Log.d(my_tag, "search: $newText size: ${newText?.length}, |||| templist ${tempList}")
+                    adapter?.setNewData(tempList)
+                } else {
+                    Log.d(my_tag, "listbasket = ${listBasket}")
+                    val tempList =  filterListDataBasket(listBasket, newText)
+                    adapterBasket?.setNewData(tempList)
+                }
+
                 return true
             }
         })
     }
 
-    private fun filterListData(listDishes: List<Dish>, searchText: String?) : List<Dish>{
+    private fun filterListDataShow(listDishes: List<Dish>, searchText: String?) : List<Dish>{
         val tempList = mutableListOf<Dish>()
         tempList.clear()
 
@@ -122,6 +165,25 @@ class DialogSearchGeneral(private val location: String) : DialogFragment() {
         return tempList
     }
 
+    private fun filterListDataBasket(listDishesBasket: List<DetailedOrderItem>, searchText: String?) : List<DetailedOrderItem>{
+        val tempList = mutableListOf<DetailedOrderItem>()
+        tempList.clear()
+
+        if(searchText != null){
+            listDishesBasket.forEach {dish ->
+                dish.name?.let { dishName ->
+                    if(dishName.lowercase(Locale.ROOT).startsWith(searchText.lowercase(Locale.ROOT))
+                        && !searchText.isBlank()){
+                        Log.d(my_tag, "${tempList}")
+                        tempList.add(dish)
+                    }
+                }
+            }
+        }
+        Log.d(my_tag, "${tempList}")
+        return tempList
+    }
+
     override fun onStart() {
         super.onStart()
         val dialog = dialog
@@ -135,6 +197,7 @@ class DialogSearchGeneral(private val location: String) : DialogFragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
+        jobBasket = null
         _binding = null
     }
 

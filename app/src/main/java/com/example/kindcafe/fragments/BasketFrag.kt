@@ -29,6 +29,7 @@ import com.example.kindcafe.database.Favorites
 import com.example.kindcafe.databinding.FragBasketBinding
 import com.example.kindcafe.databinding.FragHomeBinding
 import com.example.kindcafe.firebase.DbManager
+import com.example.kindcafe.utils.AuxillaryFunctions
 import com.example.kindcafe.utils.Locations
 import com.example.kindcafe.viewModels.MainViewModel
 import kotlinx.coroutines.cancel
@@ -51,7 +52,8 @@ class BasketFrag: Fragment() {
     private val my_tag = "BasketFragmentTag"
     private val currentFragmentName = "Basket"
 
-    private val myAdapter = AdapterBasket(clickItemElements(), clickSettingOrder())
+    //private val myAdapter = AdapterBasket(clickItemElements(), clickSettingOrder())
+    private lateinit var myAdapter : AdapterBasket
     private val dbManager = DbManager()
 
     private val tempDishes = mutableListOf<Dish>()
@@ -70,6 +72,11 @@ class BasketFrag: Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        myAdapter = AdapterBasket(
+            AuxillaryFunctions.deafultItemMoveDirections(this, mainVM, null),
+            AuxillaryFunctions.defaultClickSettingOrder(this, mainVM)
+        )
 
         mainVM.currentLocation
         val mainAct = activity as? MainActivity
@@ -92,8 +99,9 @@ class BasketFrag: Fragment() {
 
         viewLifecycleOwner.lifecycleScope.launch {
             mainVM.orderBasket.collect{
-                tempDishes.clear()
                 dbManager.setOrderBasketToRDB(KindCafeApplication.myAuth.currentUser, it)
+
+/*                tempDishes.clear()
                 it.forEachIndexed{index, orderItem ->
                     val dish = mainVM.allDishes.value.find{(it.id == orderItem.id && it.name == orderItem.name)}
                     dish?.let { tempDishes.add(it) }
@@ -117,6 +125,12 @@ class BasketFrag: Fragment() {
                     )
                 }
 
+                detailedListI.clear()
+                detailedListI.addAll(detailedList)*/
+
+                val detailedList = AuxillaryFunctions.transformOrdItemToDishesDetailed(
+                    it, mainVM.allDishes.value
+                )
                 detailedListI.clear()
                 detailedListI.addAll(detailedList)
 
@@ -152,100 +166,4 @@ class BasketFrag: Fragment() {
         _binding = null
     }
 
-
-
-
-    fun clickItemElements(): ItemMoveDirections{
-        return object : ItemMoveDirections{
-            override fun detailed(dish: Dish) {}
-
-            override fun putToBag(dish: Dish) {}
-
-            override fun putToFavorite(favoriteDish: Favorites) {
-                Log.d(my_tag, "cuurent user: ${KindCafeApplication.myAuth.currentUser}")
-                viewLifecycleOwner.lifecycleScope.launch{
-                    mainVM.addFavoritesLocal(favoriteDish)
-                    dbManager.setFavoriteDishes(KindCafeApplication.myAuth.currentUser, favoriteDish)
-                    // delete after all
-                    mainVM.getAllFavorites()
-                    cancel()
-                }
-            }
-
-            override fun delFromFavorite(favoriteDish: Favorites) {
-                viewLifecycleOwner.lifecycleScope.launch {
-                    mainVM.deleteFavDish(favoriteDish)
-                    dbManager.deleteFavoriteDish(KindCafeApplication.myAuth.currentUser, favoriteDish)
-                    mainVM.getAllFavorites()
-                    cancel()
-                }
-            }
-
-            override fun checkFavorites(favoriteDish: Favorites): Boolean {
-                return favoriteDish in mainVM.favorites.value
-            }
-
-            override fun checkUserExist(): Boolean {
-                return KindCafeApplication.myAuth.currentUser != null
-            }
-
-            override fun getTint(isPress: Boolean): ColorStateList? {
-                context?.let {
-                    if(isPress){
-                        return AppCompatResources.getColorStateList(it, R.color.greeting_phrase_color)
-                    }
-                    return AppCompatResources.getColorStateList(it, R.color.item_icon)
-                }
-                return null
-            }
-
-            override fun delFromBag(dish: Dish) {}
-
-            override fun checkBag(dish: Dish): Boolean {
-                return mainVM.orderBasket.value.filter { (it.id == dish.id && it.name == dish.name) }.isNotEmpty()
-            }
-        }
-    }
-
-    fun clickSettingOrder(): SettingOrder{
-        return object : SettingOrder{
-            override fun setQuantity(id: String, name: String, quantity: String) {
-                viewLifecycleOwner.lifecycleScope.launch {
-                    val newOrderQ = mainVM.orderBasket.value.find { (it.id == id && it.name == name) }
-                        ?.copy(count = quantity)
-                    newOrderQ?.let { mainVM.addOrderItemsLocal(it) }
-                    Log.d(my_tag,"set quantity")
-                    cancel()
-                }
-            }
-
-            override fun setSize(id: String, name: String, size: Size) {
-                viewLifecycleOwner.lifecycleScope.launch {
-                    val newOrderI = mainVM.orderBasket.value.find { (it.id == id && it.name == name) }
-                        ?.copy(size = size.name)
-                    //Log.d(my_tag, newOrderI.toString())
-                    newOrderI?.let { mainVM.addOrderItemsLocal(it) }
-                    Log.d(my_tag,"set size")
-                    cancel()
-                }
-            }
-
-            override fun setAdds(id: String, name: String, addNumber: NumberAdd, value: Boolean) {
-                val newOrderI = mainVM.orderBasket.value.find { (it.id == id && it.name == name) }
-
-                viewLifecycleOwner.lifecycleScope.launch {
-                    newOrderI?.let {
-                        when(addNumber){
-                            NumberAdd.ADD1 -> mainVM.addOrderItemsLocal(it.copy(add1 = value))
-                            NumberAdd.ADD2 -> mainVM.addOrderItemsLocal(it.copy(add2 = value))
-                            NumberAdd.ADD3 -> mainVM.addOrderItemsLocal(it.copy(add3 = value))
-                        }
-                    }
-                    Log.d(my_tag,"set add")
-                    cancel()
-                }
-            }
-
-        }
-    }
 }
