@@ -20,6 +20,7 @@ import com.example.kindcafe.data.SparklingDrinksAdditive
 import com.example.kindcafe.data.SweetsAdditive
 import com.example.kindcafe.database.Favorites
 import com.example.kindcafe.databinding.ItemBasketRvBinding
+import com.example.kindcafe.utils.IconsOnItem
 import com.example.kindcafe.utils.QuantityActions
 import com.squareup.picasso.Picasso
 
@@ -64,7 +65,13 @@ class AdapterBasket(
 
         fun setData(data: DetailedOrderItem) {
             val currentFav = Favorites(data.id, data.id, data.name)
+
             bindingInner.apply {
+
+                ibLike.setImageResource(R.drawable.ic_heart)
+                setTintIcons(false)
+
+
                 when (data.category) {
                     Categories.SparklingDrinks.categoryName -> {
                         setDataLikeSparkling()
@@ -141,6 +148,7 @@ class AdapterBasket(
 
                 // User can change additive for the order item
                 cvAdd1.setOnClickListener {
+                    //adapter.notifyItemChanged(adapterPosition)
                     data.name?.let {
                         ordSetting.setAdds(
                             id = data.id,

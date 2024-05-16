@@ -101,33 +101,6 @@ class BasketFrag: Fragment() {
             mainVM.orderBasket.collect{
                 dbManager.setOrderBasketToRDB(KindCafeApplication.myAuth.currentUser, it)
 
-/*                tempDishes.clear()
-                it.forEachIndexed{index, orderItem ->
-                    val dish = mainVM.allDishes.value.find{(it.id == orderItem.id && it.name == orderItem.name)}
-                    dish?.let { tempDishes.add(it) }
-                }
-
-                val detailedList = List(tempDishes.size){index ->
-                    DetailedOrderItem(
-                        id = tempDishes[index].id,
-                        name = tempDishes[index].name,
-                        price = tempDishes[index].price,
-                        description = tempDishes[index].description,
-                        category = tempDishes[index].category,
-                        characteristic = tempDishes[index].characteristic,
-                        uriSmall = tempDishes[index].uriSmall,
-                        uriBig = tempDishes[index].uriBig,
-                        add1 = mainVM.orderBasket.value[index].add1,
-                        add2 = mainVM.orderBasket.value[index].add2,
-                        add3 = mainVM.orderBasket.value[index].add3,
-                        size = mainVM.orderBasket.value[index].size,
-                        count = mainVM.orderBasket.value[index].count
-                    )
-                }
-
-                detailedListI.clear()
-                detailedListI.addAll(detailedList)*/
-
                 val detailedList = AuxillaryFunctions.transformOrdItemToDishesDetailed(
                     it, mainVM.allDishes.value
                 )
@@ -137,6 +110,15 @@ class BasketFrag: Fragment() {
                 Log.d(my_tag, "size detailed list: ${detailedList.size}")
                 Log.d(my_tag, "list: ${detailedList}")
                 myAdapter.setNewData(detailedList)
+            }
+        }
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            mainVM.needUpdate.collect {
+                if (it) {
+                    myAdapter.notifyDataSetChanged()
+                    mainVM.needUpdate.value = false
+                }
             }
         }
 

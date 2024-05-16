@@ -162,7 +162,7 @@ class ShowItemsFragment : Fragment() {
         viewLifecycleOwner.lifecycleScope.launch {
             mainVM.needUpdate.collect {
                 if (it) {
-                    refreshDisplaying(navArgs.category)
+                    myAdapter.notifyDataSetChanged()
                     mainVM.needUpdate.value = false
                 }
             }
@@ -183,14 +183,6 @@ class ShowItemsFragment : Fragment() {
                 Log.d(my_tag, "read when start: $it")
                 mainVM.currentLocation = Locations.SHOW_CAKES.nameL
             }
-        }
-    }
-
-    private fun refreshDisplaying(categoryCur: Categories) {
-        myAdapter.setNewData(emptyList())
-        when (categoryCur) {
-            Categories.SparklingDrinks -> myAdapter.setNewData(mainVM.sparklingDrinks.value)
-            else -> myAdapter.setNewData(mainVM.cakes.value)
         }
     }
 
@@ -220,80 +212,6 @@ class ShowItemsFragment : Fragment() {
             }
         }
     }
-
-    /*    private fun clickItemElements(): ItemMoveDirections{
-            return object : ItemMoveDirections{
-                override fun detailed(dish: Dish) {
-                    dish.name?.let {
-                        val action = ShowItemsFragmentDirections.actionShowItemsFragmentToDetailFragment(dish.id, dish.name)
-                        findNavController().navigate(action)
-                    }
-                }
-
-                override fun putToBag(dish: Dish) {
-                    viewLifecycleOwner.lifecycleScope.launch{
-                        val orderObj = OrderItem(id = dish.id, name = dish.name)
-                        mainVM.addOrderItemsLocal(orderObj)
-                        dbManager.setOrderItemBasketToRDB(KindCafeApplication.myAuth.currentUser, orderObj)
-                        cancel()
-                    }
-                }
-
-                override fun delFromBag(dish: Dish) {
-                    viewLifecycleOwner.lifecycleScope.launch {
-                        val cur = mainVM.orderBasket.value.find { (it.id == dish.id && it.name == dish.name) }
-                        cur?.let {oItem ->
-                            mainVM.deleteOrderItemsLocal(oItem)
-                            dbManager.deleteOrderBasketItemFromRDB(KindCafeApplication.myAuth.currentUser, oItem)
-                        }
-                        cancel()
-                    }
-                }
-
-                override fun putToFavorite(favoriteDish: Favorites) {
-                        Log.d(my_tag, "cuurent user: ${KindCafeApplication.myAuth.currentUser}")
-                        viewLifecycleOwner.lifecycleScope.launch{
-                            mainVM.addFavoritesLocal(favoriteDish)
-                            dbManager.setFavoriteDishes(KindCafeApplication.myAuth.currentUser, favoriteDish)
-                            // delete after all
-                            mainVM.getAllFavorites()
-                            cancel()
-                        }
-                }
-
-                override fun delFromFavorite(favoriteDish: Favorites) {
-                    viewLifecycleOwner.lifecycleScope.launch {
-                        mainVM.deleteFavDish(favoriteDish)
-                        dbManager.deleteFavoriteDish(KindCafeApplication.myAuth.currentUser, favoriteDish)
-                        mainVM.getAllFavorites()
-                        cancel()
-                    }
-                }
-
-                override fun checkFavorites(favoriteDish: Favorites): Boolean {
-                    return favoriteDish in mainVM.favorites.value
-                }
-
-                override fun checkUserExist(): Boolean {
-                    return KindCafeApplication.myAuth.currentUser != null
-                }
-
-                override fun getTint(isPress: Boolean): ColorStateList? {
-                    context?.let {
-                        if(isPress){
-                            return AppCompatResources.getColorStateList(it, R.color.greeting_phrase_color)
-                        }
-                        return AppCompatResources.getColorStateList(it, R.color.item_icon)
-                    }
-                    return null
-                }
-
-                // if true, dish in bag
-                override fun checkBag(dish: Dish): Boolean {
-                    return mainVM.orderBasket.value.filter { (it.id == dish.id && it.name == dish.name) }.isNotEmpty()
-                }
-            }
-        }*/
 
     override fun onResume() {
         super.onResume()

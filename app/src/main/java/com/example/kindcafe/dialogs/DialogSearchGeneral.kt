@@ -15,7 +15,6 @@ import com.example.kindcafe.adapters.AdapterShowItems
 import com.example.kindcafe.data.DetailedOrderItem
 import com.example.kindcafe.database.Dish
 import com.example.kindcafe.databinding.DialogSearchGeneralBinding
-import com.example.kindcafe.fragments.LoginFragment
 import com.example.kindcafe.utils.AuxillaryFunctions
 import com.example.kindcafe.utils.Locations
 import com.example.kindcafe.viewModels.MainViewModel
@@ -43,7 +42,9 @@ class DialogSearchGeneral(private val location: String) : DialogFragment() {
     private val currentListDishes = mutableListOf<Dish>()
 
     private var jobBasket: Job? = null
-    private var detailedList = listOf<DetailedOrderItem>()
+    private var detailedList = mutableListOf<DetailedOrderItem>()
+
+    val tempList1 = mutableListOf<DetailedOrderItem>()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -71,10 +72,10 @@ class DialogSearchGeneral(private val location: String) : DialogFragment() {
                 AuxillaryFunctions.defaultClickSettingOrder(this, mainViewModel)
             )
             binding.rvSearchResult.adapter = myAdapterBasket
-            setSearchViewListener(
+/*            setSearchViewListener(
                 searchView = binding.svSearch,
                 adapterBasket = myAdapterBasket,
-                listBasket = detailedList)
+                listBasket = detailedList)*/
         } else {
             myAdapterShowItems = AdapterShowItems(
                 AuxillaryFunctions.deafultItemMoveDirections(this, mainViewModel,null)
@@ -83,9 +84,6 @@ class DialogSearchGeneral(private val location: String) : DialogFragment() {
             setSearchViewListener(myAdapterShowItems, binding.svSearch, currentListDishes)
         }
 
-
-
-
         // current location - set title (it is need to create fun and correct output)
         binding.tvTitleDialog.text = location
         when(location){
@@ -93,16 +91,27 @@ class DialogSearchGeneral(private val location: String) : DialogFragment() {
             Locations.BASKET.nameL -> {
                 jobBasket = viewLifecycleOwner.lifecycleScope.launch {
                     mainViewModel.orderBasket.collect{
+                        Log.d(my_tag, "order basket collect")
                         val detailedList1 = AuxillaryFunctions.transformOrdItemToDishesDetailed(
                             it, mainViewModel.allDishes.value
                         )
+
+                        val filterList = mutableListOf<DetailedOrderItem>()
+                        detailedList1.forEach {dl1 ->
+                            tempList1.forEach {tl1 ->
+                                if(tl1.id == dl1.id){
+                                    filterList.add(dl1)
+                                }
+                            }
+                        }
+
+                        myAdapterBasket?.setNewData(filterList)
 
                         setSearchViewListener(
                             searchView = binding.svSearch,
                             adapterBasket = myAdapterBasket,
                             listBasket = detailedList1)
 
-                        //myAdapterBasket?.setNewData(detailedList1)
                     }
                 }
             }
@@ -134,11 +143,11 @@ class DialogSearchGeneral(private val location: String) : DialogFragment() {
             override fun onQueryTextChange(newText: String?): Boolean {
                 if(listBasket == null){
                     val tempList =  list?.let { filterListDataShow(it, newText)} ?: emptyList()
-                    Log.d(my_tag, "search: $newText size: ${newText?.length}, |||| templist ${tempList}")
                     adapter?.setNewData(tempList)
                 } else {
-                    Log.d(my_tag, "listbasket = ${listBasket}")
                     val tempList =  filterListDataBasket(listBasket, newText)
+                    tempList1.clear()
+                    tempList1.addAll(tempList)
                     adapterBasket?.setNewData(tempList)
                 }
 
@@ -174,13 +183,11 @@ class DialogSearchGeneral(private val location: String) : DialogFragment() {
                 dish.name?.let { dishName ->
                     if(dishName.lowercase(Locale.ROOT).startsWith(searchText.lowercase(Locale.ROOT))
                         && !searchText.isBlank()){
-                        Log.d(my_tag, "${tempList}")
                         tempList.add(dish)
                     }
                 }
             }
         }
-        Log.d(my_tag, "${tempList}")
         return tempList
     }
 
