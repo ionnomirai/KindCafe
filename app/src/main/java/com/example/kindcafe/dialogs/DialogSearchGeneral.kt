@@ -1,24 +1,34 @@
 package com.example.kindcafe.dialogs
 
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
+import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.SearchView
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.kindcafe.KindCafeApplication
+import com.example.kindcafe.R
 import com.example.kindcafe.adapters.AdapterBasket
 import com.example.kindcafe.adapters.AdapterShowItems
 import com.example.kindcafe.data.DetailedOrderItem
 import com.example.kindcafe.database.Dish
+import com.example.kindcafe.database.OrderItem
 import com.example.kindcafe.databinding.DialogSearchGeneralBinding
+import com.example.kindcafe.interfaces.SwipeBasketItem
 import com.example.kindcafe.utils.AuxillaryFunctions
 import com.example.kindcafe.utils.Locations
 import com.example.kindcafe.viewModels.MainViewModel
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import java.util.Locale
 
@@ -42,7 +52,13 @@ class DialogSearchGeneral(private val location: String) : DialogFragment() {
     private val currentListDishes = mutableListOf<Dish>()
 
     private var jobBasket: Job? = null
-    private var detailedList = mutableListOf<DetailedOrderItem>()
+    private var jobBasketDelPos: Job? = null
+
+    private var swipeBackground: ColorDrawable = ColorDrawable(Color.parseColor("#FF0000"))
+    private lateinit var deleteIcon: Drawable
+    private lateinit var itemTouchHelper: ItemTouchHelper
+    private val filterList = mutableListOf<DetailedOrderItem>()
+    private val flowDelPosition = MutableStateFlow(-1)
 
     val tempList1 = mutableListOf<DetailedOrderItem>()
 
@@ -72,10 +88,19 @@ class DialogSearchGeneral(private val location: String) : DialogFragment() {
                 AuxillaryFunctions.defaultClickSettingOrder(this, mainViewModel)
             )
             binding.rvSearchResult.adapter = myAdapterBasket
-/*            setSearchViewListener(
-                searchView = binding.svSearch,
-                adapterBasket = myAdapterBasket,
-                listBasket = detailedList)*/
+
+            val obj1 = object : SwipeBasketItem{
+                override fun getDelPosition(position: Int) {
+                    flowDelPosition.value = position
+                }
+            }
+
+            deleteIcon = ContextCompat.getDrawable(requireContext(), R.drawable.ic_delete)!!
+            itemTouchHelper = ItemTouchHelper(AuxillaryFunctions.defaultSwipeDelBasketOrder(
+                deleteIcon, swipeBackground, swipeBasketItem = obj1
+            ))
+            itemTouchHelper.attachToRecyclerView(binding.rvSearchResult)
+
         } else {
             myAdapterShowItems = AdapterShowItems(
                 AuxillaryFunctions.deafultItemMoveDirections(this, mainViewModel,null)
@@ -92,11 +117,12 @@ class DialogSearchGeneral(private val location: String) : DialogFragment() {
                 jobBasket = viewLifecycleOwner.lifecycleScope.launch {
                     mainViewModel.orderBasket.collect{
                         Log.d(my_tag, "order basket collect")
+                        myAdapterBasket?.notifyDataSetChanged()
                         val detailedList1 = AuxillaryFunctions.transformOrdItemToDishesDetailed(
                             it, mainViewModel.allDishes.value
                         )
 
-                        val filterList = mutableListOf<DetailedOrderItem>()
+                        filterList.clear()
                         detailedList1.forEach {dl1 ->
                             tempList1.forEach {tl1 ->
                                 if(tl1.id == dl1.id){
@@ -111,7 +137,34 @@ class DialogSearchGeneral(private val location: String) : DialogFragment() {
                             searchView = binding.svSearch,
                             adapterBasket = myAdapterBasket,
                             listBasket = detailedList1)
+                    }
+                }
 
+                jobBasketDelPos =this@DialogSearchGeneral.viewLifecycleOwner.lifecycleScope.launch {
+                    flowDelPosition.collect{
+                        if(it>=0){
+                            Log.d(my_tag, "delPos: $it, current data size: ${myAdapterBasket?.getCurrentList()?.size}")
+                            val adapterList = myAdapterBasket?.getCurrentList() ?: emptyList()
+                            if (it < adapterList.size){
+                                val item = OrderItem(
+                                    id = adapterList[it].id,
+                                    name = adapterList[it].name,
+                                    add1 = adapterList[it].add1,
+                                    add2 = adapterList[it].add2,
+                                    add3 = adapterList[it].add3,
+                                    size = adapterList[it].size,
+                                    count = adapterList[it].count
+                                )
+                                mainViewModel.deleteOrderItemsLocal(item)
+                                mainViewModel.dbManager.deleteOrderBasketItemFromRDB(
+                                    KindCafeApplication.myAuth.currentUser,
+                                    item
+                                )
+                                flowDelPosition.value = -1
+                            }
+
+                        }
+                        Log.d(my_tag, "current del position = $it")
                     }
                 }
             }
@@ -205,6 +258,7 @@ class DialogSearchGeneral(private val location: String) : DialogFragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         jobBasket = null
+        jobBasketDelPos = null
         _binding = null
     }
 

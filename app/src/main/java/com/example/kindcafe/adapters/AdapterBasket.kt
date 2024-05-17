@@ -56,6 +56,10 @@ class AdapterBasket(
         diffResults.dispatchUpdatesTo(this)
     }
 
+    fun getCurrentList(): List<DetailedOrderItem>{
+        return oldDishList
+    }
+
     class ViewHolderBasket(
         val bindingInner: ItemBasketRvBinding,
         val itemMoveDirectionsInner: ItemMoveDirections,

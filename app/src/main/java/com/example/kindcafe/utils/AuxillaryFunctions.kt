@@ -2,14 +2,20 @@ package com.example.kindcafe.utils
 
 import android.app.Activity
 import android.content.res.ColorStateList
+import android.graphics.Canvas
+import android.graphics.drawable.ColorDrawable
+import android.graphics.drawable.Drawable
 import android.util.Log
 import androidx.annotation.IdRes
 import androidx.annotation.StringRes
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavDirections
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.ItemTouchHelper
+import androidx.recyclerview.widget.RecyclerView
 import com.example.kindcafe.KindCafeApplication
 import com.example.kindcafe.MainActivity
 import com.example.kindcafe.R
@@ -23,6 +29,7 @@ import com.example.kindcafe.database.Favorites
 import com.example.kindcafe.database.OrderItem
 import com.example.kindcafe.dialogs.DialogDetailedDish
 import com.example.kindcafe.firebase.firebaseInterfaces.DefinitionOfStatus
+import com.example.kindcafe.interfaces.SwipeBasketItem
 import com.example.kindcafe.viewModels.MainViewModel
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.cancel
@@ -212,6 +219,95 @@ private val my_tag = "AuxillaryFunctionsTAG"
                 size = orderItems[index].size,
                 count = orderItems[index].count
             )
+        }
+    }
+
+    fun defaultSwipeDelBasketOrder(
+        deleteIcon: Drawable,
+        swipeBackground: ColorDrawable,
+        mainVM: MainViewModel? = null,
+        swipeBasketItem: SwipeBasketItem? = null
+    ): ItemTouchHelper.SimpleCallback{
+        return object : ItemTouchHelper.SimpleCallback(
+            0,
+            ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT
+        ){
+            override fun onMove(
+                recyclerView: RecyclerView,
+                viewHolder: RecyclerView.ViewHolder,
+                target: RecyclerView.ViewHolder
+            ): Boolean { return false }
+
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                /* position of element that swiped */
+                val position = viewHolder.adapterPosition
+                swipeBasketItem?.getDelPosition(position)
+
+                if(swipeBasketItem == null){
+                    val item = mainVM?.orderBasket?.value?.get(position) ?: OrderItem()
+                    mainVM?.viewModelScope?.launch {
+                        mainVM.deleteOrderItemsLocal(item)
+                        mainVM.dbManager.deleteOrderBasketItemFromRDB(
+                            KindCafeApplication.myAuth.currentUser,
+                            item
+                        )
+                        cancel()
+                    }
+                }
+
+            }
+
+            override fun onChildDraw(
+                c: Canvas,
+                recyclerView: RecyclerView,
+                viewHolder: RecyclerView.ViewHolder,
+                dX: Float,
+                dY: Float,
+                actionState: Int,
+                isCurrentlyActive: Boolean
+            ) {
+
+                val itemView = viewHolder.itemView
+                val iconMargin = (itemView.height - deleteIcon.intrinsicHeight) / 2
+
+                if(dX > 0) {
+                    swipeBackground.setBounds(itemView.left, itemView.top, dX.toInt(), itemView.bottom)
+                    deleteIcon.setBounds(
+                        itemView.left + iconMargin - 150,
+                        itemView.top + iconMargin,
+                        itemView.left + iconMargin + deleteIcon.intrinsicWidth,
+                        itemView.bottom - iconMargin)
+                } else {
+                    swipeBackground.setBounds(itemView.right + dX.toInt(), itemView.top, itemView.right, itemView.bottom)
+                    deleteIcon.setBounds(
+                        itemView.right - iconMargin - deleteIcon.intrinsicWidth + 125,
+                        itemView.top + iconMargin,
+                        itemView.right - iconMargin + 275,
+                        itemView.bottom - iconMargin)
+                }
+
+                swipeBackground.draw(c)
+                c.save()
+
+
+                if(dX > 0){
+                    c.clipRect(itemView.left, itemView.top, dX.toInt(), itemView.bottom)
+                } else {
+                    c.clipRect(itemView.right + dX.toInt(), itemView.top, itemView.right, itemView.bottom)
+                }
+                deleteIcon.draw(c)
+                c.restore()
+
+                super.onChildDraw(
+                    c,
+                    recyclerView,
+                    viewHolder,
+                    dX,
+                    dY,
+                    actionState,
+                    isCurrentlyActive
+                )
+            }
         }
     }
 }

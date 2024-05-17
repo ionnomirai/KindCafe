@@ -1,39 +1,31 @@
 package com.example.kindcafe.fragments
 
-import android.content.res.ColorStateList
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
+import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.appcompat.content.res.AppCompatResources
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.kindcafe.KindCafeApplication
 import com.example.kindcafe.MainActivity
 import com.example.kindcafe.R
 import com.example.kindcafe.adapters.AdapterBasket
-import com.example.kindcafe.adapters.AdapterShowItems
-import com.example.kindcafe.adapters.callbacks.ItemMoveDirections
-import com.example.kindcafe.adapters.callbacks.SettingOrder
-import com.example.kindcafe.data.Categories
 import com.example.kindcafe.data.DetailedOrderItem
-import com.example.kindcafe.data.NumberAdd
-import com.example.kindcafe.data.Size
-import com.example.kindcafe.database.Dish
-import com.example.kindcafe.database.Favorites
 import com.example.kindcafe.databinding.FragBasketBinding
-import com.example.kindcafe.databinding.FragHomeBinding
 import com.example.kindcafe.firebase.DbManager
 import com.example.kindcafe.utils.AuxillaryFunctions
 import com.example.kindcafe.utils.Locations
 import com.example.kindcafe.viewModels.MainViewModel
-import kotlinx.coroutines.cancel
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 class BasketFrag: Fragment() {
@@ -52,12 +44,13 @@ class BasketFrag: Fragment() {
     private val my_tag = "BasketFragmentTag"
     private val currentFragmentName = "Basket"
 
-    //private val myAdapter = AdapterBasket(clickItemElements(), clickSettingOrder())
     private lateinit var myAdapter : AdapterBasket
     private val dbManager = DbManager()
 
-    private val tempDishes = mutableListOf<Dish>()
     private val detailedListI = mutableListOf<DetailedOrderItem>()
+
+    private var swipeBackground: ColorDrawable = ColorDrawable(Color.parseColor("#FF0000"))
+    private lateinit var deleteIcon: Drawable
 
     /*---------------------------------------- Functions -----------------------------------------*/
 
@@ -72,6 +65,8 @@ class BasketFrag: Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        deleteIcon = ContextCompat.getDrawable(requireContext(), R.drawable.ic_delete)!!
 
         myAdapter = AdapterBasket(
             AuxillaryFunctions.deafultItemMoveDirections(this, mainVM, null),
@@ -135,6 +130,11 @@ class BasketFrag: Fragment() {
                 Toast.makeText(context, R.string.quatity_zero, Toast.LENGTH_SHORT).show()
             }
         }
+
+        val itemTouchHelper = ItemTouchHelper(AuxillaryFunctions.defaultSwipeDelBasketOrder(
+            deleteIcon, swipeBackground, mainVM = mainVM
+        ))
+        itemTouchHelper.attachToRecyclerView(binding.rvItemsBuy)
     }
 
     override fun onResume() {
