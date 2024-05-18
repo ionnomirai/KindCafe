@@ -82,13 +82,15 @@ class ShowItemsFragment : Fragment() {
 
         myAdapter = AdapterShowItems(
             AuxillaryFunctions.deafultItemMoveDirections(
-                this, mainVM
-            ) { dish: Dish ->
-                ShowItemsFragmentDirections.actionShowItemsFragmentToDetailFragment(
-                    dish.id,
-                    dish.name!!
-                )
-            }
+                this,
+                mainVM,
+                { dish: Dish ->
+                    ShowItemsFragmentDirections.actionShowItemsFragmentToDetailFragment(
+                        dish.id,
+                        dish.name!!
+                    )
+                }
+            )
         )
 
         val mainActivity = activity as MainActivity

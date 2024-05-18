@@ -6,6 +6,7 @@ import android.graphics.Canvas
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
 import android.util.Log
+import android.widget.ImageButton
 import androidx.annotation.IdRes
 import androidx.annotation.StringRes
 import androidx.appcompat.content.res.AppCompatResources
@@ -29,6 +30,8 @@ import com.example.kindcafe.database.Favorites
 import com.example.kindcafe.database.OrderItem
 import com.example.kindcafe.dialogs.DialogDetailedDish
 import com.example.kindcafe.firebase.firebaseInterfaces.DefinitionOfStatus
+import com.example.kindcafe.interfaces.ActionDialogDetailedDismiss
+import com.example.kindcafe.interfaces.DetailedCheckFavoritesBasket
 import com.example.kindcafe.interfaces.SwipeBasketItem
 import com.example.kindcafe.viewModels.MainViewModel
 import com.google.android.material.snackbar.Snackbar
@@ -78,14 +81,19 @@ private val my_tag = "AuxillaryFunctionsTAG"
     }
 
 
-    fun deafultItemMoveDirections(frag: Fragment, mainVM: MainViewModel, actionDetailed: ((Dish) -> NavDirections)?): ItemMoveDirections{
+    fun deafultItemMoveDirections(
+        frag: Fragment,
+        mainVM: MainViewModel,
+        actionDetailed: ((Dish) -> NavDirections)?,
+        whenDetaileDismiss: ActionDialogDetailedDismiss? = null
+    ): ItemMoveDirections{
         return object : ItemMoveDirections {
             override fun detailed(dish: Dish) {
                 dish.name?.let {
                     if (actionDetailed != null) {
                         frag.findNavController().navigate(actionDetailed(dish))
                     } else {
-                        DialogDetailedDish(dish).show(frag.parentFragmentManager, null)
+                        DialogDetailedDish(dish, whenDetaileDismiss).show(frag.parentFragmentManager, null)
                     }
                 }
             }
@@ -307,6 +315,79 @@ private val my_tag = "AuxillaryFunctionsTAG"
                     actionState,
                     isCurrentlyActive
                 )
+            }
+        }
+    }
+
+    fun defaultCheckFavBasketInterface(): DetailedCheckFavoritesBasket{
+        return object : DetailedCheckFavoritesBasket{
+            override fun checkAndFillFavorites(
+                isFavorite: Boolean,
+                ib: ImageButton,
+                colorActive: ColorStateList,
+                colorNonActive: ColorStateList
+            ) {
+                if (isFavorite) {
+                    ib.setImageResource(R.drawable.ic_heart_filled)
+                    ib.imageTintList = colorActive
+                } else {
+                    ib.setImageResource(R.drawable.ic_heart)
+                    ib.imageTintList = colorNonActive
+                }
+            }
+
+            override fun checkAndFillBasket(
+                isInBasket: Boolean,
+                ib: ImageButton,
+                colorActive: ColorStateList,
+                colorNonActive: ColorStateList
+            ) {
+                if(isInBasket){
+                    ib.imageTintList = colorActive
+                } else {
+                    ib.imageTintList = colorNonActive
+                }
+            }
+
+            override suspend fun putOrDelFavorite(
+                isFavorite: Boolean,
+                mainVm: MainViewModel,
+                idDish: String,
+                nameDish: String
+            ) {
+                val favoriteDish = Favorites(idDish, idDish, nameDish)
+                if (isFavorite) {
+                    mainVm.deleteFavDish(favoriteDish)
+                    mainVm.dbManager.deleteFavoriteDish(
+                        KindCafeApplication.myAuth.currentUser,
+                        favoriteDish
+                    )
+                } else {
+                    mainVm.addFavoritesLocal(favoriteDish)
+                    mainVm.dbManager.setFavoriteDishes(
+                        KindCafeApplication.myAuth.currentUser,
+                        favoriteDish
+                    )
+                }
+            }
+
+            override suspend fun putOrDelBasket(
+                isInBasket: Boolean,
+                mainVm: MainViewModel,
+                idDish: String,
+                nameDish: String
+            ) {
+                if(isInBasket){
+                    val cur = mainVm.orderBasket.value.find { (it.id == idDish && it.name == nameDish) }
+                    cur?.let {oItem ->
+                        mainVm.deleteOrderItemsLocal(oItem)
+                        mainVm.dbManager.deleteOrderBasketItemFromRDB(KindCafeApplication.myAuth.currentUser, oItem)
+                    }
+                } else {
+                    val orderObj = OrderItem(id = idDish, name = nameDish)
+                    mainVm.addOrderItemsLocal(orderObj)
+                    mainVm.dbManager.setOrderItemBasketToRDB(KindCafeApplication.myAuth.currentUser, orderObj)
+                }
             }
         }
     }

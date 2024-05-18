@@ -23,6 +23,7 @@ import com.example.kindcafe.data.DetailedOrderItem
 import com.example.kindcafe.database.Dish
 import com.example.kindcafe.database.OrderItem
 import com.example.kindcafe.databinding.DialogSearchGeneralBinding
+import com.example.kindcafe.interfaces.ActionDialogDetailedDismiss
 import com.example.kindcafe.interfaces.SwipeBasketItem
 import com.example.kindcafe.utils.AuxillaryFunctions
 import com.example.kindcafe.utils.Locations
@@ -103,7 +104,16 @@ class DialogSearchGeneral(private val location: String) : DialogFragment() {
 
         } else {
             myAdapterShowItems = AdapterShowItems(
-                AuxillaryFunctions.deafultItemMoveDirections(this, mainViewModel,null)
+                AuxillaryFunctions.deafultItemMoveDirections(
+                    frag =this,
+                    mainVM = mainViewModel,
+                    actionDetailed = null,
+                    object : ActionDialogDetailedDismiss{
+                        override fun actionWhenDismiss() {
+                            myAdapterShowItems.notifyDataSetChanged()
+                        }
+                    }
+                )
             )
             binding.rvSearchResult.adapter = myAdapterShowItems
             setSearchViewListener(myAdapterShowItems, binding.svSearch, currentListDishes)
@@ -253,6 +263,11 @@ class DialogSearchGeneral(private val location: String) : DialogFragment() {
             //Log.d(my_tag, "w: $width, h: $height")
             dialog.window!!.setLayout(width, height)
         }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        Log.d(my_tag, "onPause")
     }
 
     override fun onDestroyView() {
