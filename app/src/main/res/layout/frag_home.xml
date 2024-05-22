@@ -74,7 +74,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/home_first_pic" />
+                app:srcCompat="@drawable/home_first" />
 
             <ImageView
                 android:id="@+id/ivGradientFirst"
@@ -157,7 +157,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/home_second_pic" />
+                app:srcCompat="@drawable/home_second" />
 
             <ImageView
                 android:id="@+id/ivGradientSecond"
@@ -236,7 +236,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/home_third_pic" />
+                app:srcCompat="@drawable/home_third" />
 
             <ImageView
                 android:id="@+id/ivGradientThird"
@@ -316,7 +316,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/home_fourth_pic" />
+                app:srcCompat="@drawable/home_fourth" />
 
             <ImageView
                 android:id="@+id/ivGradientFourth"

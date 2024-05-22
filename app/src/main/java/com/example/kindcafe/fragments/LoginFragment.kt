@@ -5,16 +5,13 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.example.kindcafe.MainActivity
 import com.example.kindcafe.R
-import com.example.kindcafe.databinding.FragHomeBinding
 import com.example.kindcafe.databinding.FragLoginBinding
 import com.example.kindcafe.firebase.AccountHelper
-import com.example.kindcafe.firebase.firebaseInterfaces.DefinitionOfStatus
 import com.example.kindcafe.utils.AuxillaryFunctions
 import com.example.kindcafe.utils.GeneralAccessTypes
 import com.example.kindcafe.utils.SimplePopDirections
@@ -40,7 +37,7 @@ class LoginFragment : Fragment() {
 
     private var job : Job? = null
 
-    private val MY_TAG = "LoginFragmentTag"
+    private val my_tag = "LoginFragmentTag"
 
     /*---------------------------------------- Functions -----------------------------------------*/
 
@@ -88,10 +85,13 @@ class LoginFragment : Fragment() {
             tvRegNow.setOnClickListener {
                 findNavController().navigate(R.id.action_loginFragment_to_restoreAccFragment)
             }
+            tvLoginForgot.setOnClickListener {
+                findNavController().navigate(R.id.action_loginFragment_to_restoreAccFragment)
+            }
 
             /* When user do 5 wrong attempt, we offer him to restore account*/
             mainVM.numberOfAttemptsLive.observe(viewLifecycleOwner){
-                Log.d(MY_TAG, "Attempts: ${mainVM.numberOfAttempts}")
+                Log.d(my_tag, "Attempts: ${mainVM.numberOfAttempts}")
                 if (mainVM.numberOfAttempts == 5) {
                     clLoginOk.visibility = View.GONE
                     clTooManyAttempt.visibility = View.VISIBLE
@@ -105,27 +105,27 @@ class LoginFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        Log.d(MY_TAG, "onResume")
+        Log.d(my_tag, "onResume")
     }
 
     override fun onPause() {
         super.onPause()
-        Log.d(MY_TAG, "onPause")
+        Log.d(my_tag, "onPause")
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
-        Log.d(MY_TAG, "onDestroyView")
+        Log.d(my_tag, "onDestroyView")
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        Log.d(MY_TAG, "onDestroy")
+        Log.d(my_tag, "onDestroy")
     }
 
     override fun onDetach() {
         super.onDetach()
-        Log.d(MY_TAG, "onDetach")
+        Log.d(my_tag, "onDetach")
     }
 }

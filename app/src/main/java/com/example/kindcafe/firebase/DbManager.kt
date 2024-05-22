@@ -27,7 +27,6 @@ class DbManager {
 
     /*-----------------------------------General-------------------------------------------*/
     fun readAllDishDataFromDb(callbackRead: ReadAllData) {
-        //val result: MutableMap<Int, List<Dish>> = mutableMapOf()
         val result: MutableList<Dish> = mutableListOf()
 
         myDatabase.addListenerForSingleValueEvent(object : ValueEventListener {
@@ -35,9 +34,6 @@ class DbManager {
             override fun onDataChange(snapshot: DataSnapshot) {
                 // We will enter into each category
                 for (i in Categories.entries) {
-                    // list of dishes from current category (sparkling, non-sparkling etc.
-                    //val dishList: MutableList<Dish> = mutableListOf()
-
                     // move to category. Every iteration outer cycle, will be different category
                     val deeperSnapshot = snapshot.child(i.name).children
 
@@ -45,9 +41,6 @@ class DbManager {
                     for (item in deeperSnapshot) {
                         item.getValue(Dish::class.java)?.let { result.add(it) }
                     }
-
-                    // put to result map: key - index of category, value - lish of dish
-                    //result[i.ordinal] = dishList
                 }
 
                 callbackRead.readAll(result)

@@ -48,6 +48,7 @@ class ShowItemsFragment : Fragment() {
 
     /* Common viewModel between activity and this fragment */
     private val mainVM: MainViewModel by activityViewModels()
+    private lateinit var mainActivity: MainActivity
 
     //private val myAdapter = AdapterShowItems(clickItemElements())
     private lateinit var myAdapter: AdapterShowItems
@@ -93,10 +94,7 @@ class ShowItemsFragment : Fragment() {
             )
         )
 
-        val mainActivity = activity as MainActivity
-        mainActivity.supportActionBar?.title = ""
-        mainActivity.binding.tvToolbarTitle.text = navArgs.category.categoryName
-        mainActivity.everyOpenHomeSettings()
+        mainActivity = activity as MainActivity
 
         binding.rvShowItems.apply {
             layoutManager = LinearLayoutManager(requireContext())
@@ -112,7 +110,6 @@ class ShowItemsFragment : Fragment() {
         dbManager.readDishDataFromDb(
             navArgs.category,
             clarificationGetDataFirebase()
-            // we need put there "Wait sign"
         )
 
         // First try if we retrieve data from RDB, then retrieve uriSmall
@@ -176,13 +173,18 @@ class ShowItemsFragment : Fragment() {
         when (categoryCur) {
             Categories.SparklingDrinks -> mainVM.sparklingDrinks.collect {
                 myAdapter.setNewData(it)
-                Log.d(my_tag, "read when start: $it")
                 mainVM.currentLocation = Locations.SHOW_SPARKLING_DRINKS.nameL
             }
-
-            else -> mainVM.cakes.collect {
+            Categories.NonSparklingDrinks -> mainVM.nonSparklingDrinks.collect{
                 myAdapter.setNewData(it)
-                Log.d(my_tag, "read when start: $it")
+                mainVM.currentLocation = Locations.SHOW_NON_SPARKLING_DRINKS.nameL
+            }
+            Categories.Sweets -> mainVM.sweets.collect{
+                myAdapter.setNewData(it)
+                mainVM.currentLocation = Locations.SHOW_SWEETS.nameL
+            }
+            Categories.Cakes -> mainVM.cakes.collect {
+                myAdapter.setNewData(it)
                 mainVM.currentLocation = Locations.SHOW_CAKES.nameL
             }
         }
@@ -218,6 +220,9 @@ class ShowItemsFragment : Fragment() {
     override fun onResume() {
         super.onResume()
         Log.d(my_tag, "onResume")
+        mainActivity.everyOpenHomeSettings()
+        mainActivity.supportActionBar?.title = ""
+        mainActivity.binding.tvToolbarTitle.text = navArgs.category.categoryName
     }
 
     override fun onPause() {

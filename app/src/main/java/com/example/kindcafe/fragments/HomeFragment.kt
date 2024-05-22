@@ -57,6 +57,14 @@ class HomeFragment : Fragment() {
                     val action = HomeFragmentDirections.actionHomeFragmentToShowItemsFragment(Categories.SparklingDrinks)
                     findNavController().navigate(action)
                 }
+                cvSecond.setOnClickListener {
+                    val action = HomeFragmentDirections.actionHomeFragmentToShowItemsFragment(Categories.NonSparklingDrinks)
+                    findNavController().navigate(action)
+                }
+                cvThird.setOnClickListener {
+                    val action = HomeFragmentDirections.actionHomeFragmentToShowItemsFragment(Categories.Sweets)
+                    findNavController().navigate(action)
+                }
                 cvFourth.setOnClickListener {
                     val action = HomeFragmentDirections.actionHomeFragmentToShowItemsFragment(Categories.Cakes)
                     findNavController().navigate(action)

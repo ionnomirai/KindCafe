@@ -16,18 +16,19 @@ class StorageManager {
         val flow1 = MutableStateFlow(0)
         val uriDishList: MutableList<Dish> = mutableListOf()
         Log.d(my_tag, "size: ${data.size}")
+
         data.forEach {dish ->
             storageReference
-                .getReference("dish_images/${dish.name}_${dish.id}_${size.uSize}.png")
+                .getReference("dish_images/${dish.name}_${dish.id}_${size.uSize}.jpg")
                 .downloadUrl
                 .addOnSuccessListener {uri ->
                     if(size == UriSize.Small){
                         uriDishList.add(dish.copy(uriSmall = uri.toString()))
-                        Log.d(my_tag, "SMALL in success: ${uri.toString()}")
+                        Log.d(my_tag, "SMALL in success: ${dish.id}")
                         flow1.value += 1
                     } else {
                         uriDishList.add(dish.copy(uriBig = uri.toString()))
-                        Log.d(my_tag, "BIG in success: ${uri.toString()}")
+                        Log.d(my_tag, "BIG in success: ${dish.id}")
                         flow1.value += 1
                     }
 

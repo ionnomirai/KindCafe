@@ -44,7 +44,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 
 
-class MainActivity : AppCompatActivity()/*, NavigationView.OnNavigationItemSelectedListener*/ {
+class MainActivity : AppCompatActivity() {
 
     /*---------------------------------------- Properties ----------------------------------------*/
 
@@ -116,15 +116,6 @@ class MainActivity : AppCompatActivity()/*, NavigationView.OnNavigationItemSelec
         binding.apply {
             ibHome.setOnClickListener {
                 navController.popBackStack(R.id.homeFragment, false)
-                /*
-                lifecycleScope.launch {
-                    mainVM.getOrderItemsLocal()
-                }
-                lifecycleScope.launch {
-                    mainVM.orderBasket.collect{
-                        Log.d(my_tag, "orderBasket: $it")
-                    }
-                }*/
             }
 
             ibBag.setOnClickListener {
@@ -201,9 +192,25 @@ class MainActivity : AppCompatActivity()/*, NavigationView.OnNavigationItemSelec
                     }
                 }
 
-                R.id.itemLogout -> { logoutAction() }
+                R.id.itemFavorites ->{
+                    if (KindCafeApplication.myAuth.currentUser != null){
+                        moveTo(R.id.action_homeFragment_to_favoriteFragment)
+                    }
+                }
 
-                else -> Toast.makeText(this, "fraeg", Toast.LENGTH_SHORT).show()
+                R.id.itemBasket ->{
+                    if (KindCafeApplication.myAuth.currentUser != null){
+                        moveTo(R.id.action_homeFragment_to_basketFrag)
+                    }
+                }
+
+                R.id.itemSettings ->{
+                    if (KindCafeApplication.myAuth.currentUser != null){
+                        moveTo(R.id.action_homeFragment_to_settingsGeneralFragment)
+                    }
+                }
+
+                R.id.itemLogout -> { logoutAction() }
             }
             true
         }
@@ -230,7 +237,6 @@ class MainActivity : AppCompatActivity()/*, NavigationView.OnNavigationItemSelec
 
     /* Perform these settings every time the screen starts up */
     fun everyOpenHomeSettings() {
-        //binding.tbMain.title = "Kind Cafe"
         binding.tbMain.title = ""
         binding.tvToolbarTitle.text = resources.getString(R.string.home_name)
 
@@ -269,11 +275,6 @@ class MainActivity : AppCompatActivity()/*, NavigationView.OnNavigationItemSelec
                 }
             }
         }
-    }
-
-    /* Connecting NavigationView (sliding panel) to navController so that you can navigate. */
-    private fun setupNavigationMenu(navController: NavController) {
-        binding.nvLeft.setupWithNavController(navController)
     }
 
     /* Connecting NavigationView (sliding panel) to toolbar (accessed via appBarConfiguration). This does the following:
@@ -331,6 +332,7 @@ class MainActivity : AppCompatActivity()/*, NavigationView.OnNavigationItemSelec
                         getUrisBySize(UriSize.Big, this),
                         UriSize.Big
                     )
+                    Log.d(my_tag, "isSmallUrisDone")
                 }
             }
         }

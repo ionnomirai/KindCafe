@@ -42,6 +42,7 @@ class FavoriteFragment : Fragment() {
 
     /* Common viewModel between activity and this fragment */
     private val mainVM: MainViewModel by activityViewModels()
+    private lateinit var mainActivity: MainActivity
     private val myAdapter = AdapterShowItems(clickItemElements())
     private val dbManager = DbManager()
 
@@ -63,10 +64,8 @@ class FavoriteFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         Log.d(my_tag, "onViewCreated")
-
-        val mainAct = activity as? MainActivity
-
-        mainAct?.let {
+        mainActivity = activity as MainActivity
+        mainActivity?.let {
             it.binding.tvToolbarTitle.text = currentFragmentName
             it.supportActionBar?.title = ""
         }
@@ -97,14 +96,12 @@ class FavoriteFragment : Fragment() {
         }
 
         // Update adapter
-        viewLifecycleOwner.lifecycleScope.launch{
-            mainVM.favoritesLikeDish.collect{
+        viewLifecycleOwner.lifecycleScope.launch {
+            mainVM.favoritesLikeDish.collect {
                 Log.d(my_tag, "setNewData: $it")
                 myAdapter.setNewData(it)
             }
         }
-
-
 
 
     }
@@ -123,20 +120,27 @@ class FavoriteFragment : Fragment() {
             }
 
             override fun putToBag(dish: Dish) {
-                viewLifecycleOwner.lifecycleScope.launch{
+                viewLifecycleOwner.lifecycleScope.launch {
                     val orderObj = OrderItem(id = dish.id, name = dish.name)
                     mainVM.addOrderItemsLocal(orderObj)
-                    dbManager.setOrderItemBasketToRDB(KindCafeApplication.myAuth.currentUser, orderObj)
+                    dbManager.setOrderItemBasketToRDB(
+                        KindCafeApplication.myAuth.currentUser,
+                        orderObj
+                    )
                     cancel()
                 }
             }
 
             override fun delFromBag(dish: Dish) {
                 viewLifecycleOwner.lifecycleScope.launch {
-                    val cur = mainVM.orderBasket.value.find { (it.id == dish.id && it.name == dish.name) }
-                    cur?.let {oItem ->
+                    val cur =
+                        mainVM.orderBasket.value.find { (it.id == dish.id && it.name == dish.name) }
+                    cur?.let { oItem ->
                         mainVM.deleteOrderItemsLocal(oItem)
-                        dbManager.deleteOrderBasketItemFromRDB(KindCafeApplication.myAuth.currentUser, oItem)
+                        dbManager.deleteOrderBasketItemFromRDB(
+                            KindCafeApplication.myAuth.currentUser,
+                            oItem
+                        )
 
                     }
                     cancel()
@@ -148,7 +152,10 @@ class FavoriteFragment : Fragment() {
             override fun delFromFavorite(favoriteDish: Favorites) {
                 viewLifecycleOwner.lifecycleScope.launch {
                     mainVM.deleteFavDish(favoriteDish)
-                    dbManager.deleteFavoriteDish(KindCafeApplication.myAuth.currentUser, favoriteDish)
+                    dbManager.deleteFavoriteDish(
+                        KindCafeApplication.myAuth.currentUser,
+                        favoriteDish
+                    )
                     cancel()
                 }
 
@@ -164,8 +171,11 @@ class FavoriteFragment : Fragment() {
 
             override fun getTint(isPress: Boolean): ColorStateList? {
                 context?.let {
-                    if(isPress){
-                        return AppCompatResources.getColorStateList(it, R.color.greeting_phrase_color)
+                    if (isPress) {
+                        return AppCompatResources.getColorStateList(
+                            it,
+                            R.color.greeting_phrase_color
+                        )
                     }
                     return AppCompatResources.getColorStateList(it, R.color.item_icon)
                 }
@@ -173,10 +183,10 @@ class FavoriteFragment : Fragment() {
             }
 
 
-
             // if true, dish in bag
             override fun checkBag(dish: Dish): Boolean {
-                return mainVM.orderBasket.value.filter { (it.id == dish.id && it.name == dish.name) }.isNotEmpty()
+                return mainVM.orderBasket.value.filter { (it.id == dish.id && it.name == dish.name) }
+                    .isNotEmpty()
             }
         }
     }
@@ -185,6 +195,10 @@ class FavoriteFragment : Fragment() {
         super.onResume()
         Log.d(my_tag, "onResume")
         mainVM.currentLocation = Locations.FAVORITES.nameL
+
+        mainActivity.everyOpenHomeSettings()
+        mainActivity.supportActionBar?.title = ""
+        mainActivity.binding.tvToolbarTitle.text = Locations.FAVORITES.nameL
     }
 
     override fun onDestroyView() {

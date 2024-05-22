@@ -8,6 +8,7 @@ import androidx.appcompat.content.res.AppCompatResources
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
+import com.example.kindcafe.KindCafeApplication
 import com.example.kindcafe.R
 import com.example.kindcafe.database.Dish
 import com.example.kindcafe.databinding.FragDishDetailBinding
@@ -54,29 +55,53 @@ class DialogDetailedDish(
         val colorNonActive = AppCompatResources.getColorStateList(requireContext(), R.color.item_icon)
         val checkDishInterface = AuxillaryFunctions.defaultCheckFavBasketInterface()
 
-        // register changes in favorites
-        viewLifecycleOwner.lifecycleScope.launch {
-            mainVM.favorites.collect { favorites ->
-                isFavorite = favorites
-                    .filter { it.id == dish.id && it.dishId == dish.id && it.dishName == dish.name }
-                    .isNotEmpty()
-                checkDishInterface.checkAndFillFavorites(
-                    isFavorite, binding.ibFavorite, colorActive, colorNonActive
-                )
-            }
-        }
 
-        // register changes in bag
-        viewLifecycleOwner.lifecycleScope.launch {
-            mainVM.orderBasket.collect { basket ->
-                isInBasket = basket.filter {it.id == dish.id && it.name == dish.name }.isNotEmpty()
-                checkDishInterface.checkAndFillBasket(
-                    isInBasket, binding.ibToBag, colorActive, colorNonActive
-                )
-            }
-        }
 
         binding.apply {
+            if(KindCafeApplication.myAuth.currentUser != null){
+                // register changes in favorites
+                viewLifecycleOwner.lifecycleScope.launch {
+                    mainVM.favorites.collect { favorites ->
+                        isFavorite = favorites
+                            .filter { it.id == dish.id && it.dishId == dish.id && it.dishName == dish.name }
+                            .isNotEmpty()
+                        checkDishInterface.checkAndFillFavorites(
+                            isFavorite, binding.ibFavorite, colorActive, colorNonActive
+                        )
+                    }
+                }
+
+                // register changes in bag
+                viewLifecycleOwner.lifecycleScope.launch {
+                    mainVM.orderBasket.collect { basket ->
+                        isInBasket = basket.filter {it.id == dish.id && it.name == dish.name }.isNotEmpty()
+                        checkDishInterface.checkAndFillBasket(
+                            isInBasket, binding.ibToBag, colorActive, colorNonActive
+                        )
+                    }
+                }
+
+                ibFavorite.setOnClickListener {
+                    viewLifecycleOwner.lifecycleScope.launch {
+                        checkDishInterface.putOrDelFavorite(
+                            isFavorite, mainVM, dish.id, dish.name ?: ""
+                        )
+                        cancel()
+                    }
+                }
+
+                ibToBag.setOnClickListener {
+                    viewLifecycleOwner.lifecycleScope.launch{
+                        checkDishInterface.putOrDelBasket(
+                            isInBasket, mainVM,  dish.id, dish.name ?: ""
+                        )
+                        cancel()
+                    }
+                }
+
+
+            }
+
             ibCloseDialogD.visibility = View.VISIBLE
             ibCloseDialogD.setOnClickListener {
                 dismissInterface?.actionWhenDismiss()
@@ -90,24 +115,6 @@ class DialogDetailedDish(
             tvNameDish.text = dish.name
             tvPriceDish.text = resources.getString(R.string.price_style_usd, dish.price)
             tvDescription.text = dish.description
-
-            ibFavorite.setOnClickListener {
-                viewLifecycleOwner.lifecycleScope.launch {
-                    checkDishInterface.putOrDelFavorite(
-                        isFavorite, mainVM, dish.id, dish.name ?: ""
-                    )
-                    cancel()
-                }
-            }
-
-            ibToBag.setOnClickListener {
-                viewLifecycleOwner.lifecycleScope.launch{
-                    checkDishInterface.putOrDelBasket(
-                        isInBasket, mainVM,  dish.id, dish.name ?: ""
-                    )
-                    cancel()
-                }
-            }
         }
     }
 

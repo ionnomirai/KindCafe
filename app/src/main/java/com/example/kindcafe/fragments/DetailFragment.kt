@@ -60,8 +60,10 @@ class DetailFragment : Fragment() {
         // get data from nav args
         val idDish = navArgs.id
         val nameDish = navArgs.name
-        val colorActive = AppCompatResources.getColorStateList(requireContext(), R.color.greeting_phrase_color)
-        val colorNonActive = AppCompatResources.getColorStateList(requireContext(), R.color.item_icon)
+        val colorActive =
+            AppCompatResources.getColorStateList(requireContext(), R.color.greeting_phrase_color)
+        val colorNonActive =
+            AppCompatResources.getColorStateList(requireContext(), R.color.item_icon)
         val checkDishInterface = AuxillaryFunctions.defaultCheckFavBasketInterface()
 
         val mainActivity = activity as MainActivity
@@ -75,30 +77,33 @@ class DetailFragment : Fragment() {
             cancel()
         }
 
-        // register changes in favorites
-        viewLifecycleOwner.lifecycleScope.launch {
-            mainVM.favorites.collect { favorites ->
-                isFavorite = favorites
-                    .filter { it.id == idDish && it.dishId == idDish && it.dishName == nameDish }
-                    .isNotEmpty()
-                checkDishInterface.checkAndFillFavorites(
-                    isFavorite, binding.ibFavorite, colorActive, colorNonActive
-                )
-            }
-        }
 
-        // register changes in bag
-        viewLifecycleOwner.lifecycleScope.launch {
-            mainVM.orderBasket.collect { basket ->
-                isInBasket = basket.filter {it.id == idDish && it.name == nameDish }.isNotEmpty()
-                checkDishInterface.checkAndFillBasket(
-                    isInBasket, binding.ibToBag, colorActive, colorNonActive
-                )
-            }
-        }
 
-        binding.apply {
-            ibFavorite.setOnClickListener {
+        if (KindCafeApplication.myAuth.currentUser != null) {
+            // register changes in favorites
+            viewLifecycleOwner.lifecycleScope.launch {
+                mainVM.favorites.collect { favorites ->
+                    isFavorite = favorites
+                        .filter { it.id == idDish && it.dishId == idDish && it.dishName == nameDish }
+                        .isNotEmpty()
+                    checkDishInterface.checkAndFillFavorites(
+                        isFavorite, binding.ibFavorite, colorActive, colorNonActive
+                    )
+                }
+            }
+
+            // register changes in bag
+            viewLifecycleOwner.lifecycleScope.launch {
+                mainVM.orderBasket.collect { basket ->
+                    isInBasket =
+                        basket.filter { it.id == idDish && it.name == nameDish }.isNotEmpty()
+                    checkDishInterface.checkAndFillBasket(
+                        isInBasket, binding.ibToBag, colorActive, colorNonActive
+                    )
+                }
+            }
+
+            binding.ibFavorite.setOnClickListener {
                 viewLifecycleOwner.lifecycleScope.launch {
                     checkDishInterface.putOrDelFavorite(
                         isFavorite, mainVM, idDish, nameDish
@@ -107,8 +112,8 @@ class DetailFragment : Fragment() {
                 }
             }
 
-            ibToBag.setOnClickListener {
-                viewLifecycleOwner.lifecycleScope.launch{
+            binding.ibToBag.setOnClickListener {
+                viewLifecycleOwner.lifecycleScope.launch {
                     checkDishInterface.putOrDelBasket(
                         isInBasket, mainVM, idDish, nameDish
                     )

@@ -65,6 +65,14 @@ class MainViewModel : ViewModel() {
     val sparklingDrinks: StateFlow<List<Dish>>
         get() = _sparklingDrinks.asStateFlow()
 
+    private var _nonSparklingDrinks: MutableStateFlow<List<Dish>> = MutableStateFlow(emptyList())
+    val nonSparklingDrinks: StateFlow<List<Dish>>
+        get() = _nonSparklingDrinks.asStateFlow()
+
+    private var _sweets: MutableStateFlow<List<Dish>> = MutableStateFlow(emptyList())
+    val sweets: StateFlow<List<Dish>>
+        get() = _sweets.asStateFlow()
+
     private var _cakes: MutableStateFlow<List<Dish>> = MutableStateFlow(emptyList())
     val cakes: StateFlow<List<Dish>>
         get() = _cakes.asStateFlow()
@@ -119,11 +127,15 @@ class MainViewModel : ViewModel() {
             Categories.SparklingDrinks -> repository.getDishByCategory(category).collect {
                 _sparklingDrinks.value = it
             }
+            Categories.NonSparklingDrinks -> repository.getDishByCategory(category).collect{
+                _nonSparklingDrinks.value = it
+            }
+            Categories.Sweets -> repository.getDishByCategory(category).collect{
+                _sweets.value = it
+            }
             Categories.Cakes -> repository.getDishByCategory(category).collect{
                 _cakes.value = it
             }
-            Categories.Sweets -> ""
-            Categories.NonSparklingDrinks -> ""
         }
     }
 

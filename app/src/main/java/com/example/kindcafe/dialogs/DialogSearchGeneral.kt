@@ -179,8 +179,8 @@ class DialogSearchGeneral(private val location: String) : DialogFragment() {
                 }
             }
             Locations.SHOW_SPARKLING_DRINKS.nameL -> currentListDishes.addAll( mainViewModel.sparklingDrinks.value )
-            Locations.SHOW_NON_SPARKLING_DRINKS.nameL -> ""
-            Locations.SHOW_SWEETS.nameL -> ""
+            Locations.SHOW_NON_SPARKLING_DRINKS.nameL -> currentListDishes.addAll( mainViewModel.nonSparklingDrinks.value )
+            Locations.SHOW_SWEETS.nameL -> currentListDishes.addAll( mainViewModel.sweets.value )
             Locations.SHOW_CAKES.nameL -> currentListDishes.addAll( mainViewModel.cakes.value )
             else ->{ currentListDishes.addAll( mainViewModel.allDishes.value ) }
         }
