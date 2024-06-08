@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph_general"
+    app:startDestination="@id/homeFragment"
+    android:label="label1">
+
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="com.example.kindcafe.fragments.HomeFragment"
+        android:label="HomeFragment"
+        tools:layout="@layout/frag_home">
+        <action
+            android:id="@+id/action_homeFragment_to_registrationFragment"
+            app:destination="@id/registrationFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_loginFragment"
+            app:destination="@id/loginFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_showItemsFragment"
+            app:destination="@id/showItemsFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_basketFrag"
+            app:destination="@id/basketFrag" />
+        <action
+            android:id="@+id/action_homeFragment_to_favoriteFragment"
+            app:destination="@id/favoriteFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_orderSummaryFragment"
+            app:destination="@id/orderSummaryFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_settingsGeneralFragment"
+            app:destination="@id/settingsGeneralFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_settingsPersonalFragment"
+            app:destination="@id/settingsPersonalFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/registrationFragment"
+        android:name="com.example.kindcafe.fragments.RegistrationFragment"
+        android:label="RegistrationFragment"
+        tools:layout="@layout/frag_registration">
+        <action
+            android:id="@+id/action_registrationFragment_to_homeFragment"
+            app:destination="@id/homeFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/loginFragment"
+        android:name="com.example.kindcafe.fragments.LoginFragment"
+        android:label="LoginFragment"
+        tools:layout="@layout/frag_login">
+        <action
+            android:id="@+id/action_loginFragment_to_homeFragment"
+            app:destination="@id/homeFragment" />
+        <action
+            android:id="@+id/action_loginFragment_to_restoreAccFragment"
+            app:destination="@id/restoreAccFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/restoreAccFragment"
+        android:name="com.example.kindcafe.fragments.RestoreAccFragment"
+        android:label="RestoreAccFragment"
+        tools:layout="@layout/frag_restore_account">
+        <action
+            android:id="@+id/action_restoreAccFragment_to_registrationFragment"
+            app:destination="@id/registrationFragment"
+            app:popUpTo="@id/registrationFragment"
+            app:popUpToInclusive="true" />
+    </fragment>
+     <fragment
+        android:id="@+id/showItemsFragment"
+        android:name="com.example.kindcafe.fragments.ShowItemsFragment"
+        android:label="ShowItemsFragment"
+        tools:layout="@layout/frag_items">
+        <argument
+            android:name="category"
+            app:argType="com.example.kindcafe.data.Categories" />
+        <action
+            android:id="@+id/action_showItemsFragment_to_detailFragment"
+            app:destination="@id/detailFragment" />
+         <action
+             android:id="@+id/action_showItemsFragment_to_favoriteFragment"
+             app:destination="@id/favoriteFragment" />
+     </fragment>
+    <fragment
+        android:id="@+id/detailFragment"
+        android:name="com.example.kindcafe.fragments.DetailFragment"
+        android:label="DetailFragment"
+        tools:layout="@layout/frag_dish_detail">
+        <argument
+            android:name="id"
+            app:argType="string" />
+        <argument
+            android:name="name"
+            app:argType="string" />
+    </fragment>
+    <fragment
+        android:id="@+id/basketFrag"
+        android:name="com.example.kindcafe.fragments.BasketFrag"
+        android:label="BasketFrag"
+        tools:layout="@layout/frag_basket">
+        <action
+            android:id="@+id/action_basketFrag_to_orderSummaryFragment"
+            app:destination="@id/orderSummaryFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/favoriteFragment"
+        android:name="com.example.kindcafe.fragments.FavoriteFragment"
+        android:label="FavoriteFragment"
+        tools:layout="@layout/frag_favorites">
+        <action
+            android:id="@+id/action_favoriteFragment_to_detailFragment"
+            app:destination="@id/detailFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/orderSummaryFragment"
+        android:name="com.example.kindcafe.fragments.OrderSummaryFragment"
+        android:label="OrderSummaryFragment"
+        tools:layout="@layout/frag_order_summary">
+        <argument
+            android:name="detailedOrder"
+            app:argType="com.example.kindcafe.data.DetailedOrderItem[]"
+            app:nullable="true" />
+    </fragment>
+    <fragment
+        android:id="@+id/settingsGeneralFragment"
+        android:name="com.example.kindcafe.fragments.SettingsGeneralFragment"
+        android:label="SettingsGeneralFragment"
+        tools:layout="@layout/frag_settings_general">
+        <action
+            android:id="@+id/action_settingsGeneralFragment_to_settingsPersonalFragment"
+            app:destination="@id/settingsPersonalFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/settingsPersonalFragment"
+        android:name="com.example.kindcafe.fragments.SettingsPersonalFragment"
+        android:label="SettingsPersonalFragment"
+        tools:layout="@layout/frag_settings_personal"/>
+</navigation>

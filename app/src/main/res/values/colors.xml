@@ -1,5 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="black">#FF000000</color>
+    <color name="black_25_transparent">#25000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="white15">#15FFFFFF</color>
+    <color name="red">#FFFF0000</color>
+    <color name="transparent_my">#00000000</color>
+
+    <color name="menu_side_yellow">#FFEDBE</color>
+    <!--<color name="status_bar_yellow">#FFBC0F</color>-->
+    <color name="status_bar_yellow">@color/bottom_menu_color</color>
+
+    <!-- header_side_menu_gradient -->
+    <color name="header_gradient_start">#562B1A</color>
+    <color name="header_gradient_end">#CB8A58</color>
+
+    <!-- icons -->
+    <color name="hamburger_color">#D1512D</color>
+    <color name="bottom_icon_color">#C58B9A</color>
+    <color name="home_button_color">#D1512D</color>
+
+    <color name="greeting_phrase_color">#D1512D</color>
+    <color name="user_name_home_screen">#411530</color>
+    <color name="shadow_greeting_color">#25B8A331</color>
+    <color name="toolbar_title">#411530</color>
+
+    <color name="background_cream">#FFFDF9</color>
+
+    <color name="bottom_menu_color">#713E5D</color>
+    <color name="hint_color">#676767</color>
+
+    <color name="item_icon">#6D5500</color>
+
+    <color name="back_additiobnal_card">#47EFD288</color>
 </resources>

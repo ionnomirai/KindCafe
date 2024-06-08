@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "1077211295503",
+    "firebase_url": "https://kindcafe-5c04a-default-rtdb.europe-west1.firebasedatabase.app",
+    "project_id": "kindcafe-5c04a",
+    "storage_bucket": "kindcafe-5c04a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1077211295503:android:7f9358202a37327cfc587a",
+        "android_client_info": {
+          "package_name": "com.example.kindcafe"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC-FVyTYmHFqnd_p_V7wyNH4O_O2XAJgPA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

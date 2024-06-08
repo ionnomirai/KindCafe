@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/constrLayoutReg"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background_cream">
+
+    <ImageView
+        android:id="@+id/iv_reg_back"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0"
+        android:scaleType="fitXY"
+        app:srcCompat="@drawable/reg_general_figure" />
+
+    <TextView
+        android:id="@+id/tvRegisterTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="180dp"
+        android:text="@string/register_title"
+        android:textColor="@color/black"
+        android:textSize="40sp"
+        android:textStyle="bold|italic"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/etRegName"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="35dp"
+        android:layout_marginTop="50dp"
+        android:background="@drawable/reg_et_background"
+        android:ems="10"
+        android:gravity="center_horizontal"
+        android:hint="@string/register_enter_user_name"
+        android:textColorHint="@color/hint_color"
+        android:inputType="text"
+        android:paddingHorizontal="20dp"
+        android:paddingVertical="20dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvRegisterTitle" />
+
+    <EditText
+        android:id="@+id/etRegEmail"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:background="@drawable/reg_et_background"
+        android:ems="10"
+        android:gravity="center_horizontal"
+        android:hint="@string/register_enter_user_email"
+        android:textColorHint="@color/hint_color"
+        android:inputType="text|textEmailAddress"
+        android:paddingHorizontal="20dp"
+        android:paddingVertical="20dp"
+        app:layout_constraintEnd_toEndOf="@id/etRegName"
+        app:layout_constraintStart_toStartOf="@id/etRegName"
+        app:layout_constraintTop_toBottomOf="@id/etRegName" />
+
+    <EditText
+        android:id="@+id/etRegPassword"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:background="@drawable/reg_et_background"
+        android:ems="10"
+        android:gravity="center_horizontal"
+        android:hint="@string/register_enter_user_password"
+        android:inputType="text|textPassword"
+        android:paddingHorizontal="20dp"
+        android:paddingVertical="20dp"
+        android:textColorHint="@color/hint_color"
+        app:layout_constraintEnd_toEndOf="@id/etRegEmail"
+        app:layout_constraintStart_toStartOf="@id/etRegEmail"
+        app:layout_constraintTop_toBottomOf="@id/etRegEmail" />
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cvRegGo"
+        android:layout_width="0dp"
+        android:layout_height="60dp"
+        android:layout_marginTop="40dp"
+        android:backgroundTint="@color/transparent_my"
+        android:clickable="true"
+        android:focusable="true"
+        android:foreground="@drawable/reg_ripple_button"
+        app:cardCornerRadius="25dp"
+        app:cardElevation="0dp"
+        app:layout_constraintEnd_toEndOf="@id/etRegPassword"
+        app:layout_constraintStart_toStartOf="@id/etRegPassword"
+        app:layout_constraintTop_toBottomOf="@id/etRegPassword">
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/reg_button_go_background"
+            android:gravity="center"
+            android:text="@string/register_go"
+            android:textColor="@color/white"
+            android:textSize="18sp" />
+    </androidx.cardview.widget.CardView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

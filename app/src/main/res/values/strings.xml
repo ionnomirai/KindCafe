@@ -1,3 +1,180 @@
 <resources>
-    <string name="app_name">KindCafe</string>
+    <string name="app_name">Kind Cafe</string>
+
+    <!-- frag_Home-->
+    <string name="home_name">Kind Cafe</string>
+    <string name="default_welcome">Welcome,</string>
+    <string name="default_username">Guest</string>
+    <string name="default_test_username">Abigayle Smith</string>
+    <string name="home_first_category">Sparkling\ndrinks</string>
+    <string name="home_second_category">Non-sparkling\ndrinks</string>
+    <string name="home_third_category">Sweets</string>
+    <string name="home_fourth_category">Cakes</string>
+    <string name="home_open">Open</string>
+    <string name="home_not_logged">You are not logged in to your account.</string>
+    <string name="home_success_log_out">You are logged out of your account.</string>
+
+    <!-- frag_registration -->
+    <string name="register_title">Please register</string>
+    <string name="register_enter_user_name">Please enter your name</string>
+    <string name="register_enter_user_email">Please enter your e-mail</string>
+    <string name="register_enter_user_password">Please enter your password</string>
+    <string name="register_go">GO</string>
+    <string name="send_verification_email_done">A link to confirm your account has been sent to your email!</string>
+    <string name="send_verification_email_error">Failed to send confirmation email!</string>
+    <string name="can_not_contact_the_server">Registration failed. Please check your internet connection.</string>
+    <string name="incomplete_fields">You have not filled in all fields.</string>
+
+    <!-- frag_login -->
+    <string name="login_title">Please login</string>
+    <string name="login_forget_password">forget password?</string>
+    <string name="success_login">You are logged in successfully</string>
+    <string name="failed_login">Failed to login</string>
+    <string name="already_login">You are already logged in.</string>
+
+    <!-- frag_restore_account-->
+    <string name="restore_title">Restore account</string>
+    <string name="resend_password">a new password will send to your e-mail</string>
+    <string name="send_restore_message_successfully">An email with the option to update your password has been sent to your email.</string>
+    <string name="send_restore_message_failed">Failed to send recovery message with password.</string>
+    <string name="email_not_entered">You have not entered your account email.</string>
+
+    <!-- frag_too_much_wrong_attempts -->
+    <string name="sorry">Sorry</string>
+    <string name="sorry_message_wrong_password">\t\tSorry, you enter\na wrong password.\nPlease try again</string>
+    <string name="try_again">Try again</string>
+    <string name="new_registration">Do you want to register a new account?</string>
+
+    <!--basket-->
+    <string name="quatity_zero">You have not entered a quantity for one of the dishes.</string>
+
+    <!--order summary -->
+    <string name="title_check_bill">Please see bill summary</string>
+    <string name="bill_summary">Bill summary</string>
+    <string name="send">Send</string>
+    <string name="cancel_order">Cancel the order</string>
+
+    <!-- Navigation View menu (dsm = drawer_side_menu.xml) -->
+    <string name="dsm_login">Login</string>
+    <string name="dsm_register">Register</string>
+    <string name="dsm_favorites">Favorites</string>
+    <string name="dsm_basket">Basket</string>
+    <string name="dsm_settings">Settings</string>
+    <string name="dsm_log_out">Log out</string>
+    <string name="dsm_exit">Exit</string>
+
+    <!-- Header side menu -->
+    <string name="user_name_default">Guest</string>
+
+    <!-- SnackBar-->
+    <string name="close">Close</string>
+
+    <string name="choose_item">Please choose what you need</string>
+    <string name="choose_item_to_buy">Please choose what you buy</string>
+    <string name="info_title">Information</string>
+    <string name="basket_make_order">Make order</string>
+    <string name="price_style_usd">$%1$s</string>
+    <string name="drop_it_out">DROP IT OUT</string>
+    <string name="per">per</string>
+
+    <string name="size_small">Small</string>
+    <string name="size_medium">Medium</string>
+    <string name="size_big">Big</string>
+    <string name="data_updated">Data is updated</string>
+
+    <!--Setting general-->
+    <string name="hint_phone">+38000000000 (optional)</string>
+    <string name="hint_location">Italy, Rome (optional)</string>
+    <string name="personal_data">Personal data</string>
+
+    <!--Setting personal-->
+    <string name="hint_name_opt">Jack (optional)</string>
+    <string name="hint_surname_opt">Jackson (optional)</string>
+    <string name="hint_birthday_opt">01.01.1991 (optional)</string>
+    <string name="hint_email">E-mail</string>
+    <string name="hint_zodiac_opt">Sign of the zodiac (optional)</string>
+
+    <string name="title_name_opt">Name:</string>
+    <string name="title_surname_opt">Surname:</string>
+    <string name="title_birthday_opt">Birthday:</string>
+    <string name="title_email">E-mail:</string>
+    <string name="title_zodiac_opt">Zodiac sign:</string>
+
+    <!--Search dish-->
+    <string name="hint_search">Enter the name of the dish</string>
+
+
+    Name (optional)
+    Surname (optional)
+    Birthday (optional)
+    E-mail (optional)
+    Sign of the zodiac (optional)
+
+    <string name="test_string_big">The time has come\n
+For me to talk to you\n
+And I don\'t mean\n
+To hurt your pride\n
+But everybody needs a friend sometimes\n
+To make you see the light\n\n
+
+In the game of life\n
+The strong survive\n
+We\'re on a one-way street\n
+We gotta make it out alive\n
+And never let \'em drag us down\n
+In the game of life\n
+We live and die\n
+Another breath begins\n
+Another chance to win the fight\n
+From the moment that you hit the ground\n
+In the game of life\n\n
+
+You\'re born to hunt\n
+And never run away\n
+And then you\'re hunted\n
+By the prey\n
+The wounded deer\n
+Leaps highest to the sun\n
+Until his day is done\n\n
+
+In the game of life\n
+The strong survive\n
+We\'re on a one-way street\n
+We gotta make it out alive\n
+And never let \'em drag us down\n
+In the game of life\n
+We live and die\n
+Another breath begins\n
+Another chance to win the fight\n
+From the moment that you hit the ground\n\n
+
+Here comes the morning\n
+It\'s time to play\n
+The game of life\n
+The game of life\n\n
+
+In the game of life\n
+The strong survive\n
+We\'re on a one-way street\n
+We gotta make it out alive\n
+And never let \'em drag us down\n
+In the game of life\n
+We live and die\n
+Another breath begins\n
+Another chance to win the fight\n
+From the moment that you hit the ground\n
+It\'s the game of life\n
+The game of life</string>
+
+    <string name="test_real_case">
+        Espresso, 3 items, +milk, small = (2.50+1.00+0.00)*3= 10.50\n\n
+
+Espresso, 2 items, +milk, medium = (2.50 + 1.00 + 0.80)*2= 8.60\n\n
+
+Espresso, 3 items, +milk, small = (2.50+1.00+0.00)*3= 10.50\n\n
+
+Espresso, 3 items, +milk, small = (2.50+1.00+0.00)*3= 10.50\n\n
+
+Espresso, 2 items, +milk, medium = (2.50 + 1.00 + 0.80)*2= 8.60</string>
+
 </resources>

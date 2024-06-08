@@ -1,18 +1,136 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.drawerlayout.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/lDrawLayoutMain"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/home_background2x"
     tools:context=".MainActivity">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Hello World!"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/tb_main"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:elevation="9dp"
+            android:background="@android:color/transparent"
+            android:minHeight="?attr/actionBarSize"
+            android:paddingStart="20dp"
+            android:paddingTop="30dp"
+            android:paddingEnd="20dp"
+            android:theme="?attr/actionBarTheme"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:menu="@menu/toolbar_menu_general">
+
+            <TextView
+                android:id="@+id/tvToolbarTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:text = "Kind cafe"
+                android:textColor="@color/toolbar_title"
+                android:textStyle="bold"
+                android:textSize="24sp"
+                android:layout_gravity="center_horizontal"
+                 />
+        </androidx.appcompat.widget.Toolbar>
+
+
+        <androidx.fragment.app.FragmentContainerView
+            android:id="@+id/fcv_main"
+            android:name="androidx.navigation.fragment.NavHostFragment"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:defaultNavHost="true"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.0"
+            app:navGraph="@navigation/nav_graph_general"
+            tools:layout_editor_absoluteX="0dp" />
+
+
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/clMainBottomMenu"
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:background="@drawable/ellipse_of_lower_menu"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
+
+            <ImageButton
+                android:id="@+id/ibProfile"
+                android:background="@drawable/ripple_test"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginTop="15dp"
+                android:layout_marginStart="25dp"
+                app:srcCompat="@drawable/ic_user"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <ImageButton
+                android:id="@+id/ibSettings"
+                android:background="@drawable/ripple_test"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginStart="55dp"
+                app:srcCompat="@drawable/ic_settings"
+                app:layout_constraintTop_toTopOf="@id/ibProfile"
+                app:layout_constraintBottom_toBottomOf="@id/ibProfile"
+                app:layout_constraintStart_toEndOf="@id/ibProfile"/>
+
+            <ImageButton
+                android:id="@+id/ibHeart"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginEnd="55dp"
+                android:background="@drawable/ripple_test"
+                app:srcCompat="@drawable/ic_heart"
+                app:layout_constraintTop_toTopOf="@+id/ibBag"
+                app:layout_constraintBottom_toBottomOf="@id/ibBag"
+                app:layout_constraintEnd_toStartOf="@id/ibBag"
+                 />
+
+            <ImageButton
+                android:id="@+id/ibBag"
+                android:background="@drawable/ripple_test"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginEnd="25dp"
+                app:srcCompat="@drawable/ic_shopping_bag"
+                app:layout_constraintTop_toTopOf="@id/ibProfile"
+                app:layout_constraintBottom_toBottomOf="@id/ibProfile"
+                app:layout_constraintEnd_toEndOf="parent"/>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <ImageButton
+            android:id="@+id/ibHome"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:background="@drawable/home_button_back"
+            android:layout_marginBottom="15dp"
+            android:src="@drawable/ic_home"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <com.google.android.material.navigation.NavigationView
+        android:id="@+id/nvLeft"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:background="@color/menu_side_yellow"
+        app:menu="@menu/drawer_side_menu"
+        app:headerLayout="@layout/side_menu_header"/>
+
+</androidx.drawerlayout.widget.DrawerLayout>
