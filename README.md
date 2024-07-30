@@ -42,9 +42,9 @@ account email and pay for the order.
 * google.firebase
 
 ## Visual demonstration of the project
-<img width="333" alt="0" src="https://github.com/user-attachments/assets/f919193e-6ef1-421f-a22a-da955c6d03d4">
-<img width="333" alt="1" src="https://github.com/user-attachments/assets/64b2631e-9a64-4f99-bde5-222cc55dc1d9">
-<img width="333" alt="2" src="https://github.com/user-attachments/assets/ae69fb9b-746a-4fb3-a799-c2ad97abe0f0">  
+<img width="222" alt="0" src="https://github.com/user-attachments/assets/f919193e-6ef1-421f-a22a-da955c6d03d4">
+<img width="222" alt="1" src="https://github.com/user-attachments/assets/64b2631e-9a64-4f99-bde5-222cc55dc1d9">
+<img width="222" alt="2" src="https://github.com/user-attachments/assets/ae69fb9b-746a-4fb3-a799-c2ad97abe0f0">  
 
 <img width="401" alt="10" src="https://github.com/user-attachments/assets/15b76131-23b8-42c5-a30b-e0de9a504c61">
 <img width="401" alt="11" src="https://github.com/user-attachments/assets/49fe3147-b1ae-4380-9031-d102ea0ac0d6">
