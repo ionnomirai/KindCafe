@@ -43,8 +43,8 @@ account email and pay for the order.
 
 ## Visual demonstration of the project
 <img width="265" alt="0" src="https://github.com/user-attachments/assets/f919193e-6ef1-421f-a22a-da955c6d03d4">
+<img width="265" alt="2" src="https://github.com/user-attachments/assets/ae69fb9b-746a-4fb3-a799-c2ad97abe0f0">
 <img width="265" alt="1" src="https://github.com/user-attachments/assets/64b2631e-9a64-4f99-bde5-222cc55dc1d9">
-<img width="265" alt="2" src="https://github.com/user-attachments/assets/ae69fb9b-746a-4fb3-a799-c2ad97abe0f0">  
 
 <img width="265" alt="10" src="https://github.com/user-attachments/assets/d42c1f71-a859-44ce-af7e-797f4953db7a">
 <img width="265" alt="11" src="https://github.com/user-attachments/assets/15b0fd2f-8033-41c5-9d32-489f1345c5ca">
