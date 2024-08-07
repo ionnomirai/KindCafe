@@ -46,8 +46,14 @@ account email and pay for the order.
 <img width="265" alt="1" src="https://github.com/user-attachments/assets/64b2631e-9a64-4f99-bde5-222cc55dc1d9">
 <img width="265" alt="2" src="https://github.com/user-attachments/assets/ae69fb9b-746a-4fb3-a799-c2ad97abe0f0">  
 
-<img width="401" alt="10" src="https://github.com/user-attachments/assets/15b76131-23b8-42c5-a30b-e0de9a504c61">
-<img width="401" alt="11" src="https://github.com/user-attachments/assets/49fe3147-b1ae-4380-9031-d102ea0ac0d6">
+<img width="265" alt="10" src="https://github.com/user-attachments/assets/d42c1f71-a859-44ce-af7e-797f4953db7a">
+<img width="265" alt="11" src="https://github.com/user-attachments/assets/15b0fd2f-8033-41c5-9d32-489f1345c5ca">
+<img width="265" alt="8" src="https://github.com/user-attachments/assets/fea69752-866b-414f-8c6f-502d5003d461">
+
+<img width="265" alt="5" src="https://github.com/user-attachments/assets/ecea7267-5f5b-46f1-9f23-74c8dbde42e5">
+<img width="265" alt="6" src="https://github.com/user-attachments/assets/ec528fb4-6df1-488e-9e08-d235da72f721">
+<img width="265" alt="7" src="https://github.com/user-attachments/assets/0fbf0e68-606f-4192-9ff5-d9408e1d3c5f">
+
 
 
 
