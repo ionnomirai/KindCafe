@@ -53,13 +53,3 @@ account email and pay for the order.
 <img width="265" alt="5" src="https://github.com/user-attachments/assets/ecea7267-5f5b-46f1-9f23-74c8dbde42e5">
 <img width="265" alt="6" src="https://github.com/user-attachments/assets/ec528fb4-6df1-488e-9e08-d235da72f721">
 <img width="265" alt="7" src="https://github.com/user-attachments/assets/0fbf0e68-606f-4192-9ff5-d9408e1d3c5f">
-
-
-
-
-
-
-
-
-
-
